@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dailyLedger', '0016_truncate_expense_table'),
+        ('dailyLedger', '0015_remove_expense_ledger_type_alter_expense_employee_and_more'),
     ]
 
     operations = [
