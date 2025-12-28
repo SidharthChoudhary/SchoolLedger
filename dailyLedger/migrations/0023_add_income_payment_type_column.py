@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dailyLedger', '0022_remove_income_payment_type'),
+        ('dailyLedger', '0021_income_fees_account'),
     ]
 
     operations = [
