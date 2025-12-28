@@ -1,0 +1,112 @@
+{% extends 'website/base.html' %}
+
+{% block title %}{% if account %}Edit{% else %}Add{% endif %} Fees Account - Devki Public School{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>
+                <i class="fa-solid fa-receipt"></i>
+                {% if account %}Edit Fees Account{% else %}Add New Fees Account{% endif %}
+            </h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'view_fees_accounts' %}" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">
+                            Name <span class="text-danger">*</span>
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.name.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.account_open.id_for_label }}" class="form-label">
+                            Account Open Date <span class="text-danger">*</span>
+                        </label>
+                        {{ form.account_open }}
+                        {% if form.account_open.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.account_open.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.account_status.id_for_label }}" class="form-label">
+                            Account Status <span class="text-danger">*</span>
+                        </label>
+                        {{ form.account_status }}
+                        {% if form.account_status.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.account_status.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.account_close.id_for_label }}" class="form-label">
+                            Account Close Date
+                        </label>
+                        {{ form.account_close }}
+                        <small class="text-muted">Leave blank if account is still open</small>
+                        {% if form.account_close.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.account_close.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:20px;">
+                    <a href="{% url 'view_fees_accounts' %}" class="btn-secondary">
+                        <i class="fa-solid fa-times"></i> Cancel
+                    </a>
+                    <button type="submit">
+                        <i class="fa-solid fa-save"></i> 
+                        {% if account %}Update{% else %}Create{% endif %} Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control {
+        border-radius: 4px;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+    }
+    
+    .text-danger {
+        color: #dc3545;
+    }
+</style>
+{% endblock %}

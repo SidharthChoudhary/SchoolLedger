@@ -1,0 +1,109 @@
+{% extends "website/base.html" %}
+
+{% block title %}Salary Payment Details - {{ employee.name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 20px;">
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h1 style="margin: 0 0 10px 0;">Salary Payment Details</h1>
+        <h2 style="margin: 0; font-weight: normal;">{{ employee.name }}</h2>
+        <p style="margin: 5px 0 0 0; font-size: 14px;">Employee ID: {{ employee.emp_no }}</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+        <div style="background: #f0f7ff; border-left: 4px solid #2196F3; padding: 15px; border-radius: 4px;">
+            <div style="font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px;">Total Payable</div>
+            <div style="font-size: 24px; font-weight: bold; color: #2196F3;">{{ total_payable|floatformat:2 }}</div>
+        </div>
+        
+        <div style="background: #e8f5e9; border-left: 4px solid #4CAF50; padding: 15px; border-radius: 4px;">
+            <div style="font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px;">Total Paid</div>
+            <div style="font-size: 24px; font-weight: bold; color: #4CAF50;">{{ total_paid|floatformat:2 }}</div>
+        </div>
+        
+        <div style="background: {% if total_pending > 0 %}#fff3e0{% else %}#e8f5e9{% endif %}; border-left: 4px solid {% if total_pending > 0 %}#FF9800{% else %}#4CAF50{% endif %}; padding: 15px; border-radius: 4px;">
+            <div style="font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px;">Pending</div>
+            <div style="font-size: 24px; font-weight: bold; color: {% if total_pending > 0 %}#FF9800{% else %}#4CAF50{% endif %};">{{ total_pending|floatformat:2 }}</div>
+        </div>
+    </div>
+
+    <!-- Payment Details Table -->
+    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 30px;">
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
+                    <tr>
+                        <th style="padding: 15px; text-align: left; font-weight: 600; white-space: nowrap;">Session</th>
+                        <th style="padding: 15px; text-align: left; font-weight: 600; white-space: nowrap;">Month</th>
+                        <th style="padding: 15px; text-align: right; font-weight: 600; white-space: nowrap;">Payable Salary</th>
+                        <th style="padding: 15px; text-align: center; font-weight: 600; white-space: nowrap;">Payment Date</th>
+                        <th style="padding: 15px; text-align: right; font-weight: 600; white-space: nowrap;">Payment Amount</th>
+                        <th style="padding: 15px; text-align: center; font-weight: 600; white-space: nowrap;">Voucher</th>
+                        <th style="padding: 15px; text-align: right; font-weight: 600; white-space: nowrap;">Pending</th>
+                        <th style="padding: 15px; text-align: center; font-weight: 600; white-space: nowrap;">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detail in payment_details %}
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px 15px;">
+                            <span style="background: #e3f2fd; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 600;">{{ detail.session }}</span>
+                        </td>
+                        <td style="padding: 12px 15px;">{{ detail.month }}</td>
+                        <td style="padding: 12px 15px; text-align: right; font-weight: 600;">{{ detail.payable|floatformat:2 }}</td>
+                        <td style="padding: 12px 15px; text-align: center;">
+                            {% if detail.payment_date %}
+                                {{ detail.payment_date|date:"d M Y" }}
+                            {% else %}
+                                <span style="color: #999;">—</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px 15px; text-align: right; color: {% if detail.amount > 0 %}#4CAF50{% else %}#999{% endif %}; font-weight: {% if detail.amount > 0 %}600{% else %}normal{% endif %};">
+                            {{ detail.amount|floatformat:2 }}
+                        </td>
+                        <td style="padding: 12px 15px; text-align: center;">
+                            {% if detail.voucher != '-' %}
+                                <small style="background: #fff3e0; padding: 3px 6px; border-radius: 3px;">{{ detail.voucher }}</small>
+                            {% else %}
+                                <small style="color: #999;">{{ detail.voucher }}</small>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px 15px; text-align: right; color: {% if detail.pending > 0 %}#f44336{% else %}#4CAF50{% endif %}; font-weight: 600;">
+                            {{ detail.pending|floatformat:2 }}
+                        </td>
+                        <td style="padding: 12px 15px; text-align: center; font-size: 12px; color: #666;">
+                            {% if detail.pending > 0 %}
+                                <span style="color: #f44336; font-weight: 600;">Pending</span>
+                            {% else %}
+                                <span style="color: #4CAF50;">Paid</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" style="padding: 30px; text-align: center; color: #999;">
+                            No payment data available for this employee
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="{% url 'employees_home' %}" style="display: inline-block; padding: 10px 20px; background: #2196F3; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px;">Back to Employees</a>
+        <button onclick="window.print()" style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 4px; cursor: pointer;">Print Details</button>
+    </div>
+</div>
+
+<style>
+@media print {
+    button { display: none; }
+    .container { margin: 0; }
+}
+</style>
+{% endblock %}

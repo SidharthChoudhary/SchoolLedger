@@ -1,0 +1,324 @@
+{% extends "website/base.html" %}
+{% block title %}Fees Structure{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Fees Structure</h2>
+
+<h3 class="form-section">Add / Edit</h3>
+
+<form method="post">
+  {% csrf_token %}
+  {% if editing_fees %}
+    <input type="hidden" name="fees_id" value="{{ editing_fees.id }}">
+  {% endif %}
+
+  <div class="form-section">
+    <h4>Session, Class & Fees</h4>
+    <div class="row">
+      <div class="field">
+        <label for="{{ form.session.id_for_label }}">Session</label>
+        {{ form.session }}
+        {% if form.session.errors %}<span class="error">{{ form.session.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.class_code.id_for_label }}">Class</label>
+        {{ form.class_code }}
+        {% if form.class_code.errors %}<span class="error">{{ form.class_code.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.fee_tuition.id_for_label }}">Tuition Fee</label>
+        {{ form.fee_tuition }}
+        {% if form.fee_tuition.errors %}<span class="error">{{ form.fee_tuition.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.fee_tc.id_for_label }}">Transfer Certificate (TC)</label>
+        {{ form.fee_tc }}
+        {% if form.fee_tc.errors %}<span class="error">{{ form.fee_tc.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.fee_admission.id_for_label }}">Admission Fee</label>
+        {{ form.fee_admission }}
+        {% if form.fee_admission.errors %}<span class="error">{{ form.fee_admission.errors }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h4>Books & Uniform</h4>
+    <div class="row">
+      <div class="field">
+        <label for="{{ form.book_set.id_for_label }}">Full Book Set</label>
+        {{ form.book_set }}
+        {% if form.book_set.errors %}<span class="error">{{ form.book_set.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.book_diary.id_for_label }}">Diary</label>
+        {{ form.book_diary }}
+        {% if form.book_diary.errors %}<span class="error">{{ form.book_diary.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.book_other.id_for_label }}">Other Books</label>
+        {{ form.book_other }}
+        {% if form.book_other.errors %}<span class="error">{{ form.book_other.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.uniform_shirt.id_for_label }}">Shirt</label>
+        {{ form.uniform_shirt }}
+        {% if form.uniform_shirt.errors %}<span class="error">{{ form.uniform_shirt.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.uniform_pant.id_for_label }}">Pant</label>
+        {{ form.uniform_pant }}
+        {% if form.uniform_pant.errors %}<span class="error">{{ form.uniform_pant.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.uniform_tie.id_for_label }}">Tie</label>
+        {{ form.uniform_tie }}
+        {% if form.uniform_tie.errors %}<span class="error">{{ form.uniform_tie.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.uniform_belt.id_for_label }}">Belt</label>
+        {{ form.uniform_belt }}
+        {% if form.uniform_belt.errors %}<span class="error">{{ form.uniform_belt.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.uniform_id_card.id_for_label }}">ID Card</label>
+        {{ form.uniform_id_card }}
+        {% if form.uniform_id_card.errors %}<span class="error">{{ form.uniform_id_card.errors }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <button type="submit" class="btn-primary">{% if editing_fees %}Update{% else %}Save{% endif %}</button>
+    {% if editing_fees %}
+      <a href="{% url 'fees_structure_list' %}" class="btn-secondary" style="margin-left: 10px;">Cancel</a>
+    {% endif %}
+  </div>
+</form>
+
+<h3 class="form-section">Saved Fees Structures</h3>
+
+{% if fees_structures %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Session</th>
+          <th>Class</th>
+          <th>Tuition</th>
+          <th>TC</th>
+          <th>Admission</th>
+          <th>Book Set</th>
+          <th>Book Diary</th>
+          <th>Book Other</th>
+          <th>Shirt</th>
+          <th>Pant</th>
+          <th>Tie</th>
+          <th>Belt</th>
+          <th>ID Card</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fees in fees_structures %}
+        <tr>
+          <td>{{ fees.session.session }}</td>
+          <td>{{ fees.class_code.class_code }}</td>
+          <td>{{ fees.fee_tuition|default:"-" }}</td>
+          <td>{{ fees.fee_tc|default:"-" }}</td>
+          <td>{{ fees.fee_admission|default:"-" }}</td>
+          <td>{{ fees.book_set|default:"-" }}</td>
+          <td>{{ fees.book_diary|default:"-" }}</td>
+          <td>{{ fees.book_other|default:"-" }}</td>
+          <td>{{ fees.uniform_shirt|default:"-" }}</td>
+          <td>{{ fees.uniform_pant|default:"-" }}</td>
+          <td>{{ fees.uniform_tie|default:"-" }}</td>
+          <td>{{ fees.uniform_belt|default:"-" }}</td>
+          <td>{{ fees.uniform_id_card|default:"-" }}</td>
+          <td class="actions">
+            <a class="btn-edit" href="?edit={{ fees.pk }}">Edit</a>
+            <a class="btn-delete"
+               onclick="return confirm('Delete this fees structure?')"
+               href="{% url 'delete_fees_structure' fees.pk %}">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No fees structures yet.</p>
+  {% endif %}
+
+<style>
+  h3.form-section {
+    margin: 30px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #0F4F4F;
+  }
+
+  form > .form-section {
+    margin: 0;
+    padding: 0;
+    border-bottom: none;
+  }
+
+  .form-section h4 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: none;
+  }
+
+  .form-section:last-of-type h4 {
+    border-bottom: none;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 10px;
+  }
+
+  .form-section:last-of-type .row {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+  }
+
+  .form-section:last-of-type .field input {
+    padding: 6px 4px;
+    font-size: 12px;
+    width: 100%;
+    max-width: 80px;
+  }
+
+  .form-section:last-of-type .field label {
+    font-size: 12px;
+    margin-bottom: 3px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .field input,
+  .field select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .field input:focus,
+  .field select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  }
+
+  .error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 500;
+  }
+
+  .btn-primary {
+    background-color: #0F4F4F;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: #0a3a3a;
+  }
+
+  .btn-secondary {
+    background-color: #0F4F4F;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #0a3a3a;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    margin-top: 15px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table thead {
+    background-color: #f8f9fa;
+  }
+  
+  .table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  .actions {
+    white-space: nowrap;
+  }
+
+  .btn-edit,
+  .btn-delete {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  .btn-edit {
+    background-color: #d3d3d3;
+    color: #333;
+  }
+
+  .btn-edit:hover {
+    background-color: #b8b8b8;
+  }
+
+  .btn-delete {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-delete:hover {
+    background-color: #c82333;
+  }
+</style>
+
+{% endblock %}

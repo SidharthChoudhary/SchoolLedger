@@ -1,0 +1,43 @@
+{% extends "website/base.html" %}
+{% block title %}Attendance Records{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Attendance Records</h2>
+
+{% if records %}
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Session</th>
+        <th>Class</th>
+        <th>Date</th>
+        <th>Attendance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in records %}
+      <tr>
+        <td>{{ record.session.session }}</td>
+        <td>{{ record.student_class.class_code|default:record.student_class.class_name }}</td>
+        <td>{{ record.date|date:"d-m-Y" }}</td>
+        <td>
+          <span class="status">{{ record.percentage }}% ({{ record.present_count }}/{{ record.total_students }})</span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p>No attendance records found.</p>
+{% endif %}
+
+<style>
+  .status {
+    color: #0f4f4f;
+    font-weight: 600;
+  }
+</style>
+
+{% endblock %}

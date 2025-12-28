@@ -1,0 +1,26 @@
+{% extends "website/base.html" %}
+{% block title %}Ledger Statement - Parameters{% endblock %}
+{% block content %}
+<h2 style="margin-top:0; text-align:center; text-decoration:underline;">Ledger Statement</h2>
+<div class="card">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Select Parameters</div>
+  <form method="post" style="max-width:600px; margin:0 auto;">
+    {% csrf_token %}
+    <div class="field" style="margin-bottom:14px;">
+      <label>Session</label>
+      <select name="session" required style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px;">
+        <option value="">-- Select Session --</option>
+        {% for sess in sessions %}<option value="{{ sess.id }}">{{ sess.session }}</option>{% endfor %}
+      </select>
+    </div>
+    <div style="display:flex; justify-content:center; margin-top:20px; gap:12px;">
+      <button type="submit" class="btn-primary" style="padding:10px 32px; font-size:16px;">Generate</button>
+      <a href="{% url 'select_statement_type' %}" class="btn-ghost"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "website/base.html" %}
+{% block title %}Delete Fees Structure{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Delete Fees Structure</h2>
+
+<div class="confirmation-card">
+  <div class="confirmation-content">
+    <p style="font-size: 16px; margin-bottom: 20px;">Are you sure you want to delete this fees structure?</p>
+    
+    <div class="fees-details" style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 4px;">
+      <table style="width: 100%;">
+        <tr>
+          <td style="font-weight: 600; width: 30%; padding: 8px 0;">Session:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.session.session }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Class Code:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.class_code.class_code }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Fee Tuition:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.fee_tuition|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Fee TC:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.fee_tc|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Fee Admission:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.fee_admission|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Book Set:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.book_set|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Book Diary:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.book_diary|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Book Other:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.book_other|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Uniform Shirt:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.uniform_shirt|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Uniform Pant:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.uniform_pant|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Uniform Tie:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.uniform_tie|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Uniform Belt:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.uniform_belt|default:"-" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Uniform ID Card:</td>
+          <td style="padding: 8px 0;">{{ fees_structure.uniform_id_card|default:"-" }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger" onclick="return confirm('This action cannot be undone. Are you absolutely sure?');">
+          Yes, Delete
+        </button>
+      </form>
+      <a href="{% url 'fees_structure_list' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .confirmation-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .confirmation-content p {
+    color: #666;
+  }
+
+  .btn-danger,
+  .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+</style>
+
+{% endblock %}

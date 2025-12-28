@@ -1,0 +1,450 @@
+{% extends "website/base.html" %}
+{% block title %}View Students{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">View Pupils</h2>
+
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Add / Edit Student</h3>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if editing_student %}
+      <input type="hidden" name="student_id" value="{{ editing_student.id }}">
+    {% endif %}
+
+    <!-- Personal Information Section -->
+    <div class="form-section">
+      <h4>Personal Information</h4>
+      <div class="entry-grid">
+        <div class="field">
+          <label for="{{ form.first_name.id_for_label }}">First Name</label>
+          {{ form.first_name }}
+          {% if form.first_name.errors %}<span class="error">{{ form.first_name.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+          {{ form.last_name }}
+          {% if form.last_name.errors %}<span class="error">{{ form.last_name.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth</label>
+          {{ form.date_of_birth }}
+          {% if form.date_of_birth.errors %}<span class="error">{{ form.date_of_birth.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.gender.id_for_label }}">Gender</label>
+          {{ form.gender }}
+          {% if form.gender.errors %}<span class="error">{{ form.gender.errors }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Parent Information Section -->
+    <div class="form-section">
+      <h4>Parent / Guardian Information</h4>
+      <div class="entry-grid">
+        <div class="field">
+          <label for="{{ form.fathers_name.id_for_label }}">Father's Name</label>
+          {{ form.fathers_name }}
+          {% if form.fathers_name.errors %}<span class="error">{{ form.fathers_name.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.fathers_phone.id_for_label }}">Father's Phone</label>
+          {{ form.fathers_phone }}
+          {% if form.fathers_phone.errors %}<span class="error">{{ form.fathers_phone.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.mothers_name.id_for_label }}">Mother's Name</label>
+          {{ form.mothers_name }}
+          {% if form.mothers_name.errors %}<span class="error">{{ form.mothers_name.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.mothers_phone.id_for_label }}">Mother's Phone</label>
+          {{ form.mothers_phone }}
+          {% if form.mothers_phone.errors %}<span class="error">{{ form.mothers_phone.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.contact_person.id_for_label }}">Contact Person</label>
+          {{ form.contact_person }}
+          {% if form.contact_person.errors %}<span class="error">{{ form.contact_person.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.contact_phone.id_for_label }}">Contact Phone</label>
+          {{ form.contact_phone }}
+          {% if form.contact_phone.errors %}<span class="error">{{ form.contact_phone.errors }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Health Information Section -->
+    <div class="form-section">
+      <h4>Health Information</h4>
+      <div class="entry-grid">
+        <div class="field">
+          <label for="{{ form.blood_group.id_for_label }}">Blood Group</label>
+          {{ form.blood_group }}
+          {% if form.blood_group.errors %}<span class="error">{{ form.blood_group.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.health_conditions.id_for_label }}">Health Conditions</label>
+          {{ form.health_conditions }}
+          {% if form.health_conditions.errors %}<span class="error">{{ form.health_conditions.errors }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Academic Details Section -->
+    <div class="form-section">
+      <h4>Academic Details</h4>
+      <div class="entry-grid">
+        <div class="field">
+          <label for="{{ form.session.id_for_label }}">Admission Session</label>
+          {{ form.session }}
+          {% if form.session.errors %}<span class="error">{{ form.session.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.student_class.id_for_label }}">Admission Class</label>
+          {{ form.student_class }}
+          {% if form.student_class.errors %}<span class="error">{{ form.student_class.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.admission_date.id_for_label }}">Admission Date</label>
+          {{ form.admission_date }}
+          {% if form.admission_date.errors %}<span class="error">{{ form.admission_date.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.srn.id_for_label }}">Student Registration Number (SRN)</label>
+          {{ form.srn }}
+          {% if form.srn.errors %}<span class="error">{{ form.srn.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.transport_method.id_for_label }}">Uses School Bus</label>
+          {{ form.transport_method }}
+          {% if form.transport_method.errors %}<span class="error">{{ form.transport_method.errors }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Other Information Section -->
+    <div class="form-section">
+      <h4>Other Information</h4>
+      <div class="entry-grid">
+        <div class="field">
+          <label for="{{ form.rte.id_for_label }}">RTE</label>
+          {{ form.rte }}
+          {% if form.rte.errors %}<span class="error">{{ form.rte.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.primary_account_holder.id_for_label }}">Primary Account Holder</label>
+          {{ form.primary_account_holder }}
+          {% if form.primary_account_holder.errors %}<span class="error">{{ form.primary_account_holder.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.image.id_for_label }}">Photo</label>
+          {{ form.image }}
+          {% if form.image.errors %}<span class="error">{{ form.image.errors }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <button type="submit" class="btn-primary">{% if editing_student %}Update{% else %}Save{% endif %} Student</button>
+      {% if editing_student %}
+        <a href="{% url 'view_students' %}" class="btn-secondary" style="margin-left: 10px;">Cancel Edit</a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <h3 class="form-section">Saved Students</h3>
+
+  {% if students %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Photo</th>
+          <th>Name</th>
+          <th>Date of Birth</th>
+          <th>Father's Name</th>
+          <th>Admission Session</th>
+          <th>Admission Class</th>
+          <th>SRN</th>
+          <th>RTE</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr class="row-gender-{{ student.gender }}">
+          <td>
+            {% if student.image %}
+              <img src="{{ student.image.url }}" alt="{{ student.name }}" class="student-photo">
+            {% else %}
+              <div class="student-photo-placeholder">No Photo</div>
+            {% endif %}
+          </td>
+          <td>{{ student.first_name }} {{ student.last_name }}</td>
+          <td>{{ student.date_of_birth|date:"d-m-Y" }}</td>
+          <td>{{ student.fathers_name }}</td>
+          <td>{{ student.session.session|default:"N/A" }}</td>
+          <td>{{ student.student_class.class_code }}</td>
+          <td>{{ student.srn }}</td>
+          <td>
+            <span class="status {% if student.rte %}status-yes{% else %}status-no{% endif %}">
+              {% if student.rte %}Yes{% else %}No{% endif %}
+            </span>
+          </td>
+          <td class="actions">
+            <a class="btn-view" href="{% url 'student_details' student.pk %}">View</a>
+            <a class="btn-edit" href="?edit={{ student.pk }}">Edit</a>
+            <a class="btn-delete"
+               onclick="return confirm('Delete this student?')"
+               href="{% url 'delete_student' student.pk %}">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No students yet.</p>
+  {% endif %}
+</div>
+
+<style>
+  .form-section {
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+  }
+
+  .form-section h4 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .entry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .field input[type="checkbox"],
+  .field input[type="radio"] {
+    width: auto;
+    margin-right: 5px;
+  }
+
+  .field input[type="file"] {
+    padding: 5px;
+  }
+
+  .error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #5a6268;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    margin-top: 15px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .table thead {
+    background-color: #f8f9fa;
+  }
+  
+  .table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .table tbody tr.row-gender-male {
+    background-color: #cfe2ff;
+  }
+  
+  .table tbody tr.row-gender-male:hover {
+    background-color: #bbdefb;
+  }
+  
+  .table tbody tr.row-gender-female {
+    background-color: #ffc0e8;
+  }
+  
+  .table tbody tr.row-gender-female:hover {
+    background-color: #ffb3de;
+  }
+  
+  .table tbody tr.row-gender-3rd_gender {
+    background-color: #d4edda;
+  }
+  
+  .table tbody tr.row-gender-3rd_gender:hover {
+    background-color: #c3e6cb;
+  }
+
+  .student-photo {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .student-photo-placeholder {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    font-size: 11px;
+    color: #6c757d;
+    text-align: center;
+    padding: 5px;
+  }
+
+  .actions {
+    white-space: nowrap;
+  }
+
+  .btn-view,
+  .btn-edit,
+  .btn-delete {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  .btn-view,
+  .btn-edit {
+    background-color: #d3d3d3;
+    color: #333;
+  }
+
+  .btn-view:hover,
+  .btn-edit:hover {
+    background-color: #b8b8b8;
+  }
+
+  .btn-delete {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-delete:hover {
+    background-color: #c82333;
+  }
+
+  .status {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .status-yes {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .status-no {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .card {
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+{% endblock %}
+

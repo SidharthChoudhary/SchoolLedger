@@ -1,0 +1,72 @@
+{% extends "website/base.html" %}
+{% block title %}Sessions{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Academic Sessions</h2>
+
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Add / Edit Session</h3>
+
+  <form method="post">
+    {% csrf_token %}
+    {% if editing_session %}
+      <input type="hidden" name="session_id" value="{{ editing_session.id }}">
+    {% endif %}
+
+    <div class="entry-grid">
+      <div class="field">
+        <label>Session</label>
+        {{ form.session }}
+      </div>
+
+      <div class="field">
+        <label>Status</label>
+        {{ form.status }}
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit">{% if editing_session %}Update{% else %}Save{% endif %}</button>
+      </div>
+    </div>
+
+    {% if editing_session %}
+      <div style="margin-top:10px;"><a href="/ledger-expense/sessions/">Cancel Edit</a></div>
+    {% endif %}
+  </form>
+</div>
+
+<div class="card">
+  <h3 class="form-section">Saved sessions</h3>
+
+  {% if sessions %}
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Session</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+
+      {% for s in sessions %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ s.session }}</td>
+        <td>{{ s.status }}</td>
+        <td class="actions">
+          <a class="btn-edit" href="/ledger-expense/sessions/?edit={{ s.id }}">Edit</a>
+          <a class="btn-delete"
+             onclick="return confirm('Delete this session?')"
+             href="/ledger-expense/sessions/delete/{{ s.id }}/">
+             Delete
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No sessions yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends "website/base.html" %}
+{% block title %}View Employees{% endblock %}
+
+{% block content %}
+<h2 style="margin-top:10;">View All Employees</h2>
+
+<div class="card" style="margin-bottom:14px;">
+  <form method="get" style="display:flex; gap:12px; flex-wrap:wrap; align-items:end;">
+
+    <div class="field" style="min-width:220px;">
+      <label>Post</label>
+      <select name="post">
+        <option value="">All</option>
+        {% for p in post_choices %}
+          <option value="{{ p }}" {% if selected_post == p %}selected{% endif %}>{{ p }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field" style="min-width:220px;">
+      <label>Status</label>
+      <select name="status">
+        <option value="">All</option>
+        {% for code,label in status_choices %}
+          <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field">
+      <button type="submit">Apply</button>
+      <a href="/employees/view/" class="btn-secondary">Clear</a>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0;">Employees List</h2>
+
+<div style="margin:8px 0 14px; color:#374151; font-size:14px;">
+  Total Salary (filtered): 
+  <strong>₹ {{ total_salary }}</strong>
+</div>
+
+  {% if employees %}
+    <table>
+      <tr>
+        <th>Sr. No</th>
+        <th>Emp No</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Post</th>
+        <th>Contact</th>
+        <th>Status</th>
+        <th>Salary</th>
+        <th>Joining</th>
+        <th>Gender</th>
+        <th>Role</th>
+        <th>Role Detail</th>
+        <th>Leaving</th>
+      </tr>
+
+      {% for emp in employees %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td><b>{{ emp.emp_no }}</b></td>
+        <td>
+          {% if emp.emp_image %}
+            <img src="{{ emp.emp_image.url }}" alt="emp"
+                 style="width:42px;height:42px;border-radius:10px;object-fit:cover;">
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td>{{ emp.name }}</td>
+        <td>{{ emp.post }}</td>
+        <td>{{ emp.contact_number }}</td>
+        <td>{{ emp.get_status_display }}</td>
+        <td class="amount">{{ emp.base_salary_per_month }}</td>
+        <td>{{ emp.joining_date|default:"—" }}</td>
+         <td>{{ emp.get_gender_display }}</td>
+        <td>{{ emp.role }}</td>
+        <td>{{ emp.role_detail }}</td>
+        <td>{{ emp.leaving_date|default:"—" }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p style="color:#6b7280;">No employees found for selected filters.</p>
+  {% endif %}
+</div>
+
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+  
+  h2, h3, h4, h5, h6 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+  }
+  
+  p, div, label {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+  }
+  
+  table, th, td {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,437 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Link Fee Account{% endblock %}
+
+{% block content %}
+
+<h2 style="margin-top:0;">Link Fee Account to Student</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <div style="padding: 12px; margin-bottom: 15px; border-radius: 4px; background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7;">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!-- Panel 1 - Link by Student Name -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Link by Student Name</h3>
+  
+  <form method="post" id="link_by_student_form">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="link_by_student">
+    
+    <div class="entry-grid">
+      <div class="field">
+        <label>Session</label>
+        <select id="session_filter" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Session --</option>
+          {% for session in sessions %}
+            <option value="{{ session.id }}">{{ session.session }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Class</label>
+        <select id="class_filter" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Class --</option>
+          {% for class in classes %}
+            <option value="{{ class.id }}">{{ class.class_code }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Student Name</label>
+        <select id="student_id" name="student_id" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+          <option value="">-- Select Student --</option>
+          {% for student in students %}
+            <option value="{{ student.id }}" data-session="{{ student.session.id }}" data-class="{{ student.student_class.id }}" data-father="{{ student.fathers_name }}">
+              {{ student.first_name }} {{ student.last_name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Father Name</label>
+        <input type="text" id="father_name_display" readonly style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5;">
+      </div>
+
+      <div class="field">
+        <label>Open Account Names</label>
+        <select name="account_id" id="account_id" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+          <option value="">-- Select Account --</option>
+          {% for account in open_accounts %}
+            <option value="{{ account.id }}">{{ account.account_id }} - {{ account.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit">Link Account</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Panel 2 - Link by Account Register Page Number -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Link by Account Register Page Number</h3>
+  
+  <form method="post" id="link_by_register_form">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="link_by_register_page">
+    
+    <div class="entry-grid">
+      <div class="field">
+        <label>Account Register Page Number</label>
+        <select id="register_page_select" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+          <option value="">-- Select Register Page --</option>
+          {% for account in open_accounts %}
+            {% if account.register_page %}
+              <option value="{{ account.register_page }}" data-account-id="{{ account.id }}" data-account-name="{{ account.name }}" data-account-status="{{ account.account_status }}">
+                {{ account.register_page }}
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Account Name</label>
+        <input type="text" id="account_name_display" readonly style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5;">
+      </div>
+
+      <div class="field">
+        <label>Session</label>
+        <select id="session_filter_panel2" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- All Sessions --</option>
+          {% for session in sessions %}
+            <option value="{{ session.id }}">{{ session.session }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Class</label>
+        <select id="class_filter_panel2" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- All Classes --</option>
+          {% for class in classes %}
+            <option value="{{ class.id }}">{{ class.class_code }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Student Name</label>
+        <select id="student_select_register" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" required>
+          <option value="">-- Select Student --</option>
+          {% for student in students %}
+            <option value="{{ student.id }}" data-session="{{ student.session.id }}" data-class="{{ student.student_class.id }}" data-father="{{ student.fathers_name }}" data-srn="{{ student.srn }}">
+              {{ student.first_name }} {{ student.last_name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Father Name</label>
+        <input type="text" id="father_name_register_display" readonly style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5;">
+      </div>
+
+      <div class="field">
+        <label>SRN</label>
+        <input type="text" id="srn_display" readonly style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5;">
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit">Link Account</button>
+        <input type="hidden" name="student_id_register" id="student_id_register">
+        <input type="hidden" name="register_page" id="register_page_hidden">
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Panel 1 - Link by Student Name
+  const sessionFilter = document.getElementById('session_filter');
+  const classFilter = document.getElementById('class_filter');
+  const studentIdSelect = document.getElementById('student_id');
+  const fatherNameDisplay = document.getElementById('father_name_display');
+
+  function filterStudents() {
+    const sessionId = sessionFilter.value;
+    const classId = classFilter.value;
+
+    Array.from(studentIdSelect.options).forEach(option => {
+      if (option.value === '') return;
+      const studentSession = option.dataset.session;
+      const studentClass = option.dataset.class;
+
+      let show = true;
+      if (sessionId && studentSession !== sessionId) show = false;
+      if (classId && studentClass !== classId) show = false;
+
+      option.style.display = show ? 'block' : 'none';
+    });
+  }
+
+  sessionFilter.addEventListener('change', filterStudents);
+  classFilter.addEventListener('change', filterStudents);
+
+  studentIdSelect.addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    fatherNameDisplay.value = selectedOption.dataset.father || '';
+  });
+
+  // Panel 2 - Link by Account Register Page Number
+  const registerPageSelect = document.getElementById('register_page_select');
+  const accountIdDisplay = document.getElementById('account_id_display');
+  const accountNameDisplay = document.getElementById('account_name_display');
+  const studentSelectRegister = document.getElementById('student_select_register');
+  const fatherNameRegisterDisplay = document.getElementById('father_name_register_display');
+  const srnDisplay = document.getElementById('srn_display');
+  const sessionDisplay = document.getElementById('session_display');
+  const classDisplay = document.getElementById('class_display');
+  const studentIdRegisterInput = document.getElementById('student_id_register');
+  const registerPageHidden = document.getElementById('register_page_hidden');
+  
+  // Panel 2 - Filter students by Session and Class
+  const sessionFilterPanel2 = document.getElementById('session_filter_panel2');
+  const classFilterPanel2 = document.getElementById('class_filter_panel2');
+
+  function filterStudentsPanel2() {
+    const sessionId = sessionFilterPanel2.value;
+    const classId = classFilterPanel2.value;
+
+    Array.from(studentSelectRegister.options).forEach(option => {
+      if (option.value === '') return;
+      const studentSession = option.dataset.session;
+      const studentClass = option.dataset.class;
+
+      let show = true;
+      if (sessionId && studentSession !== sessionId) show = false;
+      if (classId && studentClass !== classId) show = false;
+
+      option.style.display = show ? 'block' : 'none';
+    });
+  }
+
+  sessionFilterPanel2.addEventListener('change', filterStudentsPanel2);
+  classFilterPanel2.addEventListener('change', filterStudentsPanel2);
+
+  registerPageSelect.addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    accountNameDisplay.value = selectedOption.dataset.accountName || '';
+    registerPageHidden.value = this.value;
+  });
+
+  studentSelectRegister.addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    fatherNameRegisterDisplay.value = selectedOption.dataset.father || '';
+    srnDisplay.value = selectedOption.dataset.srn || '';
+    studentIdRegisterInput.value = this.value;
+  });
+
+  // Panel 3 - Pre-select student if coming from Panel 3
+  {% if pre_selected_student_id %}
+    document.getElementById('student_id').value = '{{ pre_selected_student_id }}';
+    const selectedOpt = document.getElementById('student_id').options[document.getElementById('student_id').selectedIndex];
+    document.getElementById('father_name_display').value = selectedOpt.dataset.father || '';
+  {% endif %}
+</script>
+
+<!-- Panel 3 - Student - Account Map -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Student - Account Map (Unlinked Students)</h3>
+  
+  <form method="get" style="display:flex; gap:12px; align-items:end; flex-wrap:wrap; margin-bottom: 20px;">
+    <div>
+      <label style="font-size:12px; font-weight:700;">Session</label>
+      <br>
+      <select name="session_filter" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="">-- All Sessions --</option>
+        {% for session in sessions %}
+          <option value="{{ session.id }}" {% if session_filter == session.id|stringformat:"s" %}selected{% endif %}>{{ session.session }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div>
+      <label style="font-size:12px; font-weight:700;">Class</label>
+      <br>
+      <select name="class_filter" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="">-- All Classes --</option>
+        {% for class in classes %}
+          <option value="{{ class.id }}" {% if class_filter == class.id|stringformat:"s" %}selected{% endif %}>{{ class.class_code }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div>
+      <label style="font-size:12px; font-weight:700;">Student Name</label>
+      <br>
+      <input type="text" name="student_name_filter" placeholder="Search by name" value="{{ student_name_filter }}" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    </div>
+    
+    <div>
+      <button type="submit">Filter</button>
+      <a href="/students/link-fee-account/" style="margin-left:10px;">Clear</a>
+    </div>
+  </form>
+
+  {% if students_no_account %}
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Session</th>
+        <th>Class</th>
+        <th>Student Name</th>
+        <th>Father Name</th>
+        <th>Account Name</th>
+        <th>Action</th>
+      </tr>
+
+      {% for student in students_no_account %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ student.session.session|default:"—" }}</td>
+        <td>{{ student.student_class.class_code|default:"—" }}</td>
+        <td>{{ student.first_name }} {{ student.last_name }}</td>
+        <td>{{ student.fathers_name }}</td>
+        <td>{{ student.fees_account.name|default:"Not Linked" }}</td>
+        <td class="actions">
+          <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_from_panel3">
+            <input type="hidden" name="student_id" value="{{ student.id }}">
+            <button type="submit" class="btn-edit">Update Account</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p style="padding: 20px; text-align: center; color: #666;">All students have fee accounts linked!</p>
+  {% endif %}
+</div>
+
+<!-- Panel 4 - All Students with Account Information -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">All Students with Account Information</h3>
+  
+  <form method="get" style="display:flex; gap:12px; align-items:end; flex-wrap:wrap; margin-bottom: 20px;">
+    <div>
+      <label style="font-size:12px; font-weight:700;">Session</label>
+      <br>
+      <select name="session_filter_p4" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="">-- All Sessions --</option>
+        {% for session in sessions %}
+          <option value="{{ session.id }}" {% if session_filter_p4 == session.id|stringformat:"s" %}selected{% endif %}>{{ session.session }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div>
+      <label style="font-size:12px; font-weight:700;">Class</label>
+      <br>
+      <select name="class_filter_p4" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="">-- All Classes --</option>
+        {% for class in classes %}
+          <option value="{{ class.id }}" {% if class_filter_p4 == class.id|stringformat:"s" %}selected{% endif %}>{{ class.class_code }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div>
+      <label style="font-size:12px; font-weight:700;">Student Name</label>
+      <br>
+      <select name="student_name_filter_p4" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="">-- All Students --</option>
+        {% for student in all_students %}
+          <option value="{{ student.id }}" {% if student_name_filter_p4 == student.id|stringformat:"s" %}selected{% endif %}>{{ student.first_name }} {{ student.last_name }}</option>
+        {% empty %}
+          {% for student in students %}
+            <option value="{{ student.id }}" {% if student_name_filter_p4 == student.id|stringformat:"s" %}selected{% endif %}>{{ student.first_name }} {{ student.last_name }}</option>
+          {% endfor %}
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div>
+      <label style="font-size:12px; font-weight:700;">Account Name</label>
+      <br>
+      <select name="account_name_filter_p4" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="">-- All Accounts --</option>
+        {% for account in open_accounts %}
+          <option value="{{ account.id }}" {% if account_name_filter_p4 == account.id|stringformat:"s" %}selected{% endif %}>{{ account.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div>
+      <label style="font-size:12px; font-weight:700;">Register Page</label>
+      <br>
+      <select name="register_page_filter_p4" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="">-- All Pages --</option>
+        {% for account in open_accounts %}
+          {% if account.register_page %}
+            <option value="{{ account.register_page }}" {% if register_page_filter_p4 == account.register_page|stringformat:"s" %}selected{% endif %}>{{ account.register_page }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div>
+      <button type="submit">Filter</button>
+      <a href="/students/link-fee-account/" style="margin-left:10px;">Clear</a>
+    </div>
+  </form>
+
+  {% if filtered_students %}
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Session</th>
+        <th>Class</th>
+        <th>Student Name</th>
+        <th>Father Name</th>
+        <th>SRN</th>
+        <th>Account Name</th>
+        <th>Register Page</th>
+        <th>Action</th>
+      </tr>
+
+      {% for student in filtered_students %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ student.session.session|default:"—" }}</td>
+        <td>{{ student.student_class.class_code|default:"—" }}</td>
+        <td>{{ student.first_name }} {{ student.last_name }}</td>
+        <td>{{ student.fathers_name }}</td>
+        <td>{{ student.srn|default:"—" }}</td>
+        <td>{{ student.fees_account.name|default:"Not Linked" }}</td>
+        <td>{{ student.fees_account.register_page|default:"—" }}</td>
+        <td class="actions">
+          <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_from_panel3">
+            <input type="hidden" name="student_id" value="{{ student.id }}">
+            <button type="submit" class="btn-edit">Update Account</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p style="padding: 20px; text-align: center; color: #666;">No students found matching the filters.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

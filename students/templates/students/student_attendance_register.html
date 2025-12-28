@@ -1,0 +1,228 @@
+{% extends "website/base.html" %}
+{% load student_filters %}
+{% block title %}Student Attendance{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Student Attendance</h2>
+
+<div class="card" style="padding: 20px; margin-bottom: 18px;">
+  <form method="get" class="attendance-settings">
+    <div class="field">
+      <label>Session</label>
+      <select name="session">
+        {% if sessions %}
+          {% for session in sessions %}
+            <option value="{{ session.id }}" {% if selected_session and session.id == selected_session.id %}selected{% endif %}>
+              {{ session.session }}{% if current_session and session.id == current_session.id %} (Current){% endif %}
+            </option>
+          {% endfor %}
+        {% else %}
+          <option disabled>No sessions configured</option>
+        {% endif %}
+      </select>
+    </div>
+    <div class="field">
+      <label>Date</label>
+      <input type="date" name="date" value="{{ selected_date_str }}">
+    </div>
+    <div class="field field-btn">
+      <button type="submit">Load</button>
+    </div>
+  </form>
+</div>
+
+{% if messages %}
+<div class="messages">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% with selected_class.class_code|default:selected_class.class_name as class_label %}
+<div class="card">
+  <h3 class="form-section">Attendance for {{ class_label }} · {{ selected_date|date:"l, d-M-Y" }}</h3>
+  
+  {% if students %}
+  <form method="post">
+    {% csrf_token %}
+    {% if selected_session %}
+      <input type="hidden" name="session" value="{{ selected_session.id }}">
+    {% endif %}
+    <input type="hidden" name="date" value="{{ selected_date_str }}">
+    
+    <div class="attendance-rally-table">
+      <div class="attendance-header">
+        <div class="student-name">Student Name</div>
+        <div class="student-attendance">Present</div>
+        <div class="student-attendance">Absent</div>
+      </div>
+      
+      {% for student in students %}
+      <div class="attendance-row" id="row_{{ student.id }}">
+        <div class="student-name">
+          <strong>{{ student.name }}</strong>
+        </div>
+        
+        <div class="student-attendance">
+          <input type="radio" name="attendance_{{ student.id }}" 
+                 value="present" id="present_{{ student.id }}"
+                 {% if attendance_records|get_item:student.id == 'present' %}checked{% endif %} 
+                 onchange="updateRowColor({{ student.id }});"
+                 required>
+        </div>
+        
+        <div class="student-attendance">
+          <input type="radio" name="attendance_{{ student.id }}" 
+                 value="absent" id="absent_{{ student.id }}"
+                 {% if attendance_records|get_item:student.id == 'absent' %}checked{% endif %}
+                 onchange="updateRowColor({{ student.id }});">
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="margin-top: 20px; text-align: center; display: flex; gap: 10px; justify-content: center;">
+      <button type="submit" class="btn btn-primary" style="padding: 10px 30px; background-color: #0F4F4F; border-color: #0F4F4F; color: white;">Submit Attendance</button>
+      <button type="button" class="btn btn-secondary" style="padding: 10px 30px; background-color: #ff6b6b; border-color: #ff6b6b; color: white;" onclick="clearAllAttendance();">Clear All</button>
+    </div>
+  </form>
+  {% else %}
+  <div class="alert alert-warning no-students-message">No Students in class</div>
+  {% endif %}
+</div>
+{% endwith %}
+
+<style>
+  .attendance-settings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    align-items: end;
+  }
+
+  .attendance-settings .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .attendance-settings select,
+  .attendance-settings input[type="date"] {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  .attendance-settings .field-btn button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #0f4f4f;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  .attendance-rally-table {
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .attendance-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    background-color: #f5f5f5;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .attendance-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    gap: 10px;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+
+  .attendance-row:last-child {
+    border-bottom: none;
+  }
+
+  .attendance-row:nth-child(odd) {
+    background-color: #fafafa;
+  }
+
+  .attendance-row.absent-row {
+    background-color: #ffe6e6 !important;
+  }
+
+  .student-name {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .student-attendance {
+    text-align: center;
+  }
+
+  .student-attendance input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  .no-students-message {
+    font-size: 1.5rem;
+    padding: 30px;
+    text-align: center;
+    color: red;
+  }
+</style>
+
+<script>
+function updateRowColor(studentId) {
+  const row = document.getElementById('row_' + studentId);
+  const absentRadio = document.getElementById('absent_' + studentId);
+  
+  if (absentRadio.checked) {
+    row.classList.add('absent-row');
+  } else {
+    row.classList.remove('absent-row');
+  }
+}
+
+function clearAllAttendance() {
+  const radios = document.querySelectorAll('input[type="radio"]');
+  radios.forEach(radio => {
+    radio.checked = false;
+  });
+  
+  const rows = document.querySelectorAll('.attendance-row');
+  rows.forEach(row => {
+    row.classList.remove('absent-row');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const radios = document.querySelectorAll('input[type="radio"]');
+  radios.forEach(radio => {
+    const match = radio.id.match(/absent_(\d+)/);
+    if (match) {
+      const studentId = match[1];
+      if (radio.checked) {
+        document.getElementById('row_' + studentId).classList.add('absent-row');
+      }
+    }
+  });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,386 @@
+{% extends "website/base.html" %}
+{% block title %}Add Student{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">{% if student %}Edit Student{% else %}Add Student{% endif %}</h2>
+
+<div class="card" style="margin-bottom:14px;">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="student-form">
+      <h4 class="form-section">Personal Details</h4>
+      
+      <div class="row">
+        <div class="field">
+          <label for="{{ form.first_name.id_for_label }}">First Name</label>
+          {{ form.first_name }}
+          {% if form.first_name.errors %}<span class="error">{{ form.first_name.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+          {{ form.last_name }}
+          {% if form.last_name.errors %}<span class="error">{{ form.last_name.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth</label>
+          {{ form.date_of_birth }}
+          {% if form.date_of_birth.errors %}<span class="error">{{ form.date_of_birth.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.gender.id_for_label }}">Gender</label>
+          {{ form.gender }}
+          {% if form.gender.errors %}<span class="error">{{ form.gender.errors }}</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="{{ form.fathers_name.id_for_label }}">Father's Name</label>
+          {{ form.fathers_name }}
+          {% if form.fathers_name.errors %}<span class="error">{{ form.fathers_name.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.mothers_name.id_for_label }}">Mother's Name</label>
+          {{ form.mothers_name }}
+          {% if form.mothers_name.errors %}<span class="error">{{ form.mothers_name.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.gardians_name.id_for_label }}">Guardian's Name</label>
+          {{ form.gardians_name }}
+          {% if form.gardians_name.errors %}<span class="error">{{ form.gardians_name.errors }}</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="{{ form.fathers_phone.id_for_label }}">Father's Phone Number</label>
+          {{ form.fathers_phone }}
+          {% if form.fathers_phone.errors %}<span class="error">{{ form.fathers_phone.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.mothers_phone.id_for_label }}">Mother's Phone Number</label>
+          {{ form.mothers_phone }}
+          {% if form.mothers_phone.errors %}<span class="error">{{ form.mothers_phone.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.gardians_phone.id_for_label }}">Guardian's Phone Number</label>
+          {{ form.gardians_phone }}
+          {% if form.gardians_phone.errors %}<span class="error">{{ form.gardians_phone.errors }}</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field field-wide">
+          <label for="{{ form.medical_conditions.id_for_label }}">Medical Conditions</label>
+          {{ form.medical_conditions }}
+          {% if form.medical_conditions.errors %}<span class="error">{{ form.medical_conditions.errors }}</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field field-wide">
+          <label for="{{ form.dietary_restrictions.id_for_label }}">Dietary Restrictions</label>
+          {{ form.dietary_restrictions }}
+          {% if form.dietary_restrictions.errors %}<span class="error">{{ form.dietary_restrictions.errors }}</span>{% endif %}
+        </div>
+      </div>
+
+      <h4 class="form-section">Academic Details</h4>
+      
+      <div class="row">
+        <div class="field">
+          <label for="{{ form.session.id_for_label }}">Admission Session</label>
+          {{ form.session }}
+          {% if form.session.errors %}<span class="error">{{ form.session.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.student_class.id_for_label }}">Admission Class</label>
+          {{ form.student_class }}
+          {% if form.student_class.errors %}<span class="error">{{ form.student_class.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.admission_date.id_for_label }}">Admission Date</label>
+          {{ form.admission_date }}
+          {% if form.admission_date.errors %}<span class="error">{{ form.admission_date.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.srn.id_for_label }}">Student Registration Number (SRN)</label>
+          {{ form.srn }}
+          {% if form.srn.errors %}<span class="error">{{ form.srn.errors }}</span>{% endif %}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field checkbox-field">
+          <label for="{{ form.rte.id_for_label }}" class="checkbox-label">
+            {{ form.rte }}
+            Right to Education (RTE)
+          </label>
+          {% if form.rte.errors %}<span class="error">{{ form.rte.errors }}</span>{% endif %}
+        </div>
+
+        <div class="field checkbox-field">
+          <label for="{{ form.primary_account_holder.id_for_label }}" class="checkbox-label">
+            {{ form.primary_account_holder }}
+            Primary Account Holder
+          </label>
+          {% if form.primary_account_holder.errors %}<span class="error">{{ form.primary_account_holder.errors }}</span>{% endif %}
+        </div>
+          
+        <div class="field checkbox-field">
+          <label for="{{ form.transport_method.id_for_label }}" class="checkbox-label">
+            {{ form.transport_method }}
+            Uses School Bus
+          </label>
+          {% if form.transport_method.errors %}<span class="error">{{ form.transport_method.errors }}</span>{% endif %}
+        </div>
+</div>
+      <div class="row">
+        <div class="field field-wide">
+          <label for="{{ form.previous_school.id_for_label }}">Previous School</label>
+          {{ form.previous_school }}
+          {% if form.previous_school.errors %}<span class="error">{{ form.previous_school.errors }}</span>{% endif %}
+        </div>
+      </div>
+      </div>
+
+      <h4 class="form-section">Fee Account Details</h4>
+      
+      <div class="row">
+        <div class="field field-wide">
+          <label for="{{ form.fees_account.id_for_label }}">Fees Account</label>
+          {{ form.fees_account }}
+          {% if form.fees_account.errors %}<span class="error">{{ form.fees_account.errors }}</span>{% endif %}
+        </div>
+      </div>
+      
+      {% if student and student.fee_account_name %}
+      <div class="row">
+        <div class="field field-wide">
+          <label>Generated Account Name</label>
+          <div class="readonly-field" style="padding: 10px; background-color: #f5f5f5; border: 1px solid #ddd; border-radius: 4px;">
+            {{ student.fee_account_name }}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="row">
+        <div class="field field-wide">
+          <label for="{{ form.image.id_for_label }}">Student Photo</label>
+          {{ form.image }}
+          {% if form.image.errors %}<span class="error">{{ form.image.errors }}</span>{% endif %}
+        </div>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button type="submit" id="submitBtn">{% if student %}Update Student{% else %}Add Student{% endif %}</button>
+        <a href="{% url 'view_students' %}" class="btn-secondary" style="margin-left: 10px;">View Students</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Processing Modal -->
+<div id="processingModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-body">
+      <div class="spinner"></div>
+      <p id="processingMessage">Creating fee account for the primary account holder.....</p>
+    </div>
+  </div>
+</div>
+
+<!-- Fee Account Created Modal -->
+<div id="accountCreatedModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Fee Account Created Successfully</h3>
+    </div>
+    <div class="modal-body">
+      <p><strong>Account ID:</strong> <span id="accountId"></span></p>
+      <p><strong>Account Name:</strong> <span id="accountName"></span></p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" onclick="closeModal('accountCreatedModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    padding: 0;
+    border: 1px solid #888;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .modal-header h3 {
+    margin: 0;
+  }
+  
+  .modal-body {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+  }
+  
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #14b8a6;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    flex-wrap: nowrap;
+  }
+  
+  .field {
+    flex: 1;
+  }
+  
+  .field-wide {
+    flex: 1 100%;
+  }
+  
+  .checkbox-field {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+  }
+  
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    cursor: pointer;
+    font-weight: normal;
+    white-space: nowrap;
+  }
+  
+  .checkbox-label input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+  }
+  
+  .form-section {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #545b62;
+  }
+  
+  .error {
+    color: red;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+  }
+</style>
+
+<script>
+  // Show processing modal when form is submitted and primary account holder is checked
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const primaryAccountHolder = document.querySelector('input[name="primary_account_holder"]');
+    
+    form.addEventListener('submit', function(e) {
+      if (primaryAccountHolder && primaryAccountHolder.checked) {
+        // Show processing modal
+        document.getElementById('processingModal').style.display = 'flex';
+        
+        // Simulate processing delay
+        setTimeout(function() {
+          // Message will be shown from server-side messages
+          document.getElementById('processingModal').style.display = 'none';
+        }, 2000);
+      }
+    });
+  });
+  
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+  
+  // Close modal when clicking outside of it
+  window.onclick = function(event) {
+    const processingModal = document.getElementById('processingModal');
+    const accountCreatedModal = document.getElementById('accountCreatedModal');
+    
+    if (event.target === processingModal) {
+      processingModal.style.display = 'none';
+    }
+    if (event.target === accountCreatedModal) {
+      accountCreatedModal.style.display = 'none';
+    }
+  }
+</script>
+
+{% endblock %}

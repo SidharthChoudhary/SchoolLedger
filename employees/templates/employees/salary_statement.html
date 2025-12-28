@@ -1,0 +1,119 @@
+{% extends "website/base.html" %}
+{% block title %}Salary Statement{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0; text-align:center; text-decoration:underline;">Employee Salary Statement</h2>
+
+<div class="card" style="margin-bottom:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Employee Details</div>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb;">Employee Name</th>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ employee.name }}</td>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb;">Employee ID</th>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ employee.emp_no }}</td>
+    </tr>
+    <tr>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb;">Employee Role</th>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ employee.role|default:"—" }}</td>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb;">Statement Date</th>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ statement_date|date:"M d, Y" }}</td>
+    </tr>
+    <tr>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb;">Session</th>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ session.session|default:"All Sessions" }}</td>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb;">Month</th>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ month_display }}</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card" style="margin-bottom:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Monthly Breakdown</div>
+  {% if monthly_rows %}
+  <table style="width:100%; border-collapse:collapse;">
+    <tr style="background:#f3f4f6;">
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Session</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Month</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Base Salary</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Payable Salary</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Paid Salary</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Due Salary</th>
+    </tr>
+    {% for row in monthly_rows %}
+    <tr>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ row.session }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ row.month_label }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.base_salary|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.payable_salary|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.paid_salary|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.due_salary|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p style="margin:0; color:#6b7280;">No register entries found for this employee.</p>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-bottom:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Session Summary</div>
+  {% if session_summary %}
+  <table style="width:100%; border-collapse:collapse;">
+    <tr style="background:#f3f4f6;">
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Session</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Payable Salary</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Paid Salary</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Due Salary</th>
+    </tr>
+    {% for session, sums in session_summary.items %}
+    <tr>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ session }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ sums.payable|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ sums.paid|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ sums.due|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p style="margin:0; color:#6b7280;">No session summary available.</p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Final Statement</div>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr style="background:#f3f4f6;">
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Total Payable Salary</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Total Paid Salary</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Total Due Salary</th>
+    </tr>
+    <tr>
+      <td style="padding:10px; border:1px solid #e5e7eb;">₹{{ total_payable|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb;">₹{{ total_paid|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb;">₹{{ total_due|floatformat:2 }}</td>
+    </tr>
+  </table>
+</div>
+
+<div style="margin-top:20px; text-align:center;">
+  <a href="{% url 'select_statement_type' %}" class="btn-ghost"><i class="fa-solid fa-arrow-left"></i> Back</a>
+</div>
+
+{% endblock %}

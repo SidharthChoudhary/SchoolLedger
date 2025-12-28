@@ -1,0 +1,24 @@
+{% extends "website/base.html" %}
+{% block title %}Delete Income{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Delete Income</h2>
+
+<div class="card">
+  <p>
+    Are you sure you want to delete this income entry?
+    <br><br>
+    <b>Voucher:</b> {{ entry.voucher_number }}<br>
+    <b>Date:</b> {{ entry.date }}<br>
+    <b>Amount:</b> {{ entry.amount }}<br>
+    <b>Account:</b> {{ entry.account_name }}<br>
+  </p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+    <a href="{% url 'income_home' %}" style="margin-left:12px;">Cancel</a>
+  </form>
+</div>
+
+{% endblock %}

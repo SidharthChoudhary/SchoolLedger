@@ -1,0 +1,82 @@
+{% extends "website/base.html" %}
+{% block title %}Generate Employee Statements{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0; text-align:center; text-decoration:underline;">Generate Employee Statements</h2>
+
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; max-width:900px; margin:20px auto;">
+  <div class="content-card fancy-card blue" style="opacity:0.85;">
+    <div class="title"><i class="fa-solid fa-calendar-days"></i> Employee Monthly Statement</div>
+    <p class="desc">Generate for one employee for a specific month.</p>
+    
+    <form method="post" style="margin-top:16px;">
+      {% csrf_token %}
+      <input type="hidden" name="statement_type" value="monthly">
+      
+      <div class="field" style="margin-bottom:14px;">
+        <label for="employee_monthly">Employee Name</label>
+        <select id="employee_monthly" name="employee" required style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px;">
+          <option value="">-- Select Employee --</option>
+          {% for emp in employees %}
+            <option value="{{ emp.id }}">{{ emp.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field" style="margin-bottom:14px;">
+        <label for="employee_id_display_monthly">Employee ID</label>
+        <input type="text" id="employee_id_display_monthly" readonly style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px; background:#f9fafb;" placeholder="Auto-filled">
+      </div>
+
+      <div class="field" style="margin-bottom:14px;">
+        <label for="session_monthly">Session</label>
+        <select id="session_monthly" name="session" required style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px;">
+          <option value="">-- Select Session --</option>
+          {% for sess in sessions %}
+            <option value="{{ sess.id }}">{{ sess.session }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field" style="margin-bottom:14px;">
+        <label for="month_monthly">Month</label>
+        <select id="month_monthly" name="month" required style="width:100%; padding:8px; border:1px solid #d1d5db; border-radius:6px;">
+          <option value="">-- Select Month --</option>
+          {% for m in month_choices %}
+            <option value="{{ m.value }}">{{ m.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="text-align:center;">
+        <button type="submit" class="btn-primary" style="padding:10px 32px; font-size:14px; width:100%;">Generate</button>
+      </div>
+    </form>
+  </div>
+
+  <a href="{% url 'select_full_statement_params' %}" class="content-card fancy-card teal" style="opacity:0.85;">
+    <div class="title"><i class="fa-solid fa-file-lines"></i> Full Statement</div>
+    <p class="desc">View all sessions with monthly income, expense, and balance summary.</p>
+  </a>
+</div>
+
+<script>
+  // Auto-fill Employee ID when employee is selected
+  const employees = {
+    {% for emp in employees %}
+      "{{ emp.id }}": "{{ emp.emp_no }}",
+    {% endfor %}
+  };
+
+  document.getElementById('employee_monthly').addEventListener('change', function() {
+    const empId = this.value;
+    const empIdDisplay = document.getElementById('employee_id_display_monthly');
+    if (empId && employees[empId]) {
+      empIdDisplay.value = employees[empId];
+    } else {
+      empIdDisplay.value = '';
+    }
+  });
+</script>
+
+{% endblock %}

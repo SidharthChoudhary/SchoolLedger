@@ -1,0 +1,4 @@
+Voucher_Number,Date,Amount,Account_Name,Major_Head,Head,Sub_Head,Ledger_Type,Payment_Type,Session,Details
+V001,2024-01-15,5000,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Test salary payment
+V002,2024-01-20,15000,Other,Operations,Utilities,Electricity,Expense,Credit,2023-2024,Monthly electricity bill
+V003,2024-01-25,100000,School Account,Fee,Student Fees,,Income,Bank Transfer,2023-2024,Student fees collected

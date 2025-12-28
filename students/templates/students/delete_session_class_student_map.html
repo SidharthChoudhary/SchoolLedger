@@ -1,0 +1,26 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Delete Session Class Student Map{% endblock %}
+
+{% block content %}
+
+<h2>Delete Session Class Student Mapping</h2>
+
+<div class="card" style="margin-bottom:20px;">
+  <p style="margin-bottom: 15px;">Are you sure you want to delete this mapping?</p>
+  
+  <div style="padding: 15px; background: #f9f9f9; border-radius: 4px; margin-bottom: 15px;">
+    <p><strong>Session:</strong> {{ mapping.session.session }}</p>
+    <p><strong>Class:</strong> {{ mapping.student_class.class_code }}</p>
+    <p><strong>Student:</strong> {{ mapping.student.first_name }} {{ mapping.student.last_name }}</p>
+    <p><strong>SRN:</strong> {{ mapping.srn|default:"—" }}</p>
+  </div>
+  
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn-delete" style="margin-right: 10px;">Delete</button>
+    <a href="/students/manage-session-class-student-map/">Cancel</a>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "website/base.html" %}
+{% load student_filters %}
+{% block title %}Year/Class View{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Year/Class View</h2>
+
+{% if all_classes %}
+  <div class="table-responsive card">
+    <table class="year-table">
+      <thead>
+        <tr>
+          <th>Class ID</th>
+          <th>Class Type</th>
+          <th>Age</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for school_class in all_classes %}
+        <tr>
+          <td class="sr-number">#{{ school_class.id }}</td>
+          <td>{{ school_class.class_name }}</td>
+          <td class="age">{{ school_class.age }} years</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+<div class="card">
+  <p style="text-align: center; padding: 30px;">No classes found.</p>
+</div>
+{% endif %}
+
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  .year-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .year-table thead {
+    background-color: #f8f9fa;
+  }
+  
+  .year-table th, .year-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .year-table th {
+    font-weight: bold;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  .year-table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .year-table td.sr-number {
+    text-align: center;
+    width: 100px;
+    font-weight: bold;
+  }
+  
+  .year-table td.age {
+    text-align: center;
+    width: 120px;
+  }
+</style>
+
+{% endblock %}

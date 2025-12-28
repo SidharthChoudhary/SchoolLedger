@@ -1,0 +1,164 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Salary Statement - {{ employee.name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 20px;">
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h1 style="margin: 0 0 10px 0;">Salary Statement (Transaction-Based)</h1>
+        <h2 style="margin: 0; font-weight: normal;">{{ employee.name }}</h2>
+        <p style="margin: 5px 0 0 0; font-size: 14px;">Employee ID: {{ employee.emp_no }}</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
+        <div style="background: #f0f7ff; border-left: 4px solid #2196F3; padding: 15px; border-radius: 4px;">
+            <div style="font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px;">Total Payable</div>
+            <div style="font-size: 24px; font-weight: bold; color: #2196F3;">{{ total_payable|floatformat:2 }}</div>
+        </div>
+        
+        <div style="background: #e8f5e9; border-left: 4px solid #4CAF50; padding: 15px; border-radius: 4px;">
+            <div style="font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px;">Total Paid</div>
+            <div style="font-size: 24px; font-weight: bold; color: #4CAF50;">{{ total_paid|floatformat:2 }}</div>
+        </div>
+        
+        <div style="background: {% if total_pending > 0 %}#fff3e0{% else %}#e8f5e9{% endif %}; border-left: 4px solid {% if total_pending > 0 %}#FF9800{% else %}#4CAF50{% endif %}; padding: 15px; border-radius: 4px;">
+            <div style="font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px;">Pending</div>
+            <div style="font-size: 24px; font-weight: bold; color: {% if total_pending > 0 %}#FF9800{% else %}#4CAF50{% endif %};">{{ total_pending|floatformat:2 }}</div>
+        </div>
+    </div>
+
+    <!-- Statement Table -->
+    <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background: #f5f5f5; border-bottom: 2px solid #ddd;">
+                <tr>
+                    <th style="padding: 15px; text-align: left; font-weight: 600;">Month</th>
+                    <th style="padding: 15px; text-align: right; font-weight: 600;">Payable</th>
+                    <th style="padding: 15px; text-align: right; font-weight: 600;">Paid</th>
+                    <th style="padding: 15px; text-align: right; font-weight: 600;">Pending</th>
+                    <th style="padding: 15px; text-align: center; font-weight: 600;">Status</th>
+                    <th style="padding: 15px; text-align: center; font-weight: 600;">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for month_data in statement %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px 15px;">{{ month_data.month }}</td>
+                    <td style="padding: 12px 15px; text-align: right;">{{ month_data.payable_total|floatformat:2 }}</td>
+                    <td style="padding: 12px 15px; text-align: right;">{{ month_data.paid_total|floatformat:2 }}</td>
+                    <td style="padding: 12px 15px; text-align: right; color: {% if month_data.pending > 0 %}#f44336{% else %}#4CAF50{% endif %}; font-weight: 600;">{{ month_data.pending|floatformat:2 }}</td>
+                    <td style="padding: 12px 15px; text-align: center;">
+                        <span style="display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;
+                        {% if month_data.status == 'Paid' %}
+                            background: #e8f5e9; color: #2e7d32;
+                        {% elif month_data.status == 'Partial' %}
+                            background: #fff3e0; color: #e65100;
+                        {% else %}
+                            background: #ffebee; color: #c62828;
+                        {% endif %}
+                        ">{{ month_data.status }}</span>
+                    </td>
+                    <td style="padding: 12px 15px; text-align: center;">
+                        <button onclick="toggleDetails('month-{{ month_data.month }}')" style="background: none; border: none; color: #2196F3; cursor: pointer; text-decoration: underline; font-size: 12px;">View</button>
+                    </td>
+                </tr>
+                
+                <!-- Payable Entries Detail Row -->
+                <tr id="month-{{ month_data.month }}" style="display: none; background: #f9f9f9;">
+                    <td colspan="6" style="padding: 15px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                            <!-- Payable Entries -->
+                            <div>
+                                <h4 style="margin-top: 0; color: #2196F3; border-bottom: 2px solid #2196F3; padding-bottom: 8px;">Payable Entries (Due)</h4>
+                                {% if month_data.payable_entries %}
+                                    <table style="width: 100%; font-size: 13px;">
+                                        <tr style="border-bottom: 1px solid #ddd;">
+                                            <th style="text-align: left; padding: 8px 0;">Type</th>
+                                            <th style="text-align: right; padding: 8px 0;">Amount</th>
+                                        </tr>
+                                        {% for entry in month_data.payable_entries %}
+                                        <tr style="border-bottom: 1px solid #eee;">
+                                            <td style="padding: 8px 0;">
+                                                <strong>{{ entry.amount_type|title }}</strong>
+                                                {% if entry.note %}<br><small style="color: #666;">{{ entry.note }}</small>{% endif %}
+                                            </td>
+                                            <td style="text-align: right; padding: 8px 0;">{{ entry.amount|floatformat:2 }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr style="background: #f0f7ff; font-weight: 600;">
+                                            <td style="padding: 10px 0;">Subtotal</td>
+                                            <td style="text-align: right; padding: 10px 0;">{{ month_data.payable_total|floatformat:2 }}</td>
+                                        </tr>
+                                    </table>
+                                {% else %}
+                                    <p style="color: #999; font-style: italic;">No payable entries for this month</p>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Paid Entries -->
+                            <div>
+                                <h4 style="margin-top: 0; color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 8px;">Paid Entries (Actual Payments)</h4>
+                                {% if month_data.paid_entries %}
+                                    <table style="width: 100%; font-size: 13px;">
+                                        <tr style="border-bottom: 1px solid #ddd;">
+                                            <th style="text-align: left; padding: 8px 0;">Date</th>
+                                            <th style="text-align: center; padding: 8px 0;">Voucher</th>
+                                            <th style="text-align: right; padding: 8px 0;">Amount</th>
+                                        </tr>
+                                        {% for entry in month_data.paid_entries %}
+                                        <tr style="border-bottom: 1px solid #eee;">
+                                            <td style="padding: 8px 0;">{{ entry.date|date:"d M Y" }}</td>
+                                            <td style="text-align: center; padding: 8px 0;">
+                                                <small style="background: #e3f2fd; padding: 2px 6px; border-radius: 3px;">{{ entry.voucher_number }}</small>
+                                            </td>
+                                            <td style="text-align: right; padding: 8px 0;">{{ entry.amount|floatformat:2 }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr style="background: #e8f5e9; font-weight: 600;">
+                                            <td colspan="2" style="padding: 10px 0;">Subtotal</td>
+                                            <td style="text-align: right; padding: 10px 0;">{{ month_data.paid_total|floatformat:2 }}</td>
+                                        </tr>
+                                    </table>
+                                {% else %}
+                                    <p style="color: #999; font-style: italic;">No payments made this month</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="padding: 30px; text-align: center; color: #999;">
+                        No salary data available for this employee
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="{% url 'employees_home' %}" style="display: inline-block; padding: 10px 20px; background: #2196F3; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px;">Back to Employees</a>
+        <button onclick="window.print()" style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 4px; cursor: pointer;">Print Statement</button>
+    </div>
+</div>
+
+<script>
+function toggleDetails(id) {
+    const element = document.getElementById(id);
+    if (element.style.display === 'none') {
+        element.style.display = 'table-row';
+    } else {
+        element.style.display = 'none';
+    }
+}
+
+@media print {
+    button { display: none; }
+    .container { margin: 0; }
+}
+</script>
+{% endblock %}

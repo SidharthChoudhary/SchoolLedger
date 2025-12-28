@@ -1,0 +1,801 @@
+:root{
+  --sidebar-w: 345px;
+  --topbar-h: 110px;
+
+  --teal-900: #0b3b3b;
+  --teal-800: #0f4b4b;
+  --teal-700: #146060;
+
+  --gold: #d4af37;
+  --bg: #eef2f7;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --border: rgba(0,0,0,0.08);
+}
+
+*{ box-sizing:border-box; }
+html, body{ height:100%; }
+body{
+  margin:0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Global heading styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+p, div, span, label, a {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+}
+
+/* ===== Top Bar ===== */
+.topbar{
+  position: fixed;
+  top:0; left:0; right:0;
+  height: var(--topbar-h);
+  background: linear-gradient(135deg, var(--teal-900) 0%, var(--teal-800) 100%);
+  border-bottom: 3px solid var(--gold);
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.topbar-inner{
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 0 24px;
+  gap: 20px;
+}
+
+.topbar-center{
+  flex: 1;
+  text-align:center;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.school-title{
+  margin:0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+.school-tagline{
+  margin: 0 0 3px 0;
+  font-size: 13px;
+  opacity: 0.95;
+  font-style: italic;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.2px;
+}
+
+.school-address{
+  margin: 0 0 3px 0;
+  font-size: 12px;
+  opacity: 0.90;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.2px;
+}
+
+.topbar-datetime{
+  color:#fff;
+  font-size:12px;
+  opacity:0.88;
+  white-space: nowrap;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.2px;
+}
+
+.topbar-datetime i{
+  margin-right: 5px;
+  color: var(--gold);
+}
+
+/* Logo boxes */
+.logo-box{
+  width:60px; height:60px;
+  border-radius: 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(212,175,55,0.3);
+  transition: all 0.3s ease;
+}
+
+.logo-box:hover{
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(212,175,55,0.5);
+  transform: scale(1.05);
+}
+
+.logo-box img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  padding: 6px;
+}
+
+/* ===== Sidebar ===== */
+.sidebar{
+  position: fixed;
+  top: var(--topbar-h);
+  left: 0;
+  width: var(--sidebar-w);
+  height: calc(100vh - var(--topbar-h));
+  background: linear-gradient(180deg, var(--teal-900), var(--teal-800));
+  color: #fff;
+  padding: 16px 0;
+  overflow-y: auto;
+  z-index: 900;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+.sidebar .section-title{
+  margin: 16px 20px 12px;
+  font-size: 12px;
+  opacity: 0.85;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+}
+
+.nav-link{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+  padding: 11px 20px;
+  margin: 2px 0;
+  text-decoration:none;
+  color: rgba(255,255,255,0.9);
+  border: none;
+  background: transparent;
+  transition: background .2s ease, color .2s ease;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+}
+
+.nav-link i{
+  width: 18px;
+  text-align:center;
+  opacity: 0.85;
+  font-size: 15px;
+}
+
+.nav-link:hover{
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+.nav-link.active{
+  background: rgba(76, 175, 200, 0.25);
+  color: #fff;
+  border-left: 3px solid #4cafca;
+  padding-left: 17px;
+}
+
+.nav-link.disabled{
+  opacity: 0.55;
+  pointer-events:none;
+}
+
+/* Collapsible menu styles */
+.nav-group{
+  margin: 0;
+}
+
+.nav-toggle{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  padding: 11px 20px;
+  gap: 14px;
+}
+
+.nav-toggle .toggle-icon{
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  margin-left: auto;
+}
+
+.nav-submenu{
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: rgba(0,0,0,0.15);
+}
+
+.nav-submenu.show{
+  max-height: 500px;
+}
+
+.nav-subitem{
+  padding-left: 40px !important;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.nav-subitem:hover{
+  opacity: 1;
+}
+
+
+
+/* ===== Main content ===== */
+.main{
+  margin-top: var(--topbar-h);
+  margin-left: var(--sidebar-w);
+  padding: 22px 26px;
+  min-height: calc(100vh - var(--topbar-h));
+}
+
+.content-card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  padding: 18px;
+}
+
+/* Simple “dashboard card” style (use later) */
+.kpi-row{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.kpi{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+/* Forms */
+label{ 
+  font-weight: 600; 
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+input, select, textarea{
+  width:100%;
+  padding:10px;
+  border: 1px solid rgba(0,0,0,0.18);
+  border-radius: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+input:focus, select:focus, textarea:focus{
+  outline:none;
+  border-color: rgba(20,96,96,0.7);
+  box-shadow: 0 0 0 3px rgba(20,96,96,0.15);
+}
+button{
+  padding: 10px 14px;
+  border:0;
+  border-radius: 12px;
+  cursor:pointer;
+  font-weight: 600;
+  background: var(--teal-700);
+  color:#fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+}
+button:hover{ background: var(--teal-800); }
+
+/* Tables */
+table{ 
+  width:100%; 
+  border-collapse: collapse;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+}
+th{
+  text-align:left;
+  padding: 10px;
+  background: #f3f6fb;
+  border-bottom: 1px solid var(--border);
+  color: #111827;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+td{
+  padding: 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+tr:hover td{ background: #fafcff; }
+
+/* Footer */
+.footer{
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Responsive */
+@media (max-width: 900px){
+  .topbar-center{ text-align:left; }
+  .sidebar{ width: 220px; }
+  .main{ margin-left: 220px; }
+}
+@media (max-width: 720px){
+  .sidebar{ display:none; }
+  .main{ margin-left: 0; }
+}
+
+/* ===== One-row data entry grid (Excel-like) ===== */
+.entry-grid{
+  display: grid;
+  grid-template-columns:
+    140px   /* Voucher */
+    140px   /* Date */
+    120px   /* Amount */
+    280px   /* Remark */
+    160px   /* Name */
+    140px   /* Major Head */
+    160px   /* Head */
+    160px   /* Sub Head */
+    100px;  /* Save */
+  gap: 10px;
+  align-items: end;
+}
+
+.entry-grid .field label{
+  display:block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.entry-grid .field input,
+.entry-grid .field select,
+.entry-grid .field textarea{
+  height: 40px;
+}
+
+/* keep remark single-line (not huge textarea) */
+.entry-grid .field textarea{
+  resize: none;
+  padding-top: 9px;
+  overflow: hidden;
+}
+
+/* Make Remark and Name a bit flexible if needed */
+.entry-grid .field-wide{
+  min-width: 240px;
+}
+
+.entry-grid .field-btn button{
+  width: 100%;
+  height: 40px;
+}
+
+/* Responsive: wrap into 2 rows on smaller screens */
+@media (max-width: 1300px){
+  .entry-grid{
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+  }
+}
+@media (max-width: 900px){
+  .entry-grid{
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+}
+td.amount {
+  text-align: right;
+  font-weight: 700;
+}
+.amount::before {
+  content: "₹ ";
+  font-weight: 400;
+}
+
+table {
+  border: 1px solid rgba(0,0,0,0.12);
+}
+
+th, td {
+  border-right: 1px solid rgba(0,0,0,0.08);
+}
+
+tr td:last-child, tr th:last-child {
+  border-right: none;
+}
+
+th, td {
+  padding: 8px 10px;
+}
+
+.entry-grid .field-btn button{
+  height: 40px;
+  border-radius: 12px;
+}
+.edit-actions{
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+.btn-cancel{
+  margin-left: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #e9ecef;
+  color: #111;
+  text-decoration: none;
+  font-weight: 700;
+}
+.btn-cancel:hover{
+  background: #dde2e6;
+}
+.entry-grid .field-btn button{
+  white-space: nowrap;
+}
+.editing-row td{
+  background: rgba(212,175,55,0.18) !important;
+  font-weight: 600;
+}
+.editing-row {
+  background: #fffbe6;
+  border-radius: 10px;
+  padding: 8px;
+}
+/* Center + limit width */
+.employee-form-wrapper {
+  max-width: 900px;        /* controls overall form width */
+  margin: 0 auto;          /* center horizontally */
+}
+
+/* Form layout */
+.employee-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Rows: 2 columns */
+.employee-form .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Individual field */
+.employee-form .field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Full-width fields like Address */
+.employee-form .field-wide {
+  grid-column: span 2;
+}
+
+/* Inputs should not stretch visually */
+.employee-form input,
+.employee-form select,
+.employee-form textarea {
+  max-width: 100%;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .employee-form-wrapper {
+    max-width: 100%;
+  }
+
+  .employee-form .row {
+    grid-template-columns: 1fr;
+  }
+
+  .employee-form .field-wide {
+    grid-column: span 1;
+  }
+}
+.employee-form-wrapper {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.employee-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.employee-form .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.employee-form .field {
+  display: flex;
+  flex-direction: column;
+}
+
+.employee-form .field-wide {
+  grid-column: span 2;
+}
+
+@media (max-width: 900px) {
+  .employee-form-wrapper {
+    max-width: 100%;
+  }
+  .employee-form .row {
+    grid-template-columns: 1fr;
+  }
+  .employee-form .field-wide {
+    grid-column: span 1;
+  }
+}
+
+.form-section {
+  margin: 18px 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f766e;
+}
+.employee-form .field label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.form-section {
+  margin: 22px 0 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.employee-form .field label {
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.actions {
+  white-space: nowrap;
+}
+
+.actions a {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  text-decoration: none;
+  margin-right: 6px;
+}
+
+.btn-edit {
+  background: #d3d3d3;
+  color: #333333;
+}
+
+.btn-edit:hover {
+  background: #b8b8b8;
+}
+
+.btn-view {
+  background: #d3d3d3;
+  color: #333333;
+}
+
+.btn-view:hover {
+  background: #b8b8b8;
+}
+
+.btn-delete {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.btn-delete:hover {
+  background: #fecaca;
+}
+.status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.Active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.Inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+table tr:hover {
+  background: #f8fafc;
+}
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #e6f4f1;
+  color: #0f5c56;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #b7ddd6;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #d3efe9;
+  border-color: #9fd0c7;
+}
+
+/* Ghost button: transparent with border */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: transparent;
+  color: #0f766e;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid #0f766e;
+  transition: all 0.2s ease;
+}
+
+.btn-ghost:hover {
+  background: #f0fdfc;
+  border-color: #0d9488;
+  color: #0d9488;
+}
+
+/* Primary button: distinct blue with darker hover */
+.btn-primary{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #2563eb;       /* blue-600 */
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid #1d4ed8;  /* blue-700 */
+  transition: all 0.2s ease;
+}
+.btn-primary:hover{
+  background: #1e40af;        /* blue-800 */
+  border-color: #1e3a8a;      /* blue-900 */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+td.actions {
+  white-space: nowrap;
+  text-align: left;
+}
+
+td.actions .sep {
+  margin: 0 8px;
+  opacity: 0.6;
+}
+/* --- Expense entry row: responsive grid (prevents overflow) --- */
+.entry-grid{
+  display: grid;
+  gap: 12px;
+  align-items: end;
+
+  /* This is the key: it auto-wraps columns instead of overflowing */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+/* inputs should never push outside */
+.entry-grid .field input,
+.entry-grid .field select,
+.entry-grid .field textarea{
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Remark can be wider on large screens, but will still wrap on small screens */
+.entry-grid .field-wide{
+  grid-column: span 2;
+}
+
+/* Save button stays neat and doesn't overflow */
+.entry-grid .field-btn{
+  grid-column: span 1;
+  justify-self: end;
+  min-width: 120px;
+}
+
+/* Optional: on smaller screens make Remark full width */
+@media (max-width: 1100px){
+  .entry-grid .field-wide{ grid-column: span 1; }
+  .entry-grid .field-btn{ justify-self: start; }
+}
+
+/* 1) If topbar is fixed/sticky, reserve space for it */
+.topbar {
+  position: fixed;         /* or keep if you already have it */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* 2) Push sidebar + main content below the topbar */
+.sidebar,
+.main {
+  padding-top: 25px;      /* adjust this number to match your topbar height */
+}
+
+/* Optional: avoid double padding if main already has some */
+.main {
+  box-sizing: border-box;
+}
+
+/* ===== Fancy selector cards for Statement Type ===== */
+.fancy-card{
+  display:block;
+  padding: 20px;
+  border-radius: 14px;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+.fancy-card .title{ font-size: 20px; font-weight: 800; margin: 0 0 6px; }
+.fancy-card .desc{ margin:0; color: rgba(255,255,255,0.92); font-weight: 500; }
+.fancy-card:hover{ transform: translateY(-3px); box-shadow: 0 16px 36px rgba(0,0,0,0.22); filter: saturate(1.1); }
+
+/* Icons inside fancy cards */
+.fancy-card .title i{
+  margin-right: 8px;
+  opacity: 0.95;
+}
+
+/* Color variants */
+.fancy-card.blue{ background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
+.fancy-card.blue:hover{ background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); }
+
+.fancy-card.green{ background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
+.fancy-card.green:hover{ background: linear-gradient(135deg, #059669 0%, #065f46 100%); }
+
+.fancy-card.purple{ background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+.fancy-card.purple:hover{ background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); }
+
+.fancy-card.amber{ background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); }
+.fancy-card.amber:hover{ background: linear-gradient(135deg, #d97706 0%, #92400e 100%); }
+
+.fancy-card.rose{ background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%); }
+.fancy-card.rose:hover{ background: linear-gradient(135deg, #e11d48 0%, #9f1239 100%); }
+
+.fancy-card.cyan{ background: linear-gradient(135deg, #06b6d4 0%, #0e7490 100%); }
+.fancy-card.cyan:hover{ background: linear-gradient(135deg, #0891b2 0%, #155e75 100%); }
+.fancy-card.orange{ background: linear-gradient(135deg, #fcd34d 0%, #ca8a04 100%); }
+.fancy-card.orange:hover{ background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%); }
+
+.fancy-card.teal{ background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
+.fancy-card.teal:hover{ background: linear-gradient(135deg, #2dd4bf 0%, #0f766e 100%); }
+
+.fancy-card.pink{ background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); }
+.fancy-card.pink:hover{ background: linear-gradient(135deg, #f472b6 0%, #9d174d 100%); }

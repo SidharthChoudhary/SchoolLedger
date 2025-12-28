@@ -1,0 +1,7 @@
+Voucher_Number,Date,Amount,Major_Head,Head,Sub_Head,Ledger_Type,Payment_Type,Session,Details
+V001,2024-01-15,5000,Salary,Teacher,Poonam Gupta,Expense,Cash,2023-2024,Employee salary
+V002,2024-01-20,2000,Operations,Books,ABC Book Publishers,Expense,Credit,2023-2024,Books purchase
+V003,2024-01-25,1500,Transport,Fuel,Van Fuel,Expense,Cash,2023-2024,Transport fuel
+V004,2024-01-28,500,Operations,Maintenance,Office Maintenance,Expense,Cash,2023-2024,General maintenance
+V005,2024-02-01,10000,Salary,Principal,Mukesh Jodha,Expense,Cash,2023-2024,Employee salary
+I001,2024-02-05,100000,Fee,Student Fees,School,Income,Bank Transfer,2023-2024,Monthly fees

@@ -1,0 +1,175 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Fees Accounts{% endblock %}
+
+{% block content %}
+
+<h2 style="margin-top:0;">Fees Accounts</h2>
+
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Add / Edit Fees Account</h3>
+
+  <form method="post">
+    {% csrf_token %}
+    {% if editing_account %}
+      <input type="hidden" name="account_id_hidden" value="{{ editing_account.id }}">
+    {% endif %}
+
+    <div class="entry-grid">
+      <div class="field">
+        <label>Account Name</label>
+        {{ form.name }}
+      </div>
+
+      <div class="field">
+        <label>Register Page</label>
+        {{ form.register_page }}
+      </div>
+
+      <div class="field">
+        <label>Account Open Date</label>
+        {{ form.account_open }}
+      </div>
+
+      <div class="field">
+        <label>Account Status</label>
+        {{ form.account_status }}
+      </div>
+
+      <div class="field">
+        <label>Account Close Date</label>
+        {{ form.account_close }}
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit">{% if editing_account %}Update{% else %}Save{% endif %}</button>
+      </div>
+    </div>
+
+    {% if editing_account %}
+      <div style="margin-top:10px;"><a href="/students/fees-account/">Cancel Edit</a></div>
+    {% endif %}
+  </form>
+</div>
+
+<!-- Validate Account Names Panel -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Validate Account Names</h3>
+  
+  <p style="margin: 15px 0; color: #555;">
+    Update account name for primary account holders in the format: <strong>AccId-LastName FirstName-SRN-Acc_Register_page_Number</strong>
+  </p>
+  
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="validate">
+    <div style="margin-top: 15px;">
+      <button type="submit" onclick="return confirm('Are you sure you want to validate and update all account names?')">Validate Account Names</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <h3 class="form-section">Fees Accounts List</h3>
+
+  <div style="margin-bottom:20px;">
+    <form method="get" style="display:flex; gap:12px; align-items:end; flex-wrap:wrap;">
+      <div>
+        <label style="font-size:12px; font-weight:700;">Account ID</label>
+        <br>
+        <input type="text" name="account_id" placeholder="Account ID" value="{{ account_id_filter }}" style="height:40px;">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700;">Account Name</label>
+        <br>
+        <input type="text" name="name" placeholder="Account Name" value="{{ name_filter }}" style="height:40px;">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700;">Register Page</label>
+        <br>
+        <input type="text" name="register_page" placeholder="Register Page" value="{{ register_page_filter }}" style="height:40px;">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700;">Status</label>
+        <br>
+        <select name="status" style="height:40px;">
+          <option value="">All</option>
+          <option value="open" {% if status_filter == 'open' %}selected{% endif %}>Open</option>
+          <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>Closed</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700;">Open Date</label>
+        <br>
+        <input type="date" name="open_date" value="{{ open_date_filter }}" style="height:40px;">
+      </div>
+      <div>
+        <label style="font-size:12px; font-weight:700;">Close Date</label>
+        <br>
+        <input type="date" name="close_date" value="{{ close_date_filter }}" style="height:40px;">
+      </div>
+      <div>
+        <button type="submit" style="height:40px;">Apply</button>
+        <a href="/students/fees-account/" style="margin-left:10px;">Clear</a>
+      </div>
+    </form>
+  </div>
+
+  {% if accounts %}
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Account ID</th>
+        <th>Account Name</th>
+        <th>Register Page</th>
+        <th>Open Date</th>
+        <th>Status</th>
+        <th>Close Date</th>
+        <th>Actions</th>
+      </tr>
+
+      {% for account in accounts %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td><strong>{{ account.account_id }}</strong></td>
+        <td>{{ account.name }}</td>
+        <td>{{ account.register_page|default:"—" }}</td>
+        <td>{{ account.account_open|date:"d M Y" }}</td>
+        <td>
+          <span class="status {{ account.account_status }}">
+            {{ account.get_account_status_display }}
+          </span>
+        </td>
+        <td>
+          {% if account.account_close %}
+            {{ account.account_close|date:"d M Y" }}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td class="actions">
+          <a class="btn-edit" href="/students/fees-account/?edit={{ account.id }}">Edit</a>
+          <a class="btn-delete"
+             onclick="return confirm('Delete this fees account?')"
+             href="{% url 'delete_fees_account' account.pk %}">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No fees accounts yet.</p>
+  {% endif %}
+</div>
+
+<script>
+  // Show validation completed pop-up
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('validation_complete')) {
+    alert('Validation completed successfully!');
+    // Remove the query parameter from URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
+
+{% endblock %}

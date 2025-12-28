@@ -1,0 +1,63 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Delete Fees Account - Devki Public School{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">
+                    <i class="fa-solid fa-exclamation-triangle"></i> Confirm Deletion
+                </h4>
+                <p class="mb-0">
+                    Are you sure you want to delete this fees account?
+                </p>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <p><strong>Account ID:</strong> {{ account.account_id }}</p>
+                    <p><strong>Name:</strong> {{ account.name }}</p>
+                    <p><strong>Open Date:</strong> {{ account.account_open|date:"d M Y" }}</p>
+                    <p class="mb-0"><strong>Status:</strong> 
+                        <span class="badge {% if account.account_status == 'open' %}bg-success{% else %}bg-danger{% endif %}">
+                            {{ account.get_account_status_display }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="alert alert-warning" role="alert">
+                <i class="fa-solid fa-info-circle"></i> This action cannot be undone. Please be careful.
+            </div>
+
+            <form method="post" style="display:flex; gap:8px;">
+                {% csrf_token %}
+                <a href="{% url 'view_fees_accounts' %}" class="btn-secondary" style="flex:1;">
+                    <i class="fa-solid fa-arrow-left"></i> Cancel
+                </a>
+                <button type="submit" style="background: #dc2626; flex:1;">
+                    <i class="fa-solid fa-trash"></i> Delete Account
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-left: 4px solid #dc3545;
+    }
+    
+    .alert-danger {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+    }
+</style>
+{% endblock %}

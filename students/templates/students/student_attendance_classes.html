@@ -1,0 +1,73 @@
+{% extends "website/base.html" %}
+{% block title %}Student Attendance{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Student Attendance</h2>
+
+<div class="card" style="padding: 20px; margin-bottom: 20px;">
+  <p class="muted">Choose a class to mark attendance for that day.</p>
+  <div class="class-grid">
+    {% if classes_with_status %}
+      {% for item in classes_with_status %}
+        <a href="{% url 'student_attendance_register' item.class.id %}" class="class-tile {% if item.has_submitted %}submitted{% else %}not-submitted{% endif %}">
+          <div class="class-title">{{ item.class.class_code|default:item.class.class_name }}</div>
+          <div class="class-sub">Age: {{ item.class.age }}</div>
+        </a>
+      {% endfor %}
+    {% else %}
+      <p class="alert alert-warning">No classes configured yet.</p>
+    {% endif %}
+  </div>
+  </div>
+
+  <style>
+  .class-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+  }
+
+  .class-tile {
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #1a1a1a;
+    background-color: #fff;
+    box-shadow: 0 2px 6px rgba(15, 79, 79, 0.08);
+  }
+
+  .class-tile.submitted {
+    background-color: #c8e6c9;
+    border-color: #81c784;
+  }
+
+  .class-tile.not-submitted {
+    background-color: #ffcdd2;
+    border-color: #ef9a9a;
+  }
+
+  .class-tile:hover {
+    border-color: #0f4f4f;
+  }
+
+  .class-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  .class-sub {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 6px;
+  }
+
+  .muted {
+    margin-bottom: 10px;
+    color: #555;
+  }
+  </style>
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "website/base.html" %}
+{% block title %}Employee Register{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Employee Register</h2>
+
+<h3 class="form-section">Filter by Session</h3>
+<form method="get" style="margin: 10px 0 20px; display:flex; gap:12px; align-items:end;">
+    <div>
+        <label style="font-size:12px; font-weight:700;">Session</label>
+        <br>
+        <select name="session" style="height:40px;">
+            {% for s in session_choices %}
+                <option value="{{ s.id }}" {% if selected_session == s.id|stringformat:"s" %}selected{% endif %}>
+                    {{ s.session }} ({{ s.status }})
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" style="margin-right:8px;">Filter</button>
+    <a href="{% url 'employee_register' %}" class="btn-secondary">Clear</a>
+</form>
+
+<h3 class="form-section">{% if editing_register %}Edit{% else %}Add New{% endif %} Register Entry</h3>
+
+<form method="POST" style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap:18px; margin-bottom:30px;">
+    {% csrf_token %}
+    {% if editing_register %}
+        <input type="hidden" name="register_id" value="{{ editing_register.id }}">
+    {% endif %}
+
+    <div>
+        <label style="font-size:12px; font-weight:700;">Session</label>
+        <br>
+        {{ form.session }}
+    </div>
+
+    <div>
+        <label style="font-size:12px; font-weight:700;">Employee Name</label>
+        <br>
+        {{ form.employee }}
+    </div>
+
+        <div>
+            <label style="font-size:12px; font-weight:700;">Month</label>
+            <br>
+            {{ form.month }}
+        </div>
+
+    <div>
+        <label style="font-size:12px; font-weight:700;">Paid Days</label>
+        <br>
+        {{ form.paid_days }}
+    </div>
+
+    <div>
+        <label style="font-size:12px; font-weight:700;">Payable Salary</label>
+        <br>
+        {{ form.payable_salary }}
+    </div>
+
+    <div style="grid-column: span 5; display:flex; gap:10px;">
+        <button type="submit" class="btn-primary">
+            {% if editing_register %}Update{% else %}Add{% endif %} Entry
+        </button>
+        {% if editing_register %}
+            <a href="{% url 'employee_register' %}" class="btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center; padding:0 18px;">
+                Cancel Edit
+            </a>
+        {% endif %}
+    </div>
+</form>
+
+<h3 class="form-section">Register Entries</h3>
+
+<table style="width:100%; border-collapse: collapse; margin-top:10px;">
+    <thead>
+        <tr style="background:#f3f4f6; text-align:left;">
+            <th style="padding:12px; border:1px solid #e5e7eb;">Session</th>
+            <th style="padding:12px; border:1px solid #e5e7eb;">Employee Name</th>
+            <th style="padding:12px; border:1px solid #e5e7eb;">Employee ID</th>
+            <th style="padding:12px; border:1px solid #e5e7eb;">Month</th>
+            <th style="padding:12px; border:1px solid #e5e7eb;">Paid Days</th>
+            <th style="padding:12px; border:1px solid #e5e7eb;">Payable Salary</th>
+            <th style="padding:12px; border:1px solid #e5e7eb;">Base Salary/Month</th>
+            <th style="padding:12px; border:1px solid #e5e7eb;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reg in registers %}
+        <tr style="{% if editing_register.id == reg.id %}background:#fef3c7;{% endif %}">
+            <td style="padding:10px; border:1px solid #e5e7eb;">{{ reg.session.session }}</td>
+            <td style="padding:10px; border:1px solid #e5e7eb;">{{ reg.employee.name }}</td>
+            <td style="padding:10px; border:1px solid #e5e7eb;">{{ reg.employee.emp_no }}</td>
+            <td style="padding:10px; border:1px solid #e5e7eb;">{{ reg.month_display }}</td>
+            <td style="padding:10px; border:1px solid #e5e7eb;">{{ reg.paid_days|floatformat:"-2" }}</td>
+            <td style="padding:10px; border:1px solid #e5e7eb;">₹{{ reg.payable_salary|floatformat:2 }}</td>
+            <td style="padding:10px; border:1px solid #e5e7eb;">₹{{ reg.employee.base_salary_per_month }}</td>
+            <td style="padding:10px; border:1px solid #e5e7eb;" class="actions">
+                <a class="btn-edit" href="?edit={{ reg.id }}">Edit</a>
+                <a class="btn-delete"
+                   onclick="return confirm('Delete this register entry?')"
+                   href="{% url 'delete_register' reg.id %}">Delete</a>
+                <a class="btn-edit" href="{% url 'employee_monthly_statement' %}?employee={{ reg.employee.id }}&session={{ reg.session.id|default:'' }}&month={{ reg.month }}" style="margin-left:8px;">Monthly Statement</a>
+                <a class="btn-edit" href="{% url 'pay_slip_view' %}?employee={{ reg.employee.id }}&session={{ reg.session.id|default:'' }}&month={{ reg.month }}">Pay Slip</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+                <td colspan="9" style="padding:20px; text-align:center; border:1px solid #e5e7eb; color:#9ca3af;">
+                No register entries found
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

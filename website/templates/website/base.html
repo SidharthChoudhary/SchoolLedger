@@ -1,0 +1,306 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Devki Public School{% endblock %}</title>
+
+  <!-- Font Awesome icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="stylesheet" href="{% static 'website/base.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'website/favicon.png' %}?v=2">
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="logo-box">
+        <img src="{% static 'website/logo_left.png' %}" alt="Ganesh Ji">
+      </div>
+
+      <div class="topbar-center">
+        <h1 class="school-title">DEVKI PUBLIC SCHOOL</h1>
+        <p class="school-tagline">The new horizon of school education</p>
+        <p class="school-address">Tibariyan, Hingonia Road, Lalpur, Jobner | +91-9413442332</p>
+        <div class="topbar-datetime"><i class="fas fa-calendar"></i> {% now "l, d M Y" %} | <i class="fas fa-clock"></i> {% now "H:i" %}</div>
+      </div>
+
+      <div class="logo-box" style="position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
+        <img src="{% static 'website/logo_right.png' %}" alt="School Logo">
+        
+        {% if user.is_authenticated %}
+          <div class="user-menu" style="position: relative;">
+            <button class="user-button" onclick="toggleUserMenu()" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; transition: background 0.3s;">
+              {% if user.profile.profile_image %}
+                <img src="{{ user.profile.profile_image.url }}" alt="{{ user.username }}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+              {% else %}
+                <i class="fas fa-user-circle" style="font-size: 24px;"></i>
+              {% endif %}
+              <span style="font-size: 13px; font-weight: 600;">{{ user.username }}</span>
+              <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+            </button>
+            <div id="user-dropdown" class="user-dropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; min-width: 200px; margin-top: 8px;">
+              <a href="{% url 'profile' %}" style="display: block; padding: 12px 16px; color: #333; text-decoration: none; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                <i class="fas fa-user" style="width: 16px; margin-right: 8px;"></i> My Profile
+              </a>
+              <a href="{% url 'edit_profile' %}" style="display: block; padding: 12px 16px; color: #333; text-decoration: none; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                <i class="fas fa-edit" style="width: 16px; margin-right: 8px;"></i> Edit Profile
+              </a>
+              {% if user.profile.has_any_role|default:False %}
+              <a href="{% url 'user_list' %}" style="display: block; padding: 12px 16px; color: #333; text-decoration: none; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                <i class="fas fa-users" style="width: 16px; margin-right: 8px;"></i> Manage Users
+              </a>
+              {% endif %}
+              <a href="/admin/" style="display: block; padding: 12px 16px; color: #333; text-decoration: none; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">
+                <i class="fas fa-cog" style="width: 16px; margin-right: 8px;"></i> Django Admin
+              </a>
+              <a href="/admin/logout/" style="display: block; padding: 12px 16px; color: #d32f2f; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#ffebee'" onmouseout="this.style.background='white'">
+                <i class="fas fa-sign-out-alt" style="width: 16px; margin-right: 8px;"></i> Logout
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+  <div class="section-title">Navigation</div>
+
+  <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+    <i class="fa-solid fa-house"></i> Home
+  </a>
+
+<div class="nav-group">
+  <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'admin-menu')">
+    <i class="fa-solid fa-calendar-days"></i> Admin
+    <i class="fa-solid fa-chevron-down toggle-icon"></i>
+  </button>
+  <div id="admin-menu" class="nav-submenu">
+    <a class="nav-link nav-subitem {% if '/ledger-expense/sessions/' in request.path %}active{% endif %}"
+       href="/ledger-expense/sessions/">
+      <i class="fa-solid fa-calendar-days"></i> Sessions
+    </a>
+    <a class="nav-link nav-subitem {% if '/students/classes/' in request.path %}active{% endif %}"
+       href="/students/classes/">
+      <i class="fa-solid fa-layer-group"></i> Classes
+    </a>
+    <a class="nav-link nav-subitem {% if '/students/promote-session/' in request.path %}active{% endif %}"
+       href="/students/promote-session/">
+      <i class="fa-solid fa-arrow-up"></i> Promote Session
+    </a>
+    <a class="nav-link nav-subitem {% if '/ledger-expense/fees-structure/' in request.path %}active{% endif %}"
+       href="/ledger-expense/fees-structure/">
+      <i class="fa-solid fa-money-bill"></i> Fees Structure
+    </a>
+     <a class="nav-link nav-subitem {% if '/students/attendance/' in request.path %}active{% endif %}"
+       href="/students/attendance/">
+      <i class="fa-solid fa-user-graduate"></i> Student Attendance
+     </a>
+     <a class="nav-link nav-subitem {% if '/students/attendance-records/' in request.path %}active{% endif %}"
+       href="/students/attendance-records/">
+      <i class="fa-solid fa-table-list"></i> Student Attendance Records
+     </a>
+    <a class="nav-link nav-subitem {% if '/employees/attendance-rally/' in request.path %}active{% endif %}"
+       href="/employees/attendance-rally/">
+      <i class="fa-solid fa-clipboard-check"></i> Employee Attendance
+    </a>
+    <a class="nav-link nav-subitem {% if '/employees/attendance/' in request.path %}active{% endif %}"
+       href="/employees/attendance/">
+      <i class="fa-solid fa-calendar-check"></i> Attendance Records
+    </a>
+    <a class="nav-link nav-subitem {% if '/employees/manual-salary-data/' in request.path %}active{% endif %}"
+       href="/employees/manual-salary-data/">
+      <i class="fa-solid fa-hand-holding-dollar"></i> Manual Salary Data
+    </a>
+  </div>
+</div>
+
+<div class="nav-group">
+  <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'ledger-menu')">
+    <i class="fa-solid fa-book"></i> Ledger
+    <i class="fa-solid fa-chevron-down toggle-icon"></i>
+  </button>
+  <div id="ledger-menu" class="nav-submenu">
+    {% if user.is_authenticated and user.is_superuser or user.profile.has_any_role|default:False %}
+    <a class="nav-link nav-subitem {% if request.path == '/ledger-expense/' %}active{% endif %}"
+       href="/ledger-expense/">
+      <i class="fa-solid fa-plus"></i> Ledger Expense
+    </a>
+    <a class="nav-link nav-subitem {% if request.path == '/ledger-income/' %}active{% endif %}"
+       href="/ledger-income/">
+      <i class="fa-solid fa-plus"></i> Ledger Income
+    </a>
+    {% endif %}
+    <a class="nav-link nav-subitem {% if '/ledger-expense/heads/' in request.path %}active{% endif %}"
+       href="/ledger-expense/heads/">
+      <i class="fa-solid fa-layer-group"></i> Ledger Heads
+    </a>
+  </div>
+</div>
+
+<div class="nav-group">
+  <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'statements-menu')">
+    <i class="fa-solid fa-file-invoice-dollar"></i> Statements Ledger
+    <i class="fa-solid fa-chevron-down toggle-icon"></i>
+  </button>
+  <div id="statements-menu" class="nav-submenu">
+    {% if user.is_authenticated and user.is_superuser or user.profile.is_admin|default:False %}
+    <a class="nav-link nav-subitem {% if '/employees/salary-statement-full/' in request.path %}active{% endif %}"
+       href="/employees/salary-statement-full/">
+      <i class="fa-solid fa-receipt"></i> Employee Full Salary Statement
+    </a>
+    <a class="nav-link nav-subitem {% if '/employees/employees-salary-statement/' in request.path %}active{% endif %}"
+       href="/employees/employees-salary-statement/">
+      <i class="fa-solid fa-list"></i> Employees Salary Statement
+    </a>
+    <a class="nav-link nav-subitem {% if '/ledger-expense/session-ledger-report/' in request.path %}active{% endif %}"
+       href="/ledger-expense/session-ledger-report/">
+      <i class="fa-solid fa-chart-bar"></i> Session Ledger Report
+    </a>
+    {% else %}
+    <p style="padding: 12px 16px; color: #999; font-size: 12px;">Admin access required</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="nav-group">
+  <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'employees-menu')">
+    <i class="fa-solid fa-users"></i> Employees
+    <i class="fa-solid fa-chevron-down toggle-icon"></i>
+  </button>
+  <div id="employees-menu" class="nav-submenu">
+    <a class="nav-link nav-subitem {% if request.path == '/employees/' %}active{% endif %}"
+       href="/employees/">
+      <i class="fa-solid fa-user-plus"></i> Add Employees
+    </a>
+    <a class="nav-link nav-subitem {% if '/employees/view/' in request.path %}active{% endif %}"
+       href="/employees/view/">
+      <i class="fa-solid fa-eye"></i> View Employees
+    </a>
+    <a class="nav-link nav-subitem {% if '/employees/register/' in request.path %}active{% endif %}"
+       href="/employees/register/">
+      <i class="fa-solid fa-clipboard-check"></i> Employee Register
+    </a>
+    <a class="nav-link nav-subitem {% if '/employees/select-type/' in request.path %}active{% endif %}"
+       href="/employees/select-type/">
+      <i class="fa-solid fa-file-lines"></i> New Employee Statements
+    </a>
+  </div>
+</div>
+
+<div class="nav-group">
+  <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'students-menu')">
+    <i class="fa-solid fa-graduation-cap"></i> Students
+    <i class="fa-solid fa-chevron-down toggle-icon"></i>
+  </button>
+  <div id="students-menu" class="nav-submenu">
+    <a class="nav-link nav-subitem {% if '/students/add/' in request.path %}active{% endif %}"
+       href="/students/add/">
+      <i class="fa-solid fa-user-plus"></i> Add Students
+    </a>
+    <a class="nav-link nav-subitem {% if '/students/view/' in request.path %}active{% endif %}"
+       href="/students/view/">
+      <i class="fa-solid fa-eye"></i> View Pupils
+    </a>
+    <a class="nav-link nav-subitem {% if '/students/account/' in request.path %}active{% endif %}"
+       href="/students/account/">
+      <i class="fa-solid fa-receipt"></i> Student Account
+    </a>
+    <a class="nav-link nav-subitem {% if '/students/fees-account/' in request.path %}active{% endif %}"
+       href="/students/fees-account/">
+      <i class="fa-solid fa-wallet"></i> Fees Account
+    </a>
+    <a class="nav-link nav-subitem {% if '/students/link-fee-account/' in request.path %}active{% endif %}"
+       href="/students/link-fee-account/">
+      <i class="fa-solid fa-link"></i> Link Fee Account
+    </a>
+    <a class="nav-link nav-subitem {% if '/students/manage-session-class-student-map/' in request.path %}active{% endif %}"
+       href="/students/manage-session-class-student-map/">
+      <i class="fa-solid fa-sitemap"></i> Session Class Map
+    </a>
+  </div>
+</div>
+
+  <div class="section-title">Coming Soon</div>
+
+  <a class="nav-link disabled">
+    <i class="fa-solid fa-clipboard-user"></i> Attendance
+  </a>
+
+  <a class="nav-link disabled">
+    <i class="fa-solid fa-money-check-dollar"></i> Fees
+  </a>
+
+  <a class="nav-link disabled">
+    <i class="fa-solid fa-wallet"></i> Payroll
+  </a>
+
+  <a class="nav-link disabled">
+    <i class="fa-solid fa-message"></i> Chairman Message
+  </a>
+</aside>
+
+<script>
+function toggleMenu(event, menuId) {
+  event.preventDefault();
+  const menu = document.getElementById(menuId);
+  const button = event.currentTarget;
+  const icon = button.querySelector('.toggle-icon');
+  
+  menu.classList.toggle('show');
+  button.classList.toggle('active');
+  icon.style.transform = menu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+// Auto-expand menu if any submenu item is active
+document.addEventListener('DOMContentLoaded', function() {
+  const activeSubmenu = document.querySelector('.nav-submenu .nav-link.active');
+  if (activeSubmenu) {
+    const parent = activeSubmenu.closest('.nav-submenu');
+    if (parent) {
+      parent.classList.add('show');
+      const button = parent.previousElementSibling;
+      if (button) {
+        button.classList.add('active');
+        const icon = button.querySelector('.toggle-icon');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      }
+    }
+  }
+});
+
+// Toggle user menu
+function toggleUserMenu() {
+  const dropdown = document.getElementById('user-dropdown');
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+}
+
+// Close user menu when clicking outside
+document.addEventListener('click', function(event) {
+  const userMenu = document.querySelector('.user-menu');
+  if (userMenu && !userMenu.contains(event.target)) {
+    document.getElementById('user-dropdown').style.display = 'none';
+  }
+});
+</script>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="content-card">
+      {% block content %}{% endblock %}
+    </div>
+
+    <div class="footer">
+      © {% now "Y" %} Devki Public School, 35 Pradhan jiki dhani, Village Tibariya, Hingoia road, Lalpura stand, Jobner road, Jaipur
+    </div>
+  </main>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

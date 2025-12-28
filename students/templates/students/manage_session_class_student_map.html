@@ -1,0 +1,158 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Manage Session Class Student Map{% endblock %}
+
+{% block content %}
+
+<h2 style="margin-top:0;">New Student Admission To The Class</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <div style="padding: 12px; margin-bottom: 15px; border-radius: 4px; background: {% if message.tags %}{% if 'success' in message.tags %}#d1fae5; color: #065f46; border: 1px solid #6ee7b7{% elif 'warning' in message.tags %}#fef3c7; color: #92400e; border: 1px solid #fcd34d{% else %}#fee2e2; color: #991b1b; border: 1px solid #fecaca{% endif %}{% else %}#d1fae5; color: #065f46; border: 1px solid #6ee7b7{% endif %};">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!-- Panel 1 - Admit A New Student to The Class -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Admit a new student to a class register</h3>
+  
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="admit_student">
+    
+    <div class="entry-grid">
+      <div class="field">
+        <label>Student Name</label>
+        <select name="student" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Student --</option>
+          {% for student in students %}
+            <option value="{{ student.id }}" data-srn="{{ student.srn }}">{{ student.first_name }} {{ student.last_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Student Registration Number</label>
+        <input type="text" id="srn_display" readonly style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5;">
+      </div>
+
+      <div class="field">
+        <label>Class</label>
+        <select name="class" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Class --</option>
+          {% for class in classes %}
+            <option value="{{ class.id }}">{{ class.class_code }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Session</label>
+        <select name="session" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Session --</option>
+          {% for session in all_sessions %}
+            <option value="{{ session.id }}" {% if current_session.id == session.id %}selected{% endif %}>{{ session.session }} ({{ session.get_status_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit">Admit Student</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Panel 1 - Auto-populate SRN
+  const studentSelect = document.querySelector('select[name="student"]');
+  const srnDisplay = document.getElementById('srn_display');
+
+  studentSelect.addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    srnDisplay.value = selectedOption.dataset.srn || '';
+  });
+
+  // Panel 2 - Auto-populate New Class
+  const currentClassSelect = document.getElementById('current_class');
+  const newClassDisplay = document.getElementById('new_class_display');
+  const newClassInput = document.getElementById('new_class');
+
+  function updateNewClass() {
+    const currentClassId = currentClassSelect.value;
+    if (!currentClassId) {
+      newClassDisplay.value = '';
+      newClassInput.value = '';
+      return;
+    }
+
+    const currentClassOption = currentClassSelect.options[currentClassSelect.selectedIndex];
+    const currentClassText = currentClassOption.text;
+    
+    // Get current class ID and find next one
+    fetch(`/students/get-next-class/${currentClassId}/`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.next_class) {
+          newClassDisplay.value = data.next_class.class_code + ' (Age: ' + data.next_class.age + ')';
+          newClassInput.value = data.next_class.id;
+        } else {
+          newClassDisplay.value = 'No next class available';
+          newClassInput.value = '';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        newClassDisplay.value = 'Error loading next class';
+      });
+  }
+
+  currentClassSelect.addEventListener('change', updateNewClass);
+</script>
+
+<!-- Display existing mappings -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Session Class Student Map Records</h3>
+  
+  {% if existing_mappings %}
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Session</th>
+        <th>Class</th>
+        <th>Student Name</th>
+        <th>SRN</th>
+        <th>Promoted Date</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+
+      {% for mapping in existing_mappings %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ mapping.session.session }}</td>
+        <td>{{ mapping.student_class.class_code }}</td>
+        <td>{{ mapping.student.first_name }} {{ mapping.student.last_name }}</td>
+        <td>{{ mapping.srn|default:"—" }}</td>
+        <td>{{ mapping.promoted_date|default:"—" }}</td>
+        <td>{{ mapping.created_at|date:"Y-m-d" }}</td>
+        <td class="actions">
+          <a class="btn-edit" href="/students/manage-session-class-student-map/?edit={{ mapping.id }}">Edit</a>
+          <a class="btn-delete" 
+             onclick="return confirm('Delete this mapping?')"
+             href="/students/manage-session-class-student-map/delete/{{ mapping.id }}/">
+             Delete
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p style="padding: 20px; text-align: center; color: #666;">No mappings created yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "website/base.html" %}
+{% block title %}Delete Student{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Delete Student</h2>
+
+<div class="card" style="max-width: 500px;">
+  <div style="padding: 20px;">
+    <p style="font-size: 16px; margin-bottom: 20px;">
+      Are you sure you want to delete <strong>{{ student.name }}</strong>?
+    </p>
+    <p style="color: #666; margin-bottom: 30px;">
+      This action cannot be undone.
+    </p>
+    
+    <form method="post" style="display: flex; gap:8px;">
+      {% csrf_token %}
+      <button type="submit" style="background: #dc2626;">Yes, Delete</button>
+      <a href="{% url 'view_students' %}" class="btn-secondary">Cancel</a>
+    </form>
+  </div>
+</div>
+
+<style>
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #545b62;
+  }
+</style>
+
+{% endblock %}

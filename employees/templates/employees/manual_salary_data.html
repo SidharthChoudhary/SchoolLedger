@@ -1,0 +1,160 @@
+{% extends "website/base.html" %}
+{% block title %}Manual Salary Data{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Manual Salary Data</h2>
+
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Add / Edit Entry</h3>
+
+  <form method="post">
+    {% csrf_token %}
+    {% if editing_record %}
+      <input type="hidden" name="record_id" value="{{ editing_record.id }}">
+    {% endif %}
+
+    <div class="entry-grid">
+      <div class="field">
+        <label>Session</label>
+        {{ form.session }}
+      </div>
+
+      <div class="field">
+        <label>Employee</label>
+        {{ form.employee }}
+      </div>
+
+      <div class="field">
+        <label>Amount Type</label>
+        {{ form.amount_type }}
+      </div>
+
+      <div class="field">
+        <label>Amount</label>
+        {{ form.amount }}
+      </div>
+
+      <div class="field">
+        <label>Month</label>
+        {{ form.month }}
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit">{% if editing_record %}Update{% else %}Save{% endif %}</button>
+      </div>
+    </div>
+
+    <div class="field field-wide">
+      <label>Note</label>
+      {{ form.note }}
+    </div>
+
+    {% if editing_record %}
+      <div style="margin-top:10px;"><a href="/employees/manual-salary-data/">Cancel Edit</a></div>
+    {% endif %}
+  </form>
+</div>
+
+<!-- Employee Filter -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Filter Entries</h3>
+  <form method="get" style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 150px;">
+      <label>Session</label>
+      <select name="session" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        <option value="">All Sessions</option>
+        {% for sess in session_list %}
+          <option value="{{ sess }}" {% if sess == selected_session %}selected{% endif %}>
+            {{ sess }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="flex: 1; min-width: 200px;">
+      <label>Employee Name</label>
+      <select name="employee" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        <option value="">All Employees</option>
+        {% for emp_name in employee_list %}
+          <option value="{{ emp_name }}" {% if emp_name == selected_employee %}selected{% endif %}>
+            {{ emp_name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="flex: 1; min-width: 150px;">
+      <label>Month</label>
+      <select name="month" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        <option value="">All Months</option>
+        {% for month in month_list %}
+          <option value="{{ month }}" {% if month == selected_month %}selected{% endif %}>
+            {{ month }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" style="padding: 8px 16px; background: #0f4f4f; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      Filter
+    </button>
+    {% if selected_employee or selected_month or selected_session %}
+      <a href="/employees/manual-salary-data/" style="padding: 8px 16px; background: #666; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block;">
+        Clear
+      </a>
+    {% endif %}
+  </form>
+</div>
+
+<div class="card">
+  <h3 class="form-section">Manual Salary Data Entries</h3>
+  <div style="margin-bottom: 15px;">
+    <a href="{% url 'bulk_import_manual_salary_data' %}" class="btn-primary">
+      📥 Bulk Import
+    </a>
+  </div>
+
+  {% if records %}
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Session</th>
+        <th>Employee</th>
+        <th>Month</th>
+        <th>Amount Type</th>
+        <th>Amount</th>
+        <th>Note</th>
+        <th>Actions</th>
+      </tr>
+
+      {% for record in records %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ record.session.session }}</td>
+        <td>{{ record.employee.name }}</td>
+        <td>{{ record.month }}</td>
+        <td>{{ record.get_amount_type_display }}</td>
+        <td class="amount">{{ record.amount }}</td>
+        <td style="max-width: 300px; word-wrap: break-word;">{{ record.note|truncatewords:10 }}</td>
+        <td class="actions">
+          <a class="btn-edit" href="/employees/manual-salary-data/?edit={{ record.id }}">Edit</a>
+          <a class="btn-delete"
+             onclick="return confirm('Delete this entry?')"
+             href="/employees/manual-salary-data/delete/{{ record.id }}/">
+             Delete
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+      
+      <!-- Total Row -->
+      <tr style="background-color: #f0f0f0; font-weight: bold; border-top: 2px solid #333;">
+        <td colspan="5" style="text-align: right; padding-right: 10px;">Total Amount:</td>
+        <td class="amount">{{ total_amount }}</td>
+        <td colspan="2"></td>
+      </tr>
+    </table>
+  {% else %}
+    <p>No manual salary data entries yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

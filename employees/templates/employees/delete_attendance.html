@@ -1,0 +1,93 @@
+{% extends "website/base.html" %}
+{% block title %}Delete Attendance{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Delete Attendance Record</h2>
+
+<div class="confirmation-card">
+  <div class="confirmation-content">
+    <p style="font-size: 16px; margin-bottom: 20px;">Are you sure you want to delete this attendance record?</p>
+    
+    <div class="attendance-details" style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 4px;">
+      <table style="width: 100%;">
+        <tr>
+          <td style="font-weight: 600; width: 30%; padding: 8px 0;">Session:</td>
+          <td style="padding: 8px 0;">{{ attendance.session.session }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Date:</td>
+          <td style="padding: 8px 0;">{{ attendance.date|date:"d-m-Y" }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Employee ID:</td>
+          <td style="padding: 8px 0;">{{ attendance.employee.emp_no }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Employee Name:</td>
+          <td style="padding: 8px 0;">{{ attendance.employee.name }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600; padding: 8px 0;">Attendance:</td>
+          <td style="padding: 8px 0;">{{ attendance.get_attendance_display }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <form method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger" onclick="return confirm('This action cannot be undone. Are you absolutely sure?');">
+          Yes, Delete
+        </button>
+      </form>
+      <a href="{% url 'employee_attendance' %}" class="btn-secondary">Cancel</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .confirmation-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .confirmation-content p {
+    color: #666;
+  }
+
+  .btn-danger,
+  .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .btn-secondary {
+    background-color: #0F4F4F;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #0a3a3a;
+  }
+</style>
+
+{% endblock %}

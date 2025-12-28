@@ -1,0 +1,114 @@
+{% extends "website/base.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+
+<div style="max-width: 800px; margin: 0 auto;">
+  <h2 style="margin-bottom: 20px;">Edit Profile</h2>
+  
+  <form method="post" enctype="multipart/form-data" class="card">
+    {% csrf_token %}
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+      <div>
+        <label for="{{ form.full_name.id_for_label }}" style="display: block; font-weight: 700; margin-bottom: 8px;">Full Name *</label>
+        {{ form.full_name }}
+        {% if form.full_name.errors %}
+          <span style="color: #dc2626; font-size: 12px;">{{ form.full_name.errors.0 }}</span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <label for="{{ form.phone.id_for_label }}" style="display: block; font-weight: 700; margin-bottom: 8px;">Phone</label>
+        {{ form.phone }}
+        {% if form.phone.errors %}
+          <span style="color: #dc2626; font-size: 12px;">{{ form.phone.errors.0 }}</span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <label for="{{ form.gender.id_for_label }}" style="display: block; font-weight: 700; margin-bottom: 8px;">Gender</label>
+        {{ form.gender }}
+        {% if form.gender.errors %}
+          <span style="color: #dc2626; font-size: 12px;">{{ form.gender.errors.0 }}</span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <label for="{{ form.department.id_for_label }}" style="display: block; font-weight: 700; margin-bottom: 8px;">Department</label>
+        {{ form.department }}
+        {% if form.department.errors %}
+          <span style="color: #dc2626; font-size: 12px;">{{ form.department.errors.0 }}</span>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label for="{{ form.bio.id_for_label }}" style="display: block; font-weight: 700; margin-bottom: 8px;">Bio</label>
+      {{ form.bio }}
+      <small style="color: #6b7280;">Tell us a bit about yourself (optional)</small>
+      {% if form.bio.errors %}
+        <span style="color: #dc2626; font-size: 12px; display: block;">{{ form.bio.errors.0 }}</span>
+      {% endif %}
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+      <label for="{{ form.profile_image.id_for_label }}" style="display: block; font-weight: 700; margin-bottom: 8px;">Profile Picture</label>
+      <div style="display: flex; gap: 20px; align-items: flex-start;">
+        <div style="flex: 1;">
+          {{ form.profile_image }}
+          <small style="color: #6b7280;">Upload a profile picture (JPG, PNG)</small>
+          {% if form.profile_image.errors %}
+            <span style="color: #dc2626; font-size: 12px; display: block;">{{ form.profile_image.errors.0 }}</span>
+          {% endif %}
+        </div>
+        {% if profile.profile_image %}
+          <div style="flex: 0 0 120px; text-align: center;">
+            <img src="{{ profile.profile_image.url }}" alt="Current profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid #dbeafe;">
+            <small style="color: #6b7280; display: block; margin-top: 8px;">Current photo</small>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; display: flex; gap: 12px;">
+      <button type="submit" style="padding: 10px 24px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+        Save Changes
+      </button>
+      <a href="{% url 'profile' %}" style="padding: 10px 24px; background: #e5e7eb; color: #374151; text-decoration: none; border-radius: 6px; font-weight: 600; display: inline-block;">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+
+<style>
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+  }
+  
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="tel"]:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+</style>
+
+{% endblock %}

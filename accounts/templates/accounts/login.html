@@ -1,0 +1,299 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - Devki Public School</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="{% static 'website/favicon.png' %}?v=2">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+    }
+    
+    .login-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+    
+    .login-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    
+    .school-logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+    
+    .login-header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    
+    .login-header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .login-body {
+      padding: 40px 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .error-messages {
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      border-radius: 6px;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      color: #991b1b;
+      font-size: 13px;
+    }
+    
+    .error-messages ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .error-messages li {
+      margin: 4px 0;
+    }
+    
+    .error-messages li:before {
+      content: "✗ ";
+      font-weight: bold;
+      margin-right: 4px;
+    }
+    
+    .login-button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .login-button:active {
+      transform: translateY(0);
+    }
+    
+    .login-footer {
+      text-align: center;
+      padding: 20px 30px;
+      border-top: 1px solid #eee;
+      font-size: 13px;
+      color: #666;
+    }
+    
+    .demo-credentials {
+      background: #f0f9ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #1e40af;
+    }
+    
+    .demo-credentials strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #1e3a8a;
+    }
+    
+    .demo-credentials p {
+      margin: 4px 0;
+    }
+    
+    @media (max-width: 480px) {
+      .login-card {
+        border-radius: 8px;
+      }
+      
+      .login-header {
+        padding: 30px 20px;
+      }
+      
+      .login-header h1 {
+        font-size: 24px;
+      }
+      
+      .login-body {
+        padding: 30px 20px;
+      }
+      
+      .login-footer {
+        padding: 15px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Header -->
+      <div class="login-header">
+        <div class="school-logo">
+          <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h1>School Ledger</h1>
+        <p>Devki Public School Management System</p>
+      </div>
+      
+      <!-- Body -->
+      <div class="login-body">
+        <!-- Demo Credentials -->
+        <div class="demo-credentials">
+          <strong>Demo Login Credentials:</strong>
+          <p>Username: <code>admin</code></p>
+          <p>Password: <code>admin123</code></p>
+        </div>
+        
+        <!-- Error Messages -->
+        {% if form.non_field_errors %}
+          <div class="error-messages">
+            {% for error in form.non_field_errors %}
+              <ul>
+                <li>{{ error }}</li>
+              </ul>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        <!-- Login Form -->
+        <form method="post">
+          {% csrf_token %}
+          
+          <!-- Username Field -->
+          <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            <input 
+              type="text" 
+              id="{{ form.username.id_for_label }}" 
+              name="username" 
+              placeholder="Enter your username"
+              autofocus
+              required
+            >
+            {% if form.username.errors %}
+              <div class="error-messages" style="margin-top: 6px; margin-bottom: 0;">
+                {% for error in form.username.errors %}
+                  <ul>
+                    <li>{{ error }}</li>
+                  </ul>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            <input 
+              type="password" 
+              id="{{ form.password.id_for_label }}" 
+              name="password" 
+              placeholder="Enter your password"
+              required
+            >
+            {% if form.password.errors %}
+              <div class="error-messages" style="margin-top: 6px; margin-bottom: 0;">
+                {% for error in form.password.errors %}
+                  <ul>
+                    <li>{{ error }}</li>
+                  </ul>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          
+          <!-- Submit Button -->
+          <button type="submit" class="login-button">
+            <i class="fas fa-sign-in-alt"></i>
+            Sign In
+          </button>
+        </form>
+      </div>
+      
+      <!-- Footer -->
+      <div class="login-footer">
+        <p><strong>Devki Public School</strong></p>
+        <p>Tibariyan, Hingonia Road, Lalpur, Jobner | +91-9413442332</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% extends "website/base.html" %}
+{% block title %}Ledger Statement{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0; text-align:center; text-decoration:underline;">Ledger Statement</h2>
+
+<div class="card" style="margin-bottom:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Statement Information</div>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb; width:50%;">Session</th>
+      <td style="padding:10px; border:1px solid #e5e7eb; width:50%;">{{ session.session }}</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card" style="margin-bottom:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Monthly Summary</div>
+  {% if rows %}
+  <table style="width:100%; border-collapse:collapse;">
+    <tr style="background:#f3f4f6;">
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">No.</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Session</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Month</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Total Income</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Total Expense</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Total Balance</th>
+    </tr>
+    {% for row in rows %}
+    <tr>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ forloop.counter }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ row.session }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ row.month_label }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.income|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.expense|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.balance|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+    <tr style="background:#fef3c7; font-weight:600;">
+      <td colspan="3" style="padding:10px; border:1px solid #e5e7eb;">Total</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ total_income|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ total_expense|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ total_balance|floatformat:2 }}</td>
+    </tr>
+  </table>
+  {% else %}
+    <p style="margin:0; color:#6b7280;">No transactions found for this session.</p>
+  {% endif %}
+</div>
+
+<div style="margin-top:30px; padding:20px; border-top:2px solid #e5e7eb;">
+  <p style="margin:0 0 10px; color:#6b7280; font-size:14px;">Statement generated on: {{ statement_date|date:"F d, Y" }}</p>
+</div>
+
+<div style="margin-top:20px; text-align:center;">
+  <a href="{% url 'select_statement_type' %}" class="btn-ghost"><i class="fa-solid fa-arrow-left"></i> Back</a>
+  <button onclick="window.print()" class="btn-primary" style="padding:10px 32px; margin-left:10px; font-size:16px;">Print Statement</button>
+</div>
+
+{% endblock %}

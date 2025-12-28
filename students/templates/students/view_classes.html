@@ -1,0 +1,79 @@
+{% extends 'website/base.html' %}
+{% block title %}Classes{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Classes</h2>
+
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Add / Edit Class</h3>
+
+  <form method="post">
+    {% csrf_token %}
+    {% if editing_class %}
+      <input type="hidden" name="class_id" value="{{ editing_class.id }}">
+    {% endif %}
+
+    <div class="entry-grid">
+      <div class="field">
+        <label>Class Name</label>
+        {{ form.class_name }}
+      </div>
+
+      <div class="field">
+        <label>Class Code</label>
+        {{ form.class_code }}
+      </div>
+
+      <div class="field">
+        <label>Age</label>
+        {{ form.age }}
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit">{% if editing_class %}Update{% else %}Save{% endif %}</button>
+      </div>
+    </div>
+
+    {% if editing_class %}
+      <div style="margin-top:10px;"><a href="/students/classes/">Cancel Edit</a></div>
+    {% endif %}
+  </form>
+</div>
+
+<div class="card">
+  <h3 class="form-section">Classes List</h3>
+
+  {% if classes %}
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Class Name</th>
+        <th>Class Code</th>
+        <th>Age</th>
+        <th>Actions</th>
+      </tr>
+
+      {% for class in classes %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ class.class_name }}</td>
+        <td>{{ class.class_code }}</td>
+        <td>{{ class.age }} years</td>
+        <td class="actions">
+          <a class="btn-edit" href="/students/classes/?edit={{ class.id }}">Edit</a>
+          <a class="btn-delete"
+             onclick="return confirm('Delete this class?')"
+             href="/students/classes/delete/{{ class.id }}/">
+             Delete
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No classes yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

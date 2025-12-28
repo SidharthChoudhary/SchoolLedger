@@ -1,0 +1,104 @@
+{% extends "website/base.html" %}
+{% block title %}Student Account{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Student Account</h2>
+
+<div class="card" style="margin-bottom:14px;">
+  <h4 style="margin-top:0; padding-bottom:10px; border-bottom: 1px solid #ddd;">Select a Student</h4>
+  
+  {% if students %}
+  <div class="student-grid">
+    {% for student in students %}
+    <a href="{% url 'student_account_detail' student.id %}" class="student-card">
+      <div class="student-card-content">
+        {% if student.image %}
+          <img src="{{ student.image.url }}" alt="{{ student.name }}" class="student-card-image">
+        {% else %}
+          <div class="student-card-image-placeholder">
+            <i class="fa-solid fa-user"></i>
+          </div>
+        {% endif %}
+        <div class="student-card-info">
+          <h4>{{ student.name }}</h4>
+          <p><strong>Class:</strong> {{ student.student_class }}</p>
+          <p><strong>Roll No:</strong> #{{ student.id }}</p>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p style="text-align: center; padding: 30px;">No students found. <a href="{% url 'add_student' %}">Add a student first</a></p>
+  {% endif %}
+</div>
+
+<style>
+  .student-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .student-card {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    background: white;
+  }
+  
+  .student-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-color: #007bff;
+  }
+  
+  .student-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .student-card-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+  }
+  
+  .student-card-image-placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #999;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+  }
+  
+  .student-card h4 {
+    margin: 10px 0 5px 0;
+    font-size: 16px;
+  }
+  
+  .student-card p {
+    margin: 5px 0;
+    font-size: 13px;
+    color: #666;
+  }
+</style>
+
+{% endblock %}

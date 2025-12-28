@@ -1,0 +1,32 @@
+{% extends "website/base.html" %}
+{% block title %}Confirm Delete All{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Confirm Delete All {{ item_type }}</h2>
+
+<div class="card" style="margin-bottom:14px; background:#fee2e2; border:2px solid #dc2626; border-radius:8px;">
+  <div style="padding:20px;">
+    <h3 style="color:#991b1b; margin-top:0;">⚠️ Warning: This action cannot be undone!</h3>
+    <p style="color:#7f1d1d; font-size:16px; margin:10px 0;">
+      You are about to delete <strong>{{ item_count }} {{ item_type }}</strong> record{{ item_count|pluralize }}.
+    </p>
+    <p style="color:#7f1d1d; font-size:14px;">
+      Once deleted, all data will be permanently removed from the database. Please make sure you have exported the data if you need a backup.
+    </p>
+    
+    <div style="margin-top:30px; display:flex; gap:12px;">
+      <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" style="padding:10px 20px; background:#dc2626; color:white; border:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:14px;">
+          ✓ Yes, Delete All {{ item_count }} Records
+        </button>
+      </form>
+      
+      <a href="javascript:history.back()" style="padding:10px 20px; background:#6b7280; color:white; text-decoration:none; border-radius:6px; font-weight:600; cursor:pointer; font-size:14px; display:inline-block;">
+        ✕ Cancel
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

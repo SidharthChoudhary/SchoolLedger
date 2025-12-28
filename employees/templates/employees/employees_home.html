@@ -1,0 +1,216 @@
+{% extends "website/base.html" %}
+{% block title %}Employee{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Employees</h2>
+
+<div style="margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+	<a href="{% url 'bulk_import_employees' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: var(--teal-700); color: white; text-decoration: none; font-size: 14px;">
+		📤 Bulk Import Employees
+	</a>
+	<a href="{% url 'export_employees_csv' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: #059669; color: white; text-decoration: none; font-size: 14px;">
+		⬇️ Export to CSV
+	</a>
+	<a href="{% url 'delete_all_employees' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: #dc2626; color: white; text-decoration: none; font-size: 14px;">
+		🗑️ Delete All
+	</a>
+</div>
+
+<div class="card" style="margin-bottom:14px;">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if editing_employee %}
+      <input type="hidden" name="employee_id" value="{{ editing_employee.id }}">
+    {% endif %}
+    <div class="employee-form-wrapper">
+      <div class="employee-form">
+       <h4 class="form-section">Personal Details</h4>
+        <div class="row">
+          <div class="field">
+            <label>Full Name</label>
+            {{ form.name }}
+          </div>
+          <div class="field">
+            <label>Date of Birth</label>
+            {{ form.dob }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Contact Number</label>
+            {{ form.contact_number }}
+          </div>
+          
+  
+          <div class="field">
+            <label>Qualification</label>
+            {{ form.qualification }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field field-wide">
+            <label>Address</label>
+            {{ form.address }}
+          </div>
+        </div>
+                <div class="row">
+          <div class="field field-wide">
+            <label>Employee Image</label>
+            {{ form.emp_image }}
+          </div>
+        </div>
+        <h4 class="form-section">Professional Details</h4>
+        <div class="row">
+          <div class="field">
+            <label>Experience (Years)</label>
+            {{ form.experience_years }}
+          </div>
+          <div class="field">
+            <label>Previous Institute</label>
+            {{ form.previous_institute }}
+          </div>
+        </div>
+<h4 class="form-section">Employment</h4>
+        <div class="row">
+          <div class="field">
+            <label>Post</label>
+            {{ form.post }}
+          </div>
+          <div class="field">
+            <label>Joining Date</label>
+            {{ form.joining_date }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Base Salary / Month</label>
+            {{ form.base_salary_per_month }}
+          </div>
+          <div class="field">
+            <label>Status</label>
+            {{ form.status }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>Leaves Entitled</label>
+            {{ form.leaves_entitled }}
+          </div>
+          <div class="field">
+            <label>Leaving Date</label>
+            {{ form.leaving_date }}
+          </div>
+        </div>
+<div class="row">
+  <div class="field">
+    <label>Gender</label>
+    {{ form.gender }}
+  </div>
+
+  <div class="field">
+    <label>Role</label>
+    {{ form.role }}
+  </div>
+</div>
+
+<div class="row">
+  <div class="field field-wide">
+    <label>Role Detail</label>
+    {{ form.role_detail }}
+  </div>
+</div>
+
+        <!--div class="row">
+          <div class="field field-wide">
+            <label>Employee Image</label>
+            {{ form.emp_image }}
+          </div>
+        </div-->
+
+        <div class="row">
+          <div class="field field-wide">
+    <button type="submit">{% if editing_employee %}Update{% else %}Save{% endif %}</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </form>
+</div>
+
+
+<div class="card">
+  <h3 style="margin-top:0;">Employees List</h3>
+  <div style="margin-bottom: 15px;">
+    <a href="{% url 'bulk_import_employees' %}" class="btn-primary">
+      📥 Bulk Import Employees
+    </a>
+  </div>
+
+  {% if employees %}
+    <table>
+      <tr>
+        <th>Emp No</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Post</th>
+        <th>Contact</th>
+        <th>Status</th>
+        <th>Salary/Month</th>
+        <th>Joining</th>
+        <th>Leaving</th>
+        <th>Actions</th>
+      </tr>
+
+      {% for emp in employees %}
+      <tr>
+        <td><b>{{ emp.emp_no }}</b></td>
+        <td>
+          {% if emp.emp_image %}
+            <img src="{{ emp.emp_image.url }}" alt="emp"
+                 style="width:42px;height:42px;border-radius:10px;object-fit:cover;">
+          {% else %}
+            -
+          {% endif %}
+        </td>
+        <td>{{ emp.name }}</td>
+        <td>{{ emp.post }}</td>
+        <td>{{ emp.contact_number }}</td>
+       <td>
+  <span class="status {{ emp.status }}">
+    {{ emp.get_status_display }}
+  </span>
+</td>
+
+        <td class="amount">{{ emp.base_salary_per_month }}</td>
+<td>{{ emp.joining_date|default:"—" }}</td>
+<td>{{ emp.leaving_date|default:"—" }}</td>
+<td class="actions">
+  <a class="btn-edit" href="/employees/?edit={{ emp.id }}">Edit</a>
+  <a class="btn-delete"
+   onclick="return confirm('Delete this employee?')"
+   href="/employees/delete/{{ emp.id }}/">
+   Delete
+</a>
+</td>
+
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No employees yet.</p>
+  {% endif %}
+</div>
+
+{% if editing_employee %}
+  <div style="margin-top:10px;">
+    <a href="/employees/">Cancel Edit</a>
+  </div>
+{% endif %}
+
+{% endblock %}

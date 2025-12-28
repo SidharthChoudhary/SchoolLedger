@@ -1,0 +1,19 @@
+{% extends "website/base.html" %}
+{% block title %}Delete Transaction{% endblock %}
+
+{% block content %}
+<h2>Delete Transaction</h2>
+<p>Are you sure you want to delete this entry?</p>
+
+<ul>
+  <li><b>Voucher:</b> {{ expense.voucher_number }}</li>
+  <li><b>Date:</b> {{ expense.date }}</li>
+  <li><b>Amount:</b> {{ expense.amount }}</li>
+</ul>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Yes, Delete</button>
+  <a href="/ledger-expense/" style="margin-left:10px;">Cancel</a>
+</form>
+{% endblock %}

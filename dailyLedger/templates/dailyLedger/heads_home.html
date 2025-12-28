@@ -1,0 +1,268 @@
+{% extends "website/base.html" %}
+{% block title %}Account Heads{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Account Heads</h2>
+
+<div style="margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+	<a href="{% url 'bulk_import' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: var(--teal-700); color: white; text-decoration: none; font-size: 14px;">
+		📤 Bulk Import Heads
+	</a>
+	<a href="{% url 'export_heads_csv' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: #059669; color: white; text-decoration: none; font-size: 14px;">
+		⬇️ Export to CSV
+	</a>
+	<a href="{% url 'delete_all_heads' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: #dc2626; color: white; text-decoration: none; font-size: 14px;">
+		🗑️ Delete All
+	</a>
+</div>
+
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Add / Edit Account Head</h3>
+
+  <form method="post">
+    {% csrf_token %}
+    {% if editing_head %}
+      <input type="hidden" name="head_id" value="{{ editing_head.id }}">
+    {% endif %}
+
+    <div class="entry-grid">
+           <div class="field">
+        <label>Ledger Type</label>
+        {{ form.ledger_type }}
+      </div>
+      <div class="field">
+        <label>Major Head</label>
+        {{ form.major_head }}
+      </div>
+
+      <div class="field">
+        <label>Head</label>
+        {{ form.head }}
+      </div>
+
+      <div class="field">
+        <label>Sub-Head</label>
+        {{ form.sub_head }}
+      </div>
+
+      <div class="field">
+        <label>Status</label>
+        {{ form.status }}
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <div class="field">
+        <label>Details</label>
+        {{ form.details }}
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <button type="submit">
+        {% if editing_head %}Update{% else %}Save{% endif %}
+      </button>
+    </div>
+
+    {% if editing_head %}
+      <div style="margin-top:10px;">
+        <a href="/ledger-expense/heads/">Cancel Edit</a>
+      </div>
+    {% endif %}
+  </form>
+</div>
+
+<!-- Bulk Import Section -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Bulk Import</h3>
+  <p>Import multiple account heads from a CSV file.</p>
+  <a href="{% url 'bulk_import' %}" class="btn btn-primary" style="padding: 8px 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; display: inline-block;">
+    📤 Import from CSV
+  </a>
+</div>
+
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Search Account Heads</h3>
+
+  <form method="get" style="display:flex; gap:12px; flex-wrap:wrap; align-items:end;">
+
+        <div class="field" style="min-width:220px;">
+      <label>Ledger Type</label>
+      <select name="ledger_type">
+        <option value="">All</option>
+        <option value="Expense" {% if selected_ledger_type == "Expense" %}selected{% endif %}>Expense</option>
+        <option value="Income" {% if selected_ledger_type == "Income" %}selected{% endif %}>Income</option>
+      </select>
+    </div>
+    <div class="field" style="min-width:220px;">
+      <label>Major Head</label>
+      <select name="major_head">
+        <option value="">All</option>
+      </select>
+    </div>
+
+    <div class="field" style="min-width:220px;">
+      <label>Head</label>
+      <select name="head">
+        <option value="">All</option>
+      </select>
+    </div>
+
+    <div class="field" style="min-width:220px;">
+      <label>Sub-Head</label>
+      <select name="sub_head">
+        <option value="">All</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <button type="submit">Apply</button>
+      <a href="/ledger-expense/heads/" style="margin-left:10px;">Clear</a>
+    </div>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const headData = JSON.parse('{{ head_data_json|escapejs }}');
+    
+    console.log('headData:', headData);
+    console.log('headData keys:', Object.keys(headData));
+    
+    function setOptions(selectEl, data, emptyVal) {
+        selectEl.innerHTML = '<option value="">' + emptyVal + '</option>';
+        
+        if (Array.isArray(data)) {
+            data.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item;
+                opt.textContent = item || '(empty)';
+                selectEl.appendChild(opt);
+            });
+        } else if (typeof data === 'object' && data !== null) {
+            for (const [val] of Object.entries(data)) {
+                const opt = document.createElement('option');
+                opt.value = val;
+                opt.textContent = val;
+                selectEl.appendChild(opt);
+            }
+        }
+    }
+
+    // Handle filter form (method="get") for Search Account Heads
+    const filterForm = document.querySelector('form[method="get"]');
+    if (filterForm) {
+        const filterLedger = filterForm.querySelector('[name="ledger_type"]');
+        const filterMajor = filterForm.querySelector('[name="major_head"]');
+        const filterHead = filterForm.querySelector('[name="head"]');
+        const filterSub = filterForm.querySelector('[name="sub_head"]');
+        
+        console.log('filterLedger:', filterLedger);
+        console.log('filterMajor:', filterMajor);
+        console.log('filterHead:', filterHead);
+        console.log('filterSub:', filterSub);
+        
+        if (filterLedger && filterMajor && filterHead && filterSub) {
+            // Initialize on load
+            const initialLedger = filterLedger.value || 'Expense';
+            console.log('initialLedger:', initialLedger);
+            console.log('headData[initialLedger]:', headData[initialLedger]);
+            
+            if (headData[initialLedger]) {
+                setOptions(filterMajor, headData[initialLedger], 'All');
+                console.log('Populated major_head with:', Object.keys(headData[initialLedger]));
+            }
+            
+            // When ledger type changes, update major_head options
+            filterLedger.addEventListener('change', function() {
+                const ledger = this.value || 'Expense';
+                console.log('Ledger changed to:', ledger);
+                filterMajor.value = '';
+                filterHead.innerHTML = '<option value="">All</option>';
+                filterSub.innerHTML = '<option value="">All</option>';
+                
+                if (headData[ledger]) {
+                    setOptions(filterMajor, headData[ledger], 'All');
+                } else {
+                    filterMajor.innerHTML = '<option value="">All</option>';
+                }
+            });
+
+            // When major head changes, update head options
+            filterMajor.addEventListener('change', function() {
+                const ledger = filterLedger.value || 'Expense';
+                const major = this.value;
+                console.log('Major head changed to:', major, 'ledger:', ledger);
+                console.log('headData[ledger][major]:', headData[ledger] ? headData[ledger][major] : 'N/A');
+                filterHead.value = '';
+                filterSub.innerHTML = '<option value="">All</option>';
+                
+                if (major && headData[ledger] && headData[ledger][major]) {
+                    setOptions(filterHead, headData[ledger][major], 'All');
+                } else {
+                    filterHead.innerHTML = '<option value="">All</option>';
+                }
+            });
+
+            // When head changes, update sub_head options
+            filterHead.addEventListener('change', function() {
+                const ledger = filterLedger.value || 'Expense';
+                const major = filterMajor.value;
+                const head = this.value;
+                console.log('Head changed to:', head);
+                filterSub.value = '';
+                
+                if (major && head && headData[ledger] && headData[ledger][major] && headData[ledger][major][head]) {
+                    setOptions(filterSub, headData[ledger][major][head], 'All');
+                } else {
+                    filterSub.innerHTML = '<option value="">All</option>';
+                }
+            });
+        }
+    }
+});
+</script>
+
+<div class="card">
+  <h3 class="form-section">Account Heads</h3>
+
+  {% if heads %}
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Ledger Type</th>
+        <th>Major Head</th>
+        <th>Head</th>
+        <th>Sub-Head</th>
+        <th>Status</th>
+        <th>Details</th>
+        <th>Actions</th>
+      </tr>
+
+      {% for h in heads %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ h.ledger_type }}</td>
+        <td>{{ h.major_head }}</td>
+        <td>{{ h.head }}</td>
+        <td>{{ h.sub_head }}</td>
+        <td>{{ h.status }}</td>
+        <td style="font-size: 0.9em; color: #666;">{{ h.details|truncatewords:10 }}</td>
+
+        <td class="actions">
+          <a class="btn-edit" href="/ledger-expense/heads/?edit={{ h.id }}">Edit</a>
+          <a class="btn-delete"
+             onclick="return confirm('Delete this head?')"
+             href="/ledger-expense/heads/delete/{{ h.id }}/">
+             Delete
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <p>No heads yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

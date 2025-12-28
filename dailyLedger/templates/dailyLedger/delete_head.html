@@ -1,0 +1,20 @@
+{% extends "website/base.html" %}
+{% block title %}Delete Account Head{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Delete Account Head</h2>
+
+<div class="card">
+  <p>
+    Are you sure you want to delete:
+    <b>{{ head_obj.major_head }} / {{ head_obj.head }} / {{ head_obj.sub_head }}</b> ?
+  </p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+    <a href="/ledger-expense/heads/" style="margin-left:12px;">Cancel</a>
+  </form>
+</div>
+
+{% endblock %}

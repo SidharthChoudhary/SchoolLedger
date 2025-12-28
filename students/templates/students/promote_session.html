@@ -1,0 +1,108 @@
+{% extends 'website/base.html' %}
+
+{% block title %}Promote Session{% endblock %}
+
+{% block content %}
+
+<h2 style="margin-top:0;">Promote Session</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <div style="padding: 12px; margin-bottom: 15px; border-radius: 4px; background: {% if message.tags %}{% if 'success' in message.tags %}#d1fae5; color: #065f46; border: 1px solid #6ee7b7{% elif 'warning' in message.tags %}#fef3c7; color: #92400e; border: 1px solid #fcd34d{% else %}#fee2e2; color: #991b1b; border: 1px solid #fecaca{% endif %}{% else %}#d1fae5; color: #065f46; border: 1px solid #6ee7b7{% endif %};">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!-- Promote Session to New Session -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Promote Session to New Session</h3>
+  
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="promote_session">
+    
+    <div class="entry-grid">
+      <div class="field">
+        <label>Current Session</label>
+        <select name="current_session" id="current_session" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Current Session --</option>
+          {% for session in active_sessions %}
+            <option value="{{ session.id }}">{{ session.session }} ({{ session.get_status_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>New Session</label>
+        <select name="new_session" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select New Session --</option>
+          {% for session in new_sessions %}
+            <option value="{{ session.id }}">{{ session.session }} ({{ session.get_status_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Current Class</label>
+        <select name="current_class" id="current_class" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Current Class --</option>
+          {% for class in classes %}
+            <option value="{{ class.id }}">{{ class.class_code }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>New Class (Auto-populated)</label>
+        <input type="text" id="new_class_display" readonly style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5;">
+        <input type="hidden" name="new_class" id="new_class" required>
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit">Promote Students</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Panel 2 - Auto-populate New Class
+  const currentClassSelect = document.getElementById('current_class');
+  const newClassDisplay = document.getElementById('new_class_display');
+  const newClassInput = document.getElementById('new_class');
+
+  function updateNewClass() {
+    const currentClassId = currentClassSelect.value;
+    if (!currentClassId) {
+      newClassDisplay.value = '';
+      newClassInput.value = '';
+      return;
+    }
+
+    const currentClassOption = currentClassSelect.options[currentClassSelect.selectedIndex];
+    const currentClassText = currentClassOption.text;
+    
+    // Get current class ID and find next one
+    fetch(`/students/get-next-class/${currentClassId}/`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.next_class) {
+          newClassDisplay.value = data.next_class.class_code;
+          newClassInput.value = data.next_class.id;
+        } else {
+          newClassDisplay.value = 'No next class available';
+          newClassInput.value = '';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        newClassDisplay.value = 'Error loading next class';
+      });
+  }
+
+  currentClassSelect.addEventListener('change', updateNewClass);
+</script>
+
+{% endblock %}

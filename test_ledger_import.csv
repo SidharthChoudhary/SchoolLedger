@@ -1,0 +1,586 @@
+Voucher_Number,Date,Amount,Account_Type,Account_Name,Major_Head,Head,Sub_Head,Ledger_Type,Payment_Type,Session,Details
+Expense_1,2023-04-01,5000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_2,2023-04-04,115,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Cup and ginger
+Expense_3,2023-04-05,550,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Staff & Student Register
+Expense_4,2023-04-06,9214,employee,Mukesh Jodha,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash & Phone pay
+Expense_5,2023-04-06,550,Other,Other,Transport,Transport Maintenance,Bus - 1 - 4903,Expense,Cash,2023-2024,"Data Migration - 350 Bus Puncture 4903, and steering oil 200"
+Expense_6,2023-04-07,1000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash  
+Expense_7,2023-04-07,2000,employee,Mukesh Jodha,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_8,2023-04-08,450,Other,Other,Transport,Transport Maintenance,Bus - 2,Expense,Cash,2023-2024,Data Migration - Break oil abd Steering oil
+Expense_9,2023-04-10,10000,employee,Sitaram Ghashal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_10,2023-04-11,1000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_11,2023-04-11,2000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_12,2023-04-12,5000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_13,2023-04-12,5000,employee,Laxman Kumawat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_14,2023-04-13,4000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_15,2023-04-14,5000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_16,2023-04-15,5000,employee,Ram Avatar Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_17,2023-04-19,260,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_18,2023-04-19,240,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,"Data Migration - Tea, Sugar, Ginger"
+Expense_19,2023-04-19,200,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Steering oil
+Expense_20,2023-04-19,330,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus repair
+Expense_21,2023-04-20,15000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_22,2023-04-20,5000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_23,2023-04-20,10000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_24,2023-04-20,10000,employee,Sitaram Ghashal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_25,2023-04-20,5000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_26,2023-04-20,15000,employee,Rekha Meena,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_27,2023-04-21,1100,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Exam notebook
+Expense_28,2023-04-21,150,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Exam File
+Expense_29,2023-04-21,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Bile Petrol Hingonia
+Expense_30,2023-04-21,2000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_31,2023-04-21,5000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_32,2023-04-24,5000,employee,Renu Marwal(EVS),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_33,2023-04-24,6500,employee,Ram Avatar Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_34,2023-04-26,250,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Printer ink
+Expense_35,2023-04-26,5000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_36,2023-04-27,170,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Bus Puncture
+Expense_37,2023-04-27,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Ginger
+Expense_38,2023-04-27,10000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_39,2023-04-28,500,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_40,2023-04-28,5000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_41,2023-04-29,5000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_42,2023-04-30,53000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_43,2023-05-01,10000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_44,2023-05-02,2000,employee,Ram Avatar Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash 
+Expense_45,2023-05-05,1000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_46,2023-05-05,2000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_47,2023-05-16,5000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_48,2023-05-17,600,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,"Data Migration - Staff & Student Register, dairy"
+Expense_49,2023-05-22,500,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_50,2023-05-26,5000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_51,2023-05-27,55,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea 
+Expense_52,2023-05-28,100,Other,Other,Other,Building Maintenance,Building,Expense,Cash,2023-2024,Data Migration - Lime stone choona
+Expense_53,2023-05-31,390,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_54,2023-06-02,150,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Fool malaye
+Expense_55,2023-06-02,450,Other,Other,Other,Other,Other,Expense,Cash,2023-2024,Data Migration - Laddu sweets
+Expense_56,2023-06-02,150,Other,Other,Other,Other,,Expense,Cash,2023-2024,Data Migration - Pster Dressing kalwar
+Expense_57,2023-06-03,500,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - School flex repaint
+Expense_58,2023-06-03,500,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Sweets - results celebration
+Expense_59,2023-06-03,500,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Result celebration
+Expense_60,2023-06-03,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_61,2023-06-04,3000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_62,2023-06-05,6500,Other,Other,Other,Advertising,Pemphlets,Expense,Cash,2023-2024,Data Migration - Color Pumphlet Choudhary printer Kalwar
+Expense_63,2023-06-05,100,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Cold drink
+Expense_64,2023-06-05,900,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Bachho ka nasta
+Expense_65,2023-06-05,1200,Other,Other,Other,Building Maintenance,Building,Expense,Cash,2023-2024,Data Migration - Ground clearance wage
+Expense_66,2023-06-05,300,Other,Other,Other,Building Maintenance,Building,Expense,Cash,2023-2024,Data Migration - Diesel tractor and ground clearing
+Expense_67,2023-06-06,500,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_68,2023-06-06,400,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - DJ 
+Expense_69,2023-06-06,3500,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Open Car hire
+Expense_70,2023-06-06,370,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Biscuit namkeen
+Expense_71,2023-06-06,550,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Cold drink
+Expense_72,2023-06-06,450,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Banana 
+Expense_73,2023-06-13,2000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_74,2023-06-13,100,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Chalk
+Expense_75,2023-06-13,300,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Wire for flex and banner
+Expense_76,2023-06-14,8000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_77,2023-06-14,3000,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Flex pasting
+Expense_78,2023-06-15,5000,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Car rent prahalad ji field visit
+Expense_79,2023-06-15,280,Other,Other,Other,Building Maintenance,Building,Expense,Cash,2023-2024,Data Migration - Plant cutting
+Expense_80,2023-06-16,900,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Banner
+Expense_81,2023-06-16,4000,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Patti (100)
+Expense_82,2023-06-16,50,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_83,2023-06-17,11000,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Flex boards
+Expense_84,2023-06-17,1300,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - School Salary Banner
+Expense_85,2023-06-17,3700,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - School Gate Banner
+Expense_86,2023-06-17,2600,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - School gate banner right side
+Expense_87,2023-06-17,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_88,2023-06-18,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - T
+Expense_89,2023-06-19,5000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_90,2023-06-19,42600,employee,Sitaram Ghashal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash payment
+Expense_91,2023-06-19,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_92,2023-06-20,200,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus puncture
+Expense_93,2023-06-20,700,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus washing
+Expense_94,2023-06-20,50,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_95,2023-06-20,200,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Air Cleaning and bus puncture
+Expense_96,2023-06-21,2500,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Car rent prahalad ji field visit
+Expense_97,2023-06-21,50,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_98,2023-06-22,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_99,2023-06-22,200,Other,Other,Other,Bills,Electricity,Expense,Cash,2023-2024,Data Migration - Electrician
+Expense_100,2023-06-23,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_101,2023-06-24,5000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_102,2023-06-24,500,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Cash diesel
+Expense_103,2023-06-24,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_104,2023-06-25,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_105,2023-06-26,1100,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - hamara samachar for news
+Expense_106,2023-06-26,10000,employee,Ram Avatar Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash salary 
+Expense_107,2023-06-26,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_108,2023-06-27,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_109,2023-06-28,1000,employee,Ram Avatar Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash salary 
+Expense_110,2023-06-29,1000,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Diesel Scorpio field visit
+Expense_111,2023-06-29,50,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_112,2023-06-29,800,Other,Other,Other,Advertising,Pemphlets,Expense,Cash,2023-2024,Data Migration - Pumphlet distribution charge in newspaper
+Expense_113,2023-06-30,5000,employee,Renu Marwal(EVS),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_114,2023-06-30,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_115,2023-06-30,3000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_116,2023-07-01,10000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_117,2023-07-02,3000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_118,2023-07-03,70,Other,Other,Other,Affiliation,Haldighati School visit,Expense,Cash,2023-2024,Data Migration - Patrol srk Jobner
+Expense_119,2023-07-03,300,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Break repair
+Expense_120,2023-07-04,400,Other,Other,Other,Building Maintenance,Electricity,Expense,Cash,2023-2024,Data Migration - Electrician
+Expense_121,2023-07-04,400,Other,Other,Other,Building Maintenance,Furniture,Expense,Cash,2023-2024,Data Migration - Carpenter
+Expense_122,2023-07-04,2800,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash salary 
+Expense_123,2023-07-04,100,Other,Other,Other,Affiliation,SRK School visit,Expense,Cash,2023-2024,Data Migration - Petrol srk visit
+Expense_124,2023-07-04,1000,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Cash Diesel Scorpio route visit
+Expense_125,2023-07-04,140,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Chalk
+Expense_126,2023-07-05,3000,employee,Laxman Kumawat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_127,2023-07-05,10000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_128,2023-07-06,5000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_129,2023-07-06,2500,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash 
+Expense_130,2023-07-07,5000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_131,2023-07-07,1860,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - bus patta brush 
+Expense_132,2023-07-07,480,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - khokhar tractor part steering oil
+Expense_133,2023-07-07,200,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Groom
+Expense_134,2023-07-08,300,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus puncture
+Expense_135,2023-07-08,2150,Other,Other,Other,Other,Other,Expense,Cash,2023-2024,Data Migration - Books dress Yashwant kumawat
+Expense_136,2023-07-11,3350,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - bus patta brush 
+Expense_137,2023-07-11,15000,Other,Other,Other,Advertising,Other,Expense,Cash,2023-2024,Data Migration - Cash Newspaper Advertising
+Expense_138,2023-07-12,1500,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash 
+Expense_139,2023-07-12,10000,employee,Ram Avatar Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_140,2023-07-12,4000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_141,2023-07-12,4100,employee,Laxman Kumawat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_142,2023-07-13,6750,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - bus repair pokhar ji 
+Expense_143,2023-07-13,1000,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - wages bus service
+Expense_144,2023-07-14,3900,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash + 
+Expense_145,2023-07-15,500,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - swamani bhoj
+Expense_146,2023-07-17,10000,employee,Renu Marwal(EVS),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_147,2023-07-17,5000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_148,2023-07-17,10000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_149,2023-07-17,7000,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - bus servicec 7407
+Expense_150,2023-07-18,500,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_151,2023-07-18,300,Other,Other,Other,Affiliation,SRK School visit,Expense,Cash,2023-2024,Data Migration - cash diesel
+Expense_152,2023-07-21,10000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_153,2023-07-23,6830,employee,Ram Avatar Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash  final payment no dues
+Expense_154,2023-07-24,130,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - chalk
+Expense_155,2023-07-24,200,Other,Other,Other,Building Maintenance,Other,Expense,Cash,2023-2024,Data Migration - water tank cleaning
+Expense_156,2023-07-25,200,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - file + pen + stapler
+Expense_157,2023-07-25,10000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_158,2023-07-31,6000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash ?
+Expense_159,2023-07-31,1000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_160,2023-08-01,300,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_161,2023-08-16,14000,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Pokar ji 
+Expense_162,2023-08-07,7300,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,"Data Migration - bus service Jorpura , keel pin"
+Expense_163,2023-08-02,13000,employee,Rekha Meena,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash ?
+Expense_164,2023-08-08,7000,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Tyre remote
+Expense_165,2023-08-18,7000,Other,Other,Transport,Transport Maintenance,Bus3 - 0597,Expense,Cash,2023-2024,Data Migration - Tyre remote
+Expense_166,2023-08-15,5000,Other,Other,Other,Event Celebration,Independence Day,Expense,Cash,2023-2024,Data Migration - DJ + Generator
+Expense_167,2023-08-15,3100,Other,Other,Other,Event Celebration,Independence Day,Expense,Cash,2023-2024,Data Migration - Tent
+Expense_168,2023-08-07,2300,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - CRB oil
+Expense_169,2023-08-03,9000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_170,2023-08-21,1600,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus repair stearing oil 
+Expense_171,2023-08-16,1520,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Bus cross
+Expense_172,2023-08-03,1500,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea Staff July bill
+Expense_173,2023-08-14,1500,Other,Other,Other,Event Celebration,Independence Day,Expense,Cash,2023-2024,Data Migration - Medals
+Expense_174,2023-08-05,5000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_175,2023-08-03,1000,Other,Other,Other,Building Maintenance,Other,Expense,Cash,2023-2024,Data Migration - Grass spray
+Expense_176,2023-08-15,1000,Other,Other,Other,Event Celebration,Independence Day,Expense,Cash,2023-2024,Data Migration - Sweets  
+Expense_177,2023-08-23,1000,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - cash car rent renwal tyre change
+Expense_178,2023-08-15,595,Other,Other,Other,Event Celebration,Independence Day,Expense,Cash,2023-2024,Data Migration - Buiskits
+Expense_179,2023-08-07,570,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - TVS Coolant
+Expense_180,2023-08-15,500,Other,Other,Other,Event Celebration,Independence Day,Expense,Cash,2023-2024,Data Migration - Decoration Material
+Expense_181,2023-08-15,500,Other,Other,Other,Event Celebration,Independence Day,Expense,Cash,2023-2024,Data Migration - Cash Diesel Generator
+Expense_182,2023-08-16,500,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Cassh jeep route 7407
+Expense_183,2023-08-24,500,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - jeep route charge old due to Charan Singh
+Expense_184,2023-08-12,400,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - snacks
+Expense_185,2023-08-09,5000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary
+Expense_186,2023-08-09,500,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_187,2023-08-17,400,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - cross labour
+Expense_188,2023-08-11,350,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Tyre change
+Expense_189,2023-08-05,300,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Tyre change
+Expense_190,2023-08-07,300,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus Tyre
+Expense_191,2023-08-08,300,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Tyre change
+Expense_192,2023-08-12,10000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_193,2023-08-17,300,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Tools screw driver
+Expense_194,2023-08-18,300,Other,Other,Transport,Transport Maintenance,Bus3 - 0597,Expense,Cash,2023-2024,Data Migration - Tyre change
+Expense_195,2023-08-02,250,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_196,2023-08-03,250,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Bus puncture
+Expense_197,2023-08-04,200,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Break oil
+Expense_198,2023-08-28,200,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - bus puncture
+Expense_199,2023-08-04,160,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Stearing oil
+Expense_200,2023-08-02,100,Other,Other,Other,Affiliation,SRK School visit,Expense,Cash,2023-2024,Data Migration - petrol srk Jobner
+Expense_201,2023-08-03,100,Other,Other,Other,Affiliation,SRK School visit,Expense,Cash,2023-2024,Data Migration - petrol srk
+Expense_202,2023-08-04,100,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Break oil
+Expense_203,2023-08-09,100,Other,Other,Other,Affiliation,SRK School visit,Expense,Cash,2023-2024,Data Migration - srk visit
+Expense_204,2023-08-11,100,Other,Other,Other,Affiliation,SRK School visit,Expense,Cash,2023-2024,Data Migration - petrol srk visit
+Expense_205,2023-08-16,3000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_206,2023-08-16,1000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_207,2023-08-14,100,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,"Data Migration - Petrol Pachar Ramkui, kalwar"
+Expense_208,2023-08-14,100,Other,Other,Other,Event Celebration,Independence Day,Expense,Cash,2023-2024,Data Migration - White powder
+Expense_209,2023-08-16,100,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Jobner cross lane
+Expense_210,2023-08-03,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - petrol hingonia bus route
+Expense_211,2023-08-04,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - petrol bus route
+Expense_212,2023-08-05,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - petrol bus route
+Expense_213,2023-08-07,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol Route 7407
+Expense_214,2023-08-08,50,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Petrol bus route 7407
+Expense_215,2023-08-19,5000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_216,2023-08-19,5000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_217,2023-08-10,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol bus route 7407
+Expense_218,2023-08-21,5000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_219,2023-08-21,7500,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_220,2023-08-21,1500,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_221,2023-08-21,1500,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_222,2023-08-22,13000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cheque
+Expense_223,2023-08-23,9500,employee,Meena Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_224,2023-08-11,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol bus route 7407
+Expense_225,2023-08-23,800,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_226,2023-08-15,50,Other,Other,Other,Event Celebration,Independence Day,Expense,Cash,2023-2024,Data Migration - Ginger
+Expense_227,2023-08-28,1000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_228,2023-08-16,50,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Kalwar cross
+Expense_229,2023-08-29,2766,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_230,2023-08-29,1500,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_231,2023-08-29,2000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_232,2023-08-29,2000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_233,2023-08-29,2000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_234,2023-08-29,2000,employee,Nainita Soni,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_235,2023-08-29,2000,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_236,2023-08-29,2000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_237,2023-08-29,3000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_238,2023-08-29,2000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_239,2023-08-29,3000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_240,2023-08-29,2000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_241,2023-09-01,250,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Paper rim
+Expense_242,2023-09-01,7000,employee,Yashpal Kudi,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_243,2023-09-01,11866,Other,Other,Other,Bills,Electricity,Expense,Cash,2023-2024,Data Migration - Electricity bill
+Expense_244,2023-09-01,3000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Tour Adjust
+Expense_245,2023-09-01,4000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Tour Adjust
+Expense_246,2023-09-01,15000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_247,2023-09-04,100,Other,Other,Transport,Transport Maintenance,Bus3 - 0597,Expense,Cash,2023-2024,Data Migration - Break Oil
+Expense_248,2023-09-04,3450,Other,Other,Transport,Transport Maintenance,Bus3 - 0597,Expense,Cash,2023-2024,Data Migration - Pokhar Ji brk oil clutch cyilder
+Expense_249,2023-09-04,100,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Chalk
+Expense_250,2023-09-05,500,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary cash
+Expense_251,2023-09-05,1000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_252,2023-09-05,5000,employee,Nainita Soni,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_253,2023-09-06,9000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_254,2023-09-06,50000,employee,Chhoti Devi,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_255,2023-09-06,18000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_256,2023-09-06,5500,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_257,2023-09-06,3000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_258,2023-09-06,1000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_259,2023-04-30,50,Other,Other,other,other,other,Expense,Cash,2023-2024,Data Migration - adjust RSK statement diff 
+Expense_260,2023-06-30,3650,Other,Other,Other,other,Other,Expense,Cash,2023-2024,Data Migration - adjust RSK statement diff
+Expense_261,2023-08-30,7380,Other,Other,Other,other,Other,Expense,Cash,2023-2024,Data Migration - Adjust RSK statement diff
+Expense_262,2023-09-07,17000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary
+Expense_263,2023-09-08,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea 
+Expense_264,2023-09-09,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_265,2023-09-11,5000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary
+Expense_266,2023-09-11,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_267,2023-09-12,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_268,2023-09-12,5000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary
+Expense_269,2023-09-13,10000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_270,2023-09-13,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_271,2023-09-14,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_272,2023-09-14,5000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_273,2023-09-15,400,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Bus Repair
+Expense_274,2023-09-15,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_275,2023-09-16,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_276,2023-09-18,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_277,2023-09-20,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_278,2023-09-21,200,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Chalk
+Expense_279,2023-09-21,150,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Register
+Expense_280,2023-09-21,50,Other,Other,Other,Daily run,other,Expense,Cash,2023-2024,Data Migration - Petrol Bike
+Expense_281,2023-09-21,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_282,2023-09-22,500,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary
+Expense_283,2023-09-22,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_284,2023-09-23,14000,employee,Mukesh K Nitharwal,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_285,2023-09-23,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_286,2023-09-23,5000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_287,2023-09-26,4000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_288,2023-09-26,5177,Other,Other,Other,Bills,Electricity,Expense,Cash,2023-2024,Data Migration - Electricity bill
+Expense_289,2023-09-26,3500,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary
+Expense_290,2023-09-26,10000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_291,2023-09-26,6000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary
+Expense_292,2023-09-27,2000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_293,2023-09-27,1000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_294,2023-09-27,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_295,2023-09-27,20000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_296,2023-09-28,1000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - salary
+Expense_297,2023-09-28,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_298,2023-09-28,330,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Student Register
+Expense_299,2023-09-28,5000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary phone pay
+Expense_300,2023-09-29,50,Other,Other,other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_301,2023-09-30,50,Other,Other,other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_302,2023-10-02,3000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary phone pay
+Expense_303,2023-10-02,7200,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_304,2023-10-02,4000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_305,2023-10-02,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_306,2023-10-03,50,Other,Other,Other,Daily run,other,Expense,Cash,2023-2024,Data Migration - Petrol
+Expense_307,2023-10-03,250,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_308,2023-10-03,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_309,2023-10-03,2500,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_310,2023-10-04,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_311,2023-10-05,8800,employee,Renu Marwal(EVS),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary final payment
+Expense_312,2023-10-05,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_313,2023-10-05,2000,Other,Other,Transport,Transport Maintenance,Bus3 - 0597,Expense,Cash,2023-2024,Data Migration - Bus Self Repair
+Expense_314,2023-10-05,38,employee,Renu Marwal(EVS),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - To make balace 0
+Expense_315,2023-10-06,10300,employee,Rekha Meena,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary
+Expense_316,2023-10-06,5200,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus Battery new 
+Expense_317,2023-10-06,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_318,2023-10-06,3000,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus Break Kit
+Expense_319,2023-10-06,500,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_320,2023-10-06,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_321,2023-10-09,5000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_322,2023-10-09,3000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_323,2023-10-09,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_324,2023-10-10,5000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_325,2023-10-10,150,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Bus puncture
+Expense_326,2023-10-10,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_327,2023-10-11,5000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash payment
+Expense_328,2023-10-11,250,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Ink Printer
+Expense_329,2023-10-11,50,Other,Other,Other,Daily run,other,Expense,Cash,2023-2024,Data Migration - Petrol
+Expense_330,2023-10-11,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_331,2023-10-11,5000,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash payment
+Expense_332,2023-10-12,740,Other,Other,Other,Bills,News paper,Expense,Cash,2023-2024,Data Migration - news paper bill
+Expense_333,2023-10-12,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_334,2023-10-13,2000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_335,2023-10-13,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_336,2023-10-14,5000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_337,2023-10-17,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_338,2023-10-18,10000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_339,2023-10-18,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_340,2023-10-19,5000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_341,2023-10-19,500,Other,Other,Other,Advertising,Parents visit,Expense,Cash,2023-2024,Data Migration - Car petrol Swamani Gardian
+Expense_342,2023-10-19,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_343,2023-10-19,100,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Chalk
+Expense_344,2023-10-20,182000,Other,Other,Transport,Diesel Cash,Payment   - VPP,Expense,Cash,2023-2024,Data Migration - Vinayak Petrol Pump
+Expense_345,2023-10-21,10000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_346,2023-10-21,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_347,2023-10-23,1000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_348,2023-10-23,500,employee,Reena Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_349,2023-10-23,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_350,2023-10-26,460,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_351,2023-10-26,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol
+Expense_352,2023-10-26,2000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary 
+Expense_353,2023-10-26,200,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_354,2023-10-26,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_355,2023-10-27,7000,Other,Other,Transport,Transport Maintenance,Bus3 - 0597,Expense,Cash,2023-2024,Data Migration - Tyre remote one pair
+Expense_356,2023-10-27,1500,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus Putta Items cost
+Expense_357,2023-10-27,1500,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Bus Putta Items cost
+Expense_358,2023-10-27,700,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus putta labour cost
+Expense_359,2023-10-27,850,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Bus putta labour cost
+Expense_360,2023-10-27,10000,employee,Reena Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_361,2023-10-27,5000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_362,2023-10-27,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_363,2023-10-27,6000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_364,2023-10-28,1320,Other,Other,Other,Bills,Electricity,Expense,Cash,2023-2024,Data Migration - Electricity bill
+Expense_365,2023-10-28,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_366,2023-10-29,5000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_367,2023-10-30,1500,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Sita Ram Bajya before October
+Expense_368,2023-10-30,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_369,2023-10-30,400,Other,Other,Transport,Transport Maintenance,Bus3 - 0597,Expense,Cash,2023-2024,Data Migration - Tyre change
+Expense_370,2023-10-30,200,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Broom
+Expense_371,2023-10-31,2000,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,"Data Migration - Bus repair, Srirma automobile, Fanbelt, brk oil"
+Expense_372,2023-10-31,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_373,2023-10-31,100,Other,Other,Transport,Transport Maintenance,Bus3 - 0597,Expense,Cash,2023-2024,Data Migration - Bus puncture
+Expense_374,2023-11-01,500,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Breakfast RTE team
+Expense_375,2023-11-01,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_376,2023-11-02,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_377,2023-11-03,220,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus Puncture
+Expense_378,2023-11-03,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_379,2023-11-04,100,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol
+Expense_380,2023-11-04,100,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Speed post
+Expense_381,2023-11-04,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_382,2023-11-06,4800,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary cash
+Expense_383,2023-11-06,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_384,2023-11-06,200,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_385,2023-11-07,100,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol Jaipur RTE bill
+Expense_386,2023-11-07,100,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Speed post RTE Resubmit
+Expense_387,2023-11-07,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_388,2023-11-08,7000,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash salary 
+Expense_389,2023-11-08,2000,employee,Nainita Soni,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_390,2023-11-08,20000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_391,2023-11-08,1920,employee,Munshi Driving,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash - Emergency driver
+Expense_392,2023-11-09,2000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_393,2023-11-09,8500,employee,Nainita Soni,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_394,2023-11-09,3000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_395,2023-11-09,2500,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_396,2023-11-09,5000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_397,2023-11-09,5500,Other,Other,Other,Event Celebration,Other,Expense,Cash,2023-2024,Data Migration - Staff sweets on Diwali
+Expense_398,2023-11-09,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_399,2023-11-10,5000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_400,2023-11-11,2000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_401,2023-11-11,2000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_402,2023-11-17,100,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Staff first aid
+Expense_403,2023-11-17,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_404,2023-11-17,18000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_405,2023-11-18,600,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Bus puncture
+Expense_406,2023-11-18,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_407,2023-11-18,14000,employee,Reena Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_408,2023-11-20,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_409,2023-11-20,10000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_410,2023-11-20,14000,employee,Meena Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_411,2023-11-21,2100,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - bus repair Pokar ji cross change
+Expense_412,2023-11-21,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea
+Expense_413,2023-11-22,400,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Printer repair
+Expense_414,2024-11-22,80,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - cellotape
+Expense_415,2024-11-22,200,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Chalk
+Expense_416,2024-11-22,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_417,2024-11-23,10000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Salary
+Expense_418,2024-11-23,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_419,2024-11-27,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_420,2024-11-28,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_421,2024-11-28,600,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_422,2024-11-29,5000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_423,2024-11-29,250,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Cash Rim Paper
+Expense_424,2024-11-29,150,Other,Other,Transport,Transport Maintenance,Other,Expense,Cash,2023-2024,Data Migration - Cash air cleaning buses
+Expense_425,2024-11-29,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_426,2024-11-29,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol bike
+Expense_427,2024-11-30,600,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash 
+Expense_428,2024-11-30,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_429,2024-11-30,15000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_430,2024-11-30,5000,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_431,2024-11-30,4000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_432,2024-12-01,310,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,"Data Migration - Radiator, pin etc"
+Expense_433,2024-12-01,100,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol
+Expense_434,2024-12-01,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_435,2024-12-02,3500,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_436,2024-12-02,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_437,2024-12-04,5000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_438,2024-12-04,1000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_439,2024-12-04,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_440,2024-12-05,450,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - driver gate repair
+Expense_441,2024-12-05,2000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_442,2024-12-05,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_443,2024-12-06,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_444,2024-12-07,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_445,2024-12-08,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_446,2024-12-09,9500,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_447,2024-12-11,6000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_448,2024-12-11,500,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_449,2024-12-11,2100,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_450,2024-12-11,1200,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_451,2024-12-11,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_452,2024-12-11,300,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_453,2024-12-11,1000,employee,Nainita Soni,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_454,2024-12-12,5000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_455,2024-12-12,3400,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_456,2024-12-12,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_457,2024-12-12,5000,employee,Suresh Dudiya,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_458,2024-12-12,3000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_459,2024-12-13,7000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash/phone pay
+Expense_460,2024-12-13,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_461,2024-12-13,10000,Other,Other,Other,Daily run,Toilet cleaning,Expense,Cash,2023-2024,"Data Migration - Shyam Chemical, cleanings. Bill no 1251,382,2000"
+Expense_462,2024-12-14,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_463,2024-12-15,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_464,2024-12-15,5000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_465,2024-12-18,10000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_466,2024-12-18,7000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_467,2024-12-18,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_468,2024-12-19,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_469,2024-12-19,200,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Broom
+Expense_470,2024-12-19,500,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_471,2024-12-20,500,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Printing papers
+Expense_472,2024-12-20,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_473,2024-12-21,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_474,2024-12-22,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_475,2024-12-23,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_476,2024-12-23,450,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Printer repair
+Expense_477,2024-12-23,390,Other,Other,Other,Event Celebration,Other,Expense,Cash,2023-2024,Data Migration - x-mass dress
+Expense_478,2024-12-24,30000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_479,2024-12-25,5000,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_480,2024-12-25,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_481,2024-12-26,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_482,2024-12-26,145000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_483,2024-01-05,10000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_484,2024-01-05,5000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_485,2024-01-10,3600,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_486,2024-01-10,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_487,2024-01-11,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_488,2024-01-15,2400,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_489,2024-01-15,2000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_490,2024-01-15,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_491,2024-01-16,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_492,2024-01-16,750,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - Bus Repair
+Expense_493,2024-01-16,1000,employee,Reena Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_494,2024-01-16,3000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_495,2024-01-16,10000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - 
+Expense_496,2024-01-17,600,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_497,2024-01-17,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_498,2024-01-18,5000,employee,Nainita Soni,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_499,2024-01-18,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_500,2024-01-19,3000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_501,2024-01-19,50,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea
+Expense_502,2024-01-19,4000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_503,2024-01-19,4000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_504,2024-01-20,70,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol Bike
+Expense_505,2024-01-20,150,Other,Other,Other,Bills,Phone,Expense,Cash,2023-2024,Data Migration - Sim Riplacement
+Expense_506,2024-01-23,8098,Other,Other,Other,Bills,Electricity,Expense,Cash,2023-2024,Data Migration - Electricity bill
+Expense_507,2024-01-23,2800,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_508,2024-01-25,500,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_509,2024-01-27,5000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_510,2024-01-28,5000,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_511,2024-01-31,5000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_512,2024-01-31,500,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea 1o days
+Expense_513,2024-01-29,800,Other,Other,Other,Event Celebration,Republic Day,Expense,Cash,2023-2024,Data Migration - Sweets 26th january
+Expense_514,2024-02-01,10000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Ashok Kumawat phone pay
+Expense_515,2024-02-01,3000,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_516,2024-02-01,1500,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_517,2024-02-02,5000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay
+Expense_518,2024-02-03,3000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_519,2024-02-03,500,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_520,2024-02-05,400,Other,Other,Other,Daily run,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_521,2024-02-08,1720,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - bus putta
+Expense_522,2024-02-08,70,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - adarak diposable cups
+Expense_523,2024-02-09,14000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone Pay and cash
+Expense_524,2024-02-09,10000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - phone pay
+Expense_525,2024-02-09,5000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - phone pay
+Expense_526,2024-02-09,2400,Other,Other,Transport,Transport Maintenance,Bus1 - 4903,Expense,Cash,2023-2024,Data Migration - Bus Self Repair
+Expense_527,2024-02-09,850,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - tea 17 days 20 jan to 9 feb
+Expense_528,2024-02-09,100,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Milk packate
+Expense_529,2024-02-10,20000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_530,2024-02-10,2500,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_531,2024-02-10,500,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_532,2024-02-10,5000,employee,Nainita Soni,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - phone pay
+Expense_533,2024-02-12,100,Other,Other,Transport,Transport Maintenance,Bus2 - 7407,Expense,Cash,2023-2024,Data Migration - break oil
+Expense_534,2024-02-13,6000,employee,Anita Bai,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_535,2024-02-14,350,Other,Other,Transport,Transport Maintenance,Bus3 - 0597,Expense,Cash,2023-2024,Data Migration - Air Cleaning and bus puncture
+Expense_536,2024-02-14,500,Other,Other,Other,Daily run,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_537,2024-02-14,250,Other,Other,Other,Daily run,Stationary,Expense,Cash,2023-2024,Data Migration - 
+Expense_538,2024-02-15,100,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol Bike
+Expense_539,2024-02-16,5000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_540,2024-02-19,300,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_541,2024-02-20,2000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_542,2024-02-21,10000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Phone pay
+Expense_543,2024-02-22,5000,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_544,2024-02-23,25000,employee,Chhoti Devi,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash ?
+Expense_545,2024-02-27,1000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_546,2024-02-27,20000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_547,2024-03-01,4900,employee,Dolat Kansotia,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - phone pay
+Expense_548,2024-03-04,10000,employee,Reena Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_549,2024-03-04,4000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - phone pay
+Expense_550,2024-03-04,10000,employee,Ashok Kumawat(Maths),Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Ashok Kumawat phone pay
+Expense_551,2024-03-04,1500,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Tea 10th Feb to 05 March
+Expense_552,2024-03-04,5000,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Paathsala app
+Expense_553,2024-03-04,6500,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - School Bell
+Expense_554,2024-03-05,1000,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Annual Exam Notebooks and stationary
+Expense_555,2024-03-05,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol bike Hinginia
+Expense_556,2024-03-05,7000,employee,Reena Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_557,2024-03-05,500,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_558,2024-03-06,10000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_559,2024-03-06,10000,employee,Charan Singh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_560,2024-03-09,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - petrol
+Expense_561,2024-03-09,2230,Other,Other,Other,Daily run,Toilet cleaning,Expense,Cash,2023-2024,Data Migration - Toilet cleaning
+Expense_562,2024-03-10,10000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_563,2024-03-10,2500,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_564,2024-03-11,14000,employee,Madhu Sharma,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - phone pay
+Expense_565,2024-03-12,250,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Rim paper
+Expense_566,2024-03-12,250,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Mark List
+Expense_567,2024-03-12,100,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol
+Expense_568,2024-03-13,7000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - Cash
+Expense_569,2024-03-14,800,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,"Data Migration - Ink, stationary"
+Expense_570,2024-03-14,50,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Petrol
+Expense_571,2024-03-14,500,Other,Other,Other,Stationary,Stationary,Expense,Cash,2023-2024,Data Migration - Exam mark list
+Expense_572,2024-03-15,2588,Other,Other,Other,Bills,Electricity,Expense,Cash,2023-2024,Data Migration - Electricity bill
+Expense_573,2024-03-15,500,Other,Other,Other,Daily run,Snacks,Expense,Cash,2023-2024,Data Migration - Staff tea and refreshment
+Expense_574,2024-03-16,7000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_575,2024-03-16,10000,employee,Gowardhan Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_576,2024-03-16,10000,employee,Seema Chaudhary,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_577,2024-03-16,40000,employee,Ramswaroop Khokhar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_578,2024-03-16,25000,employee,Chhoti Devi,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - cash
+Expense_579,2024-03-17,200,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - Kanya daan
+Expense_580,2024-03-17,200,Other,Other,Other,Daily run,Toilet cleaning,Expense,Cash,2023-2024,Data Migration - broom
+Expense_581,2024-03-18,10000,employee,Prahlad Sepat,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - phone pay
+Expense_582,2024-03-18,500,Other,Other,Other,Daily run,Other,Expense,Cash,2023-2024,Data Migration - New session toffies and prize for kids
+Expense_583,2024-03-21,10000,employee,Mukesh Gurjar,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - phone pay
+Expense_584,2024-03-27,10000,employee,Suman Parikh,Salary,Salary,Salary,Expense,Cash,2023-2024,Data Migration - phone pay
+Expense_585,2024-03-11,50000,Other,Other,Other,Other,Other,Expense,Cash,2023-2024,Data Migration - Cash Arora Agency

@@ -1,0 +1,68 @@
+{% extends "website/base.html" %}
+{% block title %}Employee Monthly Statement{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0; text-align:center; text-decoration:underline;">Employee Monthly Statement</h2>
+
+<div class="card" style="margin-bottom:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Employee Information</div>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb; width:25%;">Employee Name</th>
+      <td style="padding:10px; border:1px solid #e5e7eb; width:25%;">{{ employee.name }}</td>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb; width:25%;">Employee ID</th>
+      <td style="padding:10px; border:1px solid #e5e7eb; width:25%;">{{ employee.emp_no }}</td>
+    </tr>
+    <tr>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb;">Session</th>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ session.session|default:"—" }}</td>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb;">Month</th>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ month_display }}</td>
+    </tr>
+  </table>
+</div>
+
+<div class="card" style="margin-bottom:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Salary Summary</div>
+  {% if register %}
+  <table style="width:100%; border-collapse:collapse;">
+    <tr style="background:#f3f4f6;">
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Description</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Amount</th>
+    </tr>
+    <tr>
+      <td style="padding:10px; border:1px solid #e5e7eb;">Payable Salary</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ payable_salary|floatformat:2 }}</td>
+    </tr>
+    <tr>
+      <td style="padding:10px; border:1px solid #e5e7eb;">Paid Salary</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ paid_amount|floatformat:2 }}</td>
+    </tr>
+    <tr style="background:{% if due_salary > 0 %}#fee2e2{% else %}#d1fae5{% endif %};">
+      <td style="padding:10px; border:1px solid #e5e7eb; font-weight:600;">Due Salary</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right; font-weight:600;">₹{{ due_salary|floatformat:2 }}</td>
+    </tr>
+  </table>
+  {% else %}
+    <p style="margin:0; color:#6b7280;">No register entry found for this employee and month.</p>
+  {% endif %}
+</div>
+
+<div style="margin-top:30px; padding:20px; border-top:2px solid #e5e7eb;">
+  <p style="margin:0 0 10px; color:#6b7280; font-size:14px;">Statement generated on: {{ statement_date|date:"F d, Y" }}</p>
+</div>
+
+<div style="margin-top:20px; text-align:center;">
+  <a href="{% url 'select_statement_type' %}" class="btn-ghost"><i class="fa-solid fa-arrow-left"></i> Back</a>
+  <button onclick="window.print()" class="btn-primary" style="padding:10px 32px; margin-left:10px; font-size:16px;">Print Statement</button>
+</div>
+
+{% endblock %}

@@ -1,0 +1,243 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+{% block title %}Bulk Import - Employees{% endblock %}
+
+{% block content %}
+<style>
+    /* Fix radio button spacing */
+    ul.radiolist {
+        list-style: none;
+        padding-left: 0;
+        margin-top: 8px;
+    }
+    ul.radiolist li {
+        margin-bottom: 8px;
+    }
+    ul.radiolist li label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+    }
+    ul.radiolist li input[type="radio"] {
+        margin: 0;
+        width: 18px;
+        height: 18px;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2>Bulk Import Employees</h2>
+    <hr>
+
+    <!-- Instructions -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5>Instructions</h5>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li>Upload a CSV file with employee data</li>
+                <li style="font-family: monospace; margin-top: 8px;">
+                    <strong>Required columns:</strong> Name, Joining_Date
+                </li>
+                <li style="font-family: monospace;">
+                    <strong>Optional columns:</strong> DOB, Contact_Number, Gender, Qualification, Address, Experience_Years, Previous_Institute, Post, Role, Role_Detail, Base_Salary_Per_Month, Status, Leaves_Entitled
+                </li>
+                <li><strong>Name:</strong> Employee's full name (required)</li>
+                <li><strong>Joining_Date:</strong> Format as YYYY-MM-DD (e.g., 2024-01-15)</li>
+                <li><strong>DOB:</strong> Format as YYYY-MM-DD (e.g., 1990-05-20)</li>
+                <li><strong>Gender:</strong> M (Male), F (Female), or O (Other)</li>
+                <li><strong>Status:</strong> 'active', 'inactive', or 'left' (default: 'active')</li>
+                <li><strong>Base_Salary_Per_Month:</strong> Numeric value (e.g., 50000 or 5000.50)</li>
+                <li><strong>Experience_Years:</strong> Numeric value (e.g., 5 or 2.5)</li>
+                <li>Use the dry-run option to preview changes before importing</li>
+                <li>Choose how to handle duplicates: Skip, Update, or Error</li>
+            </ul>
+            <p class="mt-3">
+                <a href="{% url 'download_employees_template' %}" class="btn btn-sm btn-secondary">
+                    📥 Download Sample CSV
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Import Form -->
+    <div class="card mb-4" style="max-width: 700px;">
+        <div class="card-header bg-primary text-white">
+            <h5>Import Form</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data" style="max-width: 600px;">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="id_csv_file" class="form-label">{{ form.csv_file.label }}</label>
+                    {{ form.csv_file }}
+                    {% if form.csv_file.help_text %}
+                        <small class="form-text text-muted d-block mt-1">{{ form.csv_file.help_text }}</small>
+                    {% endif %}
+                    {% if form.csv_file.errors %}
+                        <div class="alert alert-danger mt-2">{{ form.csv_file.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" style="font-weight: bold; margin-bottom: 8px; display: block;">{{ form.handle_duplicates.label }}</label>
+                    <div>
+                        {{ form.handle_duplicates }}
+                    </div>
+                    {% if form.handle_duplicates.errors %}
+                        <div class="alert alert-danger mt-2">{{ form.handle_duplicates.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3" style="display: flex; align-items: center; gap: 10px;">
+                    {{ form.dry_run }}
+                    <label class="form-check-label" for="id_dry_run" style="margin: 0; font-weight: bold;">
+                        {{ form.dry_run.label }}
+                    </label>
+                    <small class="form-text text-muted" style="margin-left: 10px;">Preview changes without saving to database</small>
+                    {% if form.dry_run.errors %}
+                        <div class="alert alert-danger mt-2">{{ form.dry_run.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div style="display:flex; gap:8px; margin-top:20px;">
+                    <button type="submit">
+                        📤 Import
+                    </button>
+                    <a href="{% url 'employees_home' %}" class="btn-secondary">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    {% if import_result %}
+    <div class="card mb-4">
+        <div class="card-header {% if import_result.dry_run %}bg-warning{% else %}bg-success{% endif %} text-white">
+            <h5>
+                {% if import_result.dry_run %}
+                    📋 Dry-Run Preview
+                {% else %}
+                    ✅ Import Summary
+                {% endif %}
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="alert alert-info">
+                        <strong>New Records:</strong> {{ import_result.created }}
+                    </div>
+                </div>
+                {% if import_result.updated %}
+                <div class="col-md-6 mb-3">
+                    <div class="alert alert-info">
+                        <strong>Updated Records:</strong> {{ import_result.updated }}
+                    </div>
+                </div>
+                {% endif %}
+                {% if import_result.skipped %}
+                <div class="col-md-6 mb-3">
+                    <div class="alert alert-warning">
+                        <strong>Skipped Records:</strong> {{ import_result.skipped }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Show valid rows in dry-run mode -->
+            {% if import_result.dry_run and import_result.valid_rows %}
+            <h6 class="mt-4">Records to be imported:</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Row</th>
+                            <th>Name</th>
+                            <th>Joining Date</th>
+                            <th>Post</th>
+                            <th>Status</th>
+                            <th>Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row_num, data in import_result.valid_rows %}
+                        <tr>
+                            <td>{{ row_num }}</td>
+                            <td>{{ data.name }}</td>
+                            <td>{{ data.joining_date|date:"Y-m-d" }}</td>
+                            <td>{{ data.post }}</td>
+                            <td>{{ data.status }}</td>
+                            <td class="text-right">{{ data.base_salary_per_month|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            <!-- Show duplicates in dry-run mode -->
+            {% if import_result.dry_run and import_result.duplicate_rows %}
+            <h6 class="mt-4">Duplicate records detected:</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped table-warning">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Row</th>
+                            <th>Name</th>
+                            <th>Joining Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row_num, data in import_result.duplicate_rows %}
+                        <tr>
+                            <td>{{ row_num }}</td>
+                            <td>{{ data.name }}</td>
+                            <td>{{ data.joining_date|date:"Y-m-d" }}</td>
+                            <td>
+                                {% if import_result.handle_duplicates == 'update' %}
+                                    Will be updated
+                                {% elif import_result.handle_duplicates == 'skip' %}
+                                    Will be skipped
+                                {% else %}
+                                    Will cause error
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            {% if not import_result.dry_run %}
+            <div class="mt-4">
+                <a href="{% url 'employees_home' %}" class="btn btn-primary">
+                    Return to Employees
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="mt-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "website/base.html" %}
+{% block title %}Full Statement{% endblock %}
+{% block content %}
+
+<div style="max-width:600px; margin:50px auto;">
+  <h2 style="text-align:center; margin-top:0;">Full Statement</h2>
+  
+  <a href="{% url 'full_statement' %}" class="content-card fancy-card teal" style="text-decoration:none; display:block; margin-bottom:20px;">
+    <div class="title"><i class="fa-solid fa-file-lines"></i> View Full Statement</div>
+    <p class="desc">View all sessions with monthly income, expense, and balance summary.</p>
+  </a>
+
+  <div style="text-align:center;">
+    <a href="{% url 'select_statement_type' %}" class="btn-ghost"><i class="fa-solid fa-arrow-left"></i> Back</a>
+  </div>
+</div>
+
+{% endblock %}
+
+

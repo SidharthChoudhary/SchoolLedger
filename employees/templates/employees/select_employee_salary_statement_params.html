@@ -1,0 +1,37 @@
+{% extends "website/base.html" %}
+{% block title %}Select Employee - Salary Statement{% endblock %}
+{% block content %}
+
+<div style="max-width: 600px; margin: 40px auto;">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px; margin-bottom: 30px; text-align: center;">
+        <h1 style="margin: 0; font-size: 28px;">Employee Salary Statement</h1>
+        <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">Select an employee to view their salary statement</p>
+    </div>
+
+    <form method="POST" style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        {% csrf_token %}
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #333;">
+                <i class="fa-solid fa-person"></i> Select Employee <span style="color: red;">*</span>
+            </label>
+            <select name="employee" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                <option value="">-- Choose an employee --</option>
+                {% for emp in employees %}
+                    <option value="{{ emp.id }}">{{ emp.name }} (ID: {{ emp.emp_no }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 30px;">
+            <button type="submit" style="flex: 1; padding: 12px; background: #667eea; color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px;">
+                <i class="fa-solid fa-arrow-right"></i> View Statement
+            </button>
+            <a href="{% url 'select_statement_type' %}" style="flex: 1; padding: 12px; background: #666; color: white; text-decoration: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px; text-align: center; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

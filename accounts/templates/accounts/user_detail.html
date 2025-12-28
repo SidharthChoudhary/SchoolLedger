@@ -1,0 +1,97 @@
+{% extends "website/base.html" %}
+{% block title %}{{ user.username }} - User Details{% endblock %}
+{% block content %}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <h2 style="margin:0;">User Details: {{ user.username }}</h2>
+  <a href="{% url 'user_list' %}" style="padding: 10px 20px; background: #6b7280; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">← Back to Users</a>
+</div>
+
+<!-- User Info Card -->
+<div class="card" style="margin-bottom: 20px;">
+  <h3 style="margin-top: 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Basic Information</h3>
+  
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 15px 0;">
+    <div>
+      <label style="font-weight: 700; color: #6b7280; font-size: 12px;">Full Name</label>
+      <p style="margin: 5px 0 0 0; font-size: 16px;">{{ user.profile.full_name }}</p>
+    </div>
+    <div>
+      <label style="font-weight: 700; color: #6b7280; font-size: 12px;">Email</label>
+      <p style="margin: 5px 0 0 0; font-size: 16px;">{{ user.email|default:"—" }}</p>
+    </div>
+    <div>
+      <label style="font-weight: 700; color: #6b7280; font-size: 12px;">Phone</label>
+      <p style="margin: 5px 0 0 0; font-size: 16px;">{{ user.profile.phone|default:"—" }}</p>
+    </div>
+    <div>
+      <label style="font-weight: 700; color: #6b7280; font-size: 12px;">Department</label>
+      <p style="margin: 5px 0 0 0; font-size: 16px;">{{ user.profile.department|default:"—" }}</p>
+    </div>
+    <div>
+      <label style="font-weight: 700; color: #6b7280; font-size: 12px;">Status</label>
+      <p style="margin: 5px 0 0 0; font-size: 16px;">
+        {% if user.is_active %}
+          <span style="display: inline-block; background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">Active</span>
+        {% else %}
+          <span style="display: inline-block; background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">Inactive</span>
+        {% endif %}
+      </p>
+    </div>
+    <div>
+      <label style="font-weight: 700; color: #6b7280; font-size: 12px;">Superuser</label>
+      <p style="margin: 5px 0 0 0; font-size: 16px;">
+        {% if user.is_superuser %}
+          <span style="display: inline-block; background: #dc2626; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">YES</span>
+        {% else %}
+          <span style="display: inline-block; background: #e5e7eb; color: #374151; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">NO</span>
+        {% endif %}
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Assigned Roles -->
+<div class="card" style="margin-bottom: 20px;">
+  <h3 style="margin-top: 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Assigned Roles ({{ user_roles.count }})</h3>
+  
+  <div style="padding: 15px 0;">
+    {% if user_roles %}
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+        {% for user_role in user_roles %}
+          <div style="display: flex; align-items: center; gap: 10px; background: #f0f9ff; border: 1px solid #bfdbfe; padding: 10px 15px; border-radius: 6px;">
+            <span style="font-weight: 600; color: #1e40af;">{{ user_role.role.display_name }}</span>
+            <form method="post" action="{% url 'remove_user_role' user.id user_role.role.id %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" style="background: #dc2626; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;" onclick="return confirm('Remove this role?');">Remove</button>
+            </form>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="color: #9ca3af; margin: 0;">No roles assigned</p>
+    {% endif %}
+  </div>
+  
+  <!-- Add Role Form -->
+  <div style="border-top: 1px solid #e5e7eb; padding-top: 15px;">
+    <h4 style="margin-top: 0;">Assign New Role</h4>
+    <form method="post" action="{% url 'add_user_role' user.id %}" style="display: flex; gap: 10px; align-items: flex-end;">
+      {% csrf_token %}
+      <div style="flex: 1; min-width: 250px;">
+        <label style="font-weight: 700; display: block; margin-bottom: 5px;">Select Role</label>
+        <select name="role_id" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; height: 40px;">
+          <option value="">-- Select a role --</option>
+          {% for role in available_roles %}
+            {% if not user_role.role in user_roles|dictsort:"role" %}
+              <option value="{{ role.id }}">{{ role.display_name }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" style="padding: 8px 20px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; height: 40px;">Add Role</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

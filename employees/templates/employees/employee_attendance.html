@@ -1,0 +1,221 @@
+{% extends "website/base.html" %}
+{% block title %}Attendance Records{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Attendance Records</h2>
+
+{% if messages %}
+<div class="messages">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<h3 class="form-section">Attendance Records</h3>
+
+  {% if attendance_records %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Session</th>
+          <th>Date</th>
+          <th>Employee ID</th>
+          <th>Employee Name</th>
+          <th>Attendance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in attendance_records %}
+        <tr>
+          <td>{{ record.session.session }}</td>
+          <td>{{ record.date|date:"d-m-Y" }}</td>
+          <td>{{ record.employee.emp_no }}</td>
+          <td>{{ record.employee.name }}</td>
+          <td>
+            <span class="status {% if record.attendance == 'present' %}status-present{% elif record.attendance == 'absent' %}status-absent{% elif record.attendance == 'half-day' %}status-half-day{% else %}status-leave{% endif %}">
+              {{ record.get_attendance_display }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No attendance records yet.</p>
+  {% endif %}
+</div>
+
+<style>
+  .form-section {
+    margin: 30px 0 20px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0F4F4F;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #A2A2A3;
+  }
+
+  .entry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 14px;
+  }
+
+  .field input,
+  .field select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  .field input:focus,
+  .field select:focus {
+    outline: none;
+    border-color: #0F4F4F;
+    box-shadow: 0 0 0 3px rgba(15, 79, 79, 0.25);
+  }
+
+  .field-btn button {
+    background-color: #0F4F4F;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .field-btn button:hover {
+    background-color: #0a3a3a;
+  }
+
+  .error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .messages {
+    margin-bottom: 20px;
+  }
+
+  .alert {
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    margin-top: 15px;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table thead {
+    background-color: #f8f9fa;
+  }
+
+  .table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  .status {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .status-present {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .status-absent {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+
+  .status-half-day {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  .status-leave {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+
+  .actions {
+    white-space: nowrap;
+  }
+
+  .btn-edit,
+  .btn-delete {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  .btn-edit {
+    background-color: #d3d3d3;
+    color: #333;
+  }
+
+  .btn-edit:hover {
+    background-color: #b8b8b8;
+  }
+
+  .btn-delete {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-delete:hover {
+    background-color: #c82333;
+  }
+</style>
+
+{% endblock %}

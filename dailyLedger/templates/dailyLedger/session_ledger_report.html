@@ -1,0 +1,249 @@
+{% extends "website/base.html" %}
+{% block title %}Session Ledger Report{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Session Ledger Report</h2>
+
+<!-- Session Selection Panel -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Select Session</h3>
+  
+  <form method="get" style="display:flex; gap:12px; align-items:flex-end;">
+    <div style="flex: 1; max-width: 300px;">
+      <label style="font-weight: 700;">Session</label>
+      <select name="session" style="height:40px; width:100%;">
+        <option value="">-- Select Session --</option>
+        {% for session in sessions %}
+          <option value="{{ session.id }}" {% if session.id|stringformat:"s" == selected_session_id %}selected{% endif %}>
+            {{ session.session }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" style="height:40px; padding: 0 20px;">Generate Report</button>
+  </form>
+</div>
+
+<!-- Report Display -->
+{% if selected_session %}
+<div class="card">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h3 class="form-section">{{ selected_session.session }} - Ledger Report</h3>
+    <button onclick="window.print()" style="padding:10px 20px; background:#0284c7; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:14px;">
+      🖨️ Print Report
+    </button>
+  </div>
+  
+  {% if report_data %}
+    <div style="overflow-x: auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:13px;">
+        <thead>
+          <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
+            <th style="padding:10px; text-align:left; border:1px solid #e5e7eb; font-weight:700;">Month</th>
+            
+            <!-- Income Major Heads -->
+            {% for head in income_major_heads %}
+              <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#e0f2fe;">
+                {{ head }}
+              </th>
+            {% endfor %}
+            <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#dbeafe;">
+              Total Income
+            </th>
+            
+            <!-- Expense Major Heads -->
+            {% for head in expense_major_heads %}
+              <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fce7f3;">
+                {{ head }}
+              </th>
+            {% endfor %}
+            <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fbecf3;">
+              Total Expense
+            </th>
+            
+            <!-- Balance -->
+            <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#f0fdf4;">
+              Balance
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in report_data %}
+            <tr style="border-bottom:1px solid #e5e7eb;">
+              <td style="padding:10px; border:1px solid #e5e7eb; font-weight:600;">
+                {{ row.month_display }} {{ row.month.year }}
+              </td>
+              
+              <!-- Income amounts -->
+              {% for amount in row.income_amounts %}
+                <td style="padding:10px; text-align:right; border:1px solid #e5e7eb;">
+                  {{ amount|floatformat:0 }}
+                </td>
+              {% endfor %}
+              <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:600; background:#dbeafe;">
+                {{ row.total_income|floatformat:0 }}
+              </td>
+              
+              <!-- Expense amounts -->
+              {% for amount in row.expense_amounts %}
+                <td style="padding:10px; text-align:right; border:1px solid #e5e7eb;">
+                  {{ amount|floatformat:0 }}
+                </td>
+              {% endfor %}
+              <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:600; background:#fbecf3;">
+                {{ row.total_expense|floatformat:0 }}
+              </td>
+              
+              <!-- Balance -->
+              <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:600; background:#f0fdf4; color:{% if row.balance >= 0 %}#15803d{% else %}#dc2626{% endif %};">
+                {% if row.balance >= 0 %}
+                  +{{ row.balance|floatformat:0 }}
+                {% else %}
+                  {{ row.balance|floatformat:0 }}
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          
+          <!-- Totals Row -->
+          <tr style="background:#f9fafb; border-top:2px solid #d1d5db; border-bottom:2px solid #d1d5db; font-weight:700;">
+            <td style="padding:10px; border:1px solid #d1d5db;">
+              Total
+            </td>
+            
+            <!-- Income totals by head -->
+            {% for total in income_head_totals_list %}
+              <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#e0f2fe;">
+                {{ total|floatformat:0 }}
+              </td>
+            {% endfor %}
+            <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#dbeafe;">
+              {{ total_income|floatformat:0 }}
+            </td>
+            
+            <!-- Expense totals by head -->
+            {% for total in expense_head_totals_list %}
+              <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fce7f3;">
+                {{ total|floatformat:0 }}
+              </td>
+            {% endfor %}
+            <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fbecf3;">
+              {{ total_expense|floatformat:0 }}
+            </td>
+            
+            <!-- Balance total -->
+            <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#f0fdf4; color:{% if total_balance >= 0 %}#15803d{% else %}#dc2626{% endif %};">
+              {% if total_balance >= 0 %}
+                +{{ total_balance|floatformat:0 }}
+              {% else %}
+                {{ total_balance|floatformat:0 }}
+              {% endif %}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p style="color:#6b7280; padding:20px; text-align:center;">
+      No data available for this session.
+    </p>
+  {% endif %}
+</div>
+{% endif %}
+
+<style>
+  table {
+    border-collapse: collapse;
+  }
+  
+  table th, table td {
+    border: 1px solid #e5e7eb;
+  }
+  
+  /* Make table responsive */
+  @media (max-width: 1024px) {
+    table {
+      font-size: 12px;
+    }
+  }
+  
+  /* Print Styling */
+  @page {
+    size: landscape;
+    margin: 0.5in;
+  }
+  
+  @media print {
+    body {
+      background: white;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Hide everything */
+    * {
+      visibility: hidden;
+    }
+    
+    /* Show only the table and its parent card */
+    table, 
+    table * {
+      visibility: visible;
+    }
+    
+    .card:last-of-type,
+    .card:last-of-type * {
+      visibility: visible;
+    }
+    
+    /* Position and size the visible content */
+    .card:last-of-type {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    
+    /* Hide form div with print button */
+    .card:last-of-type > div:first-child {
+      visibility: hidden;
+    }
+    
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9px;
+      margin: 0;
+    }
+    
+    table th {
+      background: #f3f4f6;
+      border: 1px solid #333;
+      padding: 3px;
+      text-align: center;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      font-weight: bold;
+    }
+    
+    table td {
+      border: 1px solid #333;
+      padding: 2px 3px;
+      text-align: right;
+    }
+    
+    table td:first-child {
+      text-align: left;
+    }
+  }
+</style>
+
+{% endblock %}

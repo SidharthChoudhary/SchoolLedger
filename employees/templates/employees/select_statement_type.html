@@ -1,0 +1,92 @@
+{% extends "website/base.html" %}
+{% block title %}Select Statement Type{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0; text-align:center; text-decoration:underline;">Select Statement Type</h2>
+
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; max-width:900px; margin:20px auto;">
+  <a href="{% url 'select_employee_monthly_params' %}" class="content-card fancy-card blue">
+    <div class="title"><i class="fa-solid fa-calendar-days"></i> Employee Monthly Statement</div>
+    <p class="desc">Generate for one employee for a specific month.</p>
+  </a>
+
+  <a href="{% url 'select_employee_yearly_params' %}" class="content-card fancy-card purple">
+    <div class="title"><i class="fa-solid fa-calendar"></i> Employee Yearly Statement</div>
+    <p class="desc">Generate for one employee across a selected year.</p>
+  </a>
+
+  <a href="{% url 'select_employees_monthly_params' %}" class="content-card fancy-card green">
+    <div class="title"><i class="fa-solid fa-users"></i> Employees Monthly Statement</div>
+    <p class="desc">Generate for all employees for a specific month.</p>
+  </a>
+
+  <a href="{% url 'select_employees_yearly_params' %}" class="content-card fancy-card amber">
+    <div class="title"><i class="fa-solid fa-users"></i> Employees Yearly Statement</div>
+    <p class="desc">Generate for all employees across a selected year.</p>
+  </a>
+
+  <a href="{% url 'select_pay_slip_params' %}" class="content-card fancy-card rose">
+    <div class="title"><i class="fa-solid fa-file-invoice-dollar"></i> Pay Slip</div>
+    <p class="desc">Generate monthly pay slip for a single employee.</p>
+  </a>
+
+  <a href="{% url 'select_employee_salary_statement_params' %}" class="content-card fancy-card indigo">
+    <div class="title"><i class="fa-solid fa-receipt"></i> Employee Salary Statement</div>
+    <p class="desc">View transaction-based salary statement (payable vs paid) for an employee.</p>
+  </a>
+
+  <a href="{% url 'select_employee_salary_payment_details_params' %}" class="content-card fancy-card teal">
+    <div class="title"><i class="fa-solid fa-list"></i> Salary Payment Details</div>
+    <p class="desc">View detailed payment transactions for an employee with each payment listed separately.</p>
+  </a>
+
+  <a href="{% url 'employees_summary_statement' %}" class="content-card fancy-card cyan">
+    <div class="title"><i class="fa-solid fa-table"></i> Employees Summary Statement</div>
+    <p class="desc">Big table for all employees across all months. Use session filter on the URL if needed.</p>
+  </a>
+
+  <a href="{% url 'select_ledger_statement_params' %}" class="content-card fancy-card orange">
+    <div class="title"><i class="fa-solid fa-book"></i> Ledger Statement</div>
+    <p class="desc">View all income and expense transactions for a selected session by month.</p>
+  </a>
+
+  <a href="{% url 'select_expense_statement_params' %}" class="content-card fancy-card pink">
+    <div class="title"><i class="fa-solid fa-money-bill-wave"></i> Expense Statement</div>
+    <p class="desc">View monthly expense totals per head for a session.</p>
+  </a>
+
+  <a href="{% url 'select_income_statement_params' %}" class="content-card fancy-card blue">
+    <div class="title"><i class="fa-solid fa-coins"></i> Income Statement</div>
+    <p class="desc">View monthly income totals per head for a session.</p>
+  </a>
+
+  <a href="{% url 'select_full_statement_params' %}" class="content-card fancy-card teal">
+    <div class="title"><i class="fa-solid fa-file-lines"></i> Full Statement</div>
+    <p class="desc">View session summary with monthly income, expense, and balance.</p>
+  </a>
+</div>
+
+<style>
+  body, h2, p, div, a, span {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+  
+  h2 {
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  
+  .title {
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  .desc {
+    font-weight: 400;
+    font-size: 14px;
+  }
+</style>
+
+{% endblock %}

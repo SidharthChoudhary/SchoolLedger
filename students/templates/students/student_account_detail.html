@@ -1,0 +1,182 @@
+{% extends "website/base.html" %}
+{% block title %}{{ student.name }} Account{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">{{ student.name }} - Account</h2>
+
+<div style="margin-bottom: 20px;">
+  <a href="{% url 'select_student_account' %}" class="btn-secondary">← Back to Student Selection</a>
+</div>
+
+<div class="card" style="margin-bottom:14px;">
+  <div class="student-header">
+    {% if student.image %}
+      <img src="{{ student.image.url }}" alt="{{ student.name }}" class="student-header-image">
+    {% else %}
+      <div class="student-header-placeholder">
+        <i class="fa-solid fa-user"></i>
+      </div>
+    {% endif %}
+    <div class="student-header-info">
+      <h3>{{ student.name }}</h3>
+      <p><strong>Class:</strong> {{ student.student_class }}</p>
+      <p><strong>Father's Name:</strong> {{ student.fathers_name }}</p>
+      <p><strong>Mother's Name:</strong> {{ student.mothers_name }}</p>
+    </div>
+  </div>
+</div>
+
+{% if accounts %}
+<div class="table-responsive card">
+  <table class="fees-table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Session</th>
+        <th>Tuition Fees</th>
+        <th>TC Fees</th>
+        <th>Book-Diary</th>
+        <th>Book-Other</th>
+        <th>Admission Fees</th>
+        <th>Uniform Shirt</th>
+        <th>Uniform Pant</th>
+        <th>Uniform Tie</th>
+        <th>Uniform Belt</th>
+        <th>Uniform ID Card</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for account in accounts %}
+      <tr>
+        <td class="no">{{ forloop.counter }}</td>
+        <td class="session">{{ account.session.session }}</td>
+        <td class="amount">{{ account.tuition_fees }}</td>
+        <td class="amount">{{ account.tc_fees }}</td>
+        <td class="amount">{{ account.book_diary }}</td>
+        <td class="amount">{{ account.book_other }}</td>
+        <td class="amount">{{ account.admission_fees }}</td>
+        <td class="amount">{{ account.uniform_shirt }}</td>
+        <td class="amount">{{ account.uniform_pant }}</td>
+        <td class="amount">{{ account.uniform_tie }}</td>
+        <td class="amount">{{ account.uniform_belt }}</td>
+        <td class="amount">{{ account.uniform_id_card }}</td>
+        <td class="total">{{ account.total_fees }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="card">
+  <p style="text-align: center; padding: 30px;">No account records found for this student.</p>
+</div>
+{% endif %}
+
+<style>
+  .student-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .student-header-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .student-header-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    color: #999;
+  }
+  
+  .student-header-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+  }
+  
+  .student-header-info p {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  .fees-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  
+  .fees-table thead {
+    background-color: #f8f9fa;
+  }
+  
+  .fees-table th, .fees-table td {
+    padding: 10px;
+    text-align: right;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .fees-table th {
+    font-weight: bold;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  .fees-table td.no {
+    text-align: center;
+    width: 40px;
+  }
+  
+  .fees-table td.session {
+    text-align: left;
+    min-width: 80px;
+  }
+  
+  .fees-table td.amount {
+    text-align: right;
+  }
+  
+  .fees-table td.total {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    border-top: 2px solid #dee2e6;
+  }
+  
+  .fees-table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #545b62;
+  }
+</style>
+
+{% endblock %}

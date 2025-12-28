@@ -1,0 +1,552 @@
+{% extends "website/base.html" %}
+{% block title %}Income{% endblock %}
+{% block content %}
+
+<h2 style="margin-top:0;">Income</h2>
+
+<div style="margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+	<a href="/ledger-income/bulk-import-ledger/" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: var(--teal-700); color: white; text-decoration: none; font-size: 14px;">
+		📤 Bulk Import Ledger Entries
+	</a>
+	<a href="{% url 'export_income_csv' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: #059669; color: white; text-decoration: none; font-size: 14px;">
+		⬇️ Export to CSV
+	</a>
+	<a href="{% url 'delete_all_income' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: #dc2626; color: white; text-decoration: none; font-size: 14px;">
+		🗑️ Delete All
+	</a>
+</div>
+
+<!-- PANEL 1: Add Income - Other -->
+<div class="card" style="margin-bottom:14px;">
+	<h3 class="form-section">Add Income - Other</h3>
+	<form method="post" id="other-form">
+		{% csrf_token %}
+		<input type="hidden" name="income_type" value="other">
+		<div class="entry-grid" style="background: #fbfbfc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+			<div class="field">
+				<label>Session</label>
+				{{ other_form.session }}
+			</div>
+			<div class="field">
+				<label>Major Head</label>
+				{{ other_form.major_head }}
+			</div>
+			<div class="field">
+				<label>Head</label>
+				{{ other_form.head }}
+			</div>
+			<div class="field">
+				<label>Sub-Head</label>
+				{{ other_form.sub_head }}
+			</div>
+			<div class="field">
+				<label>Voucher Number</label>
+				{{ other_form.voucher_number }}
+			</div>
+			<div class="field">
+				<label>Date</label>
+				{{ other_form.date }}
+			</div>
+			<div class="field">
+				<label>Amount</label>
+				{{ other_form.amount }}
+			</div>
+			<div class="field">
+				<label>Details</label>
+				{{ other_form.details }}
+			</div>
+			<div class="field field-btn">
+				<label>&nbsp;</label>
+				<button type="submit">Save Other Income</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- PANEL 2: Add Income - Fees -->
+<div class="card" style="margin-bottom:14px;">
+	<h3 class="form-section">Add Income - Fees (Student)</h3>
+	<form method="post" id="fees-form">
+		{% csrf_token %}
+		<input type="hidden" name="income_type" value="fees">
+		
+		<!-- Cascading section -->
+		<div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; margin-bottom: 14px; background: #fbfbfc;">
+			<div class="entry-grid">
+				<div class="field">
+					<label>Session</label>
+					{{ fees_form.session }}
+				</div>
+				
+				<div class="field">
+					<label>Class</label>
+					<select name="class_select" id="class-select" style="height: 40px;">
+						<option value="">-- Select Class --</option>
+					</select>
+				</div>
+				
+				<div class="field">
+					<label>Student</label>
+					<select name="student_select" id="student-select" style="height: 40px;">
+						<option value="">-- Select Student --</option>
+					</select>
+				</div>
+				
+				<div class="field">
+					<label>Student SRN</label>
+					<input type="text" id="srn-display" readonly style="height: 40px; background-color: #f3f4f6; color: #6b7280;">
+				</div>
+				
+				<div class="field">
+					<label>Fee Account</label>
+					<input type="text" id="account-display" readonly style="height: 40px; background-color: #f3f4f6; color: #6b7280;">
+					{{ fees_form.fees_account }}
+				</div>
+			</div>
+		</div>
+
+		<!-- Entry section -->
+		<div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; background: #fbfbfc;">
+			<div class="entry-grid">
+				<div class="field">
+					<label>Major Head</label>
+					{{ fees_form.major_head }}
+				</div>
+				<div class="field">
+					<label>Head</label>
+					{{ fees_form.head }}
+				</div>
+				<div class="field">
+					<label>Sub-Head</label>
+					{{ fees_form.sub_head }}
+				</div>
+				<div class="field">
+					<label>Voucher Number</label>
+					{{ fees_form.voucher_number }}
+				</div>
+				<div class="field">
+					<label>Date</label>
+					{{ fees_form.date }}
+				</div>
+				<div class="field">
+					<label>Amount</label>
+					{{ fees_form.amount }}
+				</div>
+				<div class="field">
+					<label>Details</label>
+					{{ fees_form.details }}
+				</div>
+				<div class="field field-btn">
+					<label>&nbsp;</label>
+					<button type="submit">Save Fee Income</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!-- SEARCH PANEL: Filter Transactions -->
+<h3 class="form-section">Search Transactions</h3>
+<div style="margin: 8px 0 14px; color:#6b7280; font-size:13px;">
+	Total Amount: <b>₹ {{ income_total|floatformat:2 }}</b>
+</div>
+
+<form method="get" style="margin: 10px 0 14px; display:flex; gap:12px; align-items:end; flex-wrap:wrap; background: #fbfbfc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+	<div>
+		<label style="font-size:12px; font-weight:700;">Session</label>
+		<br>
+		<select name="session" style="height:40px;">
+			<option value="">All</option>
+			{% for s in sessions %}
+				<option value="{{ s.id }}" {% if selected_session == s.id|stringformat:"s" %}selected{% endif %}>{{ s.session }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	<div>
+		<label style="font-size:12px; font-weight:700;">Major Head</label>
+		<br>
+		<select name="major_head" style="height:40px;">
+			<option value="">All</option>
+			{% for mh in major_heads %}
+				{% if mh %}<option value="{{ mh }}" {% if selected_major_head == mh %}selected{% endif %}>{{ mh }}</option>{% endif %}
+			{% endfor %}
+		</select>
+	</div>
+
+	<div>
+		<label style="font-size:12px; font-weight:700;">Head</label>
+		<br>
+		<select name="head" style="height:40px;">
+			<option value="">All</option>
+			{% for h in heads %}
+				{% if h %}<option value="{{ h }}" {% if selected_head == h %}selected{% endif %}>{{ h }}</option>{% endif %}
+			{% endfor %}
+		</select>
+	</div>
+
+	<div>
+		<label style="font-size:12px; font-weight:700;">Sub-Head</label>
+		<br>
+		<select name="sub_head" style="height:40px;">
+			<option value="">All</option>
+			{% for sh in sub_heads %}
+				{% if sh %}<option value="{{ sh }}" {% if selected_sub_head == sh %}selected{% endif %}>{{ sh }}</option>{% endif %}
+			{% endfor %}
+		</select>
+	</div>
+
+	<div>
+		<label style="font-size:12px; font-weight:700;">Account Name</label>
+		<br>
+		<select name="account_id" style="height:40px;">
+			<option value="">All</option>
+			{% for fa in fee_accounts %}
+				<option value="{{ fa.id }}" {% if selected_account == fa.id|stringformat:"s" %}selected{% endif %}>{{ fa.account_name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	<div>
+		<button type="submit" style="height:40px;">Apply</button>
+		<a href="{% url 'income_home' %}" style="margin-left:10px;">Clear</a>
+	</div>
+</form>
+
+<!-- BOTTOM PANEL: Transactions Table -->
+<div class="card">
+	<h3 class="form-section">All Income Transactions</h3>
+	{% if incomes %}
+		<table>
+			<tr>
+				<th>No.</th>
+				<th>Session</th>
+				<th>Major Head</th>
+				<th>Head</th>
+				<th>Sub-Head</th>
+				<th>Voucher</th>
+				<th>Date</th>
+				<th>Amount</th>
+				<th>Details</th>
+				<th>Fee Account</th>
+				<th>Actions</th>
+			</tr>
+			{% for income in incomes %}
+			<tr>
+				<td>{{ forloop.counter }}</td>
+				<td>{% if income.session %}{{ income.session.session }}{% endif %}</td>
+				<td>{{ income.major_head }}</td>
+				<td>{{ income.head }}</td>
+				<td>{{ income.sub_head }}</td>
+				<td>{{ income.voucher_number }}</td>
+				<td>{{ income.date|date:"d-m-Y" }}</td>
+				<td class="amount">{{ income.amount }}</td>
+				<td>{{ income.details }}</td>
+				<td>{% if income.fees_account %}{{ income.fees_account.account_name }}{% else %}--{% endif %}</td>
+				<td class="actions">
+					<a class="btn-delete"
+					   onclick="return confirm('Delete this transaction?')"
+					   href="{% url 'delete_income' income.id %}">Delete</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<p>No transactions yet.</p>
+	{% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+	const headDataJson = '{{ head_data_json|escapejs }}';
+	const headData = JSON.parse(headDataJson);
+	
+	// ========== PANEL 1: Other Income Cascading ==========
+	// Get the first form's selectors (Panel 1 - Other Income)
+	const panel1Form = document.getElementById('other-form');
+	
+	if (panel1Form) {
+		const majorSelect1 = panel1Form.querySelector('[name="major_head"]');
+		const headSelect1 = panel1Form.querySelector('[name="head"]');
+		const subSelect1 = panel1Form.querySelector('[name="sub_head"]');
+		
+		console.log('Panel 1 form found. Major:', majorSelect1, 'Head:', headSelect1, 'Sub:', subSelect1);
+		
+		function setOptions(selectEl, data) {
+			selectEl.innerHTML = '<option value="">-- Select --</option>';
+			
+			if (Array.isArray(data)) {
+				data.forEach(item => {
+					const opt = document.createElement('option');
+					opt.value = item;
+					opt.textContent = item;
+					selectEl.appendChild(opt);
+				});
+			} else if (typeof data === 'object' && data !== null) {
+				for (const [val] of Object.entries(data)) {
+					const opt = document.createElement('option');
+					opt.value = val;
+					opt.textContent = val;
+					selectEl.appendChild(opt);
+				}
+			}
+		}
+		
+		// Major head -> Head cascade
+		if (majorSelect1) {
+			majorSelect1.addEventListener('change', function() {
+				const major = this.value;
+				console.log('Major selected:', major);
+				headSelect1.value = '';
+				subSelect1.innerHTML = '<option value="">-- Select --</option>';
+				if (major && headData.Income && headData.Income[major]) {
+					console.log('Found heads for major:', headData.Income[major]);
+					setOptions(headSelect1, headData.Income[major]);
+				} else {
+					console.log('No heads found for major:', major);
+					headSelect1.innerHTML = '<option value="">-- Select --</option>';
+				}
+			});
+		}
+		
+		// Head -> SubHead cascade
+		if (headSelect1) {
+			headSelect1.addEventListener('change', function() {
+				const major = majorSelect1.value;
+				const head = this.value;
+				console.log('Head selected:', head, 'Major:', major);
+				subSelect1.value = '';
+				if (major && head && headData.Income && headData.Income[major] && headData.Income[major][head]) {
+					console.log('Found subs for head:', headData.Income[major][head]);
+					setOptions(subSelect1, headData.Income[major][head]);
+				} else {
+					console.log('No subs found');
+					subSelect1.innerHTML = '<option value="">-- Select --</option>';
+				}
+			});
+		}
+	} else {
+		console.log('Panel 1 form not found');
+	}
+	
+	// ========== PANEL 2: Fee Income Cascading ==========
+	const sessionSelect = document.getElementById('session-select');
+	const classSelect = document.getElementById('class-select');
+	const studentSelect = document.getElementById('student-select');
+	const srnDisplay = document.getElementById('srn-display');
+	const accountDisplay = document.getElementById('account-display');
+	const feesAccountInput = document.querySelector('[name="fees_account"]');
+	
+	// Setup cascading major/head/subhead dropdowns for Panel 2
+	const majorSelect = document.querySelector('#fees-form [name="major_head"]');
+	const headSelect = document.querySelector('#fees-form [name="head"]');
+	const subSelect = document.querySelector('#fees-form [name="sub_head"]');
+	
+	function setOptions(selectEl, data) {
+		selectEl.innerHTML = '<option value="">-- Select --</option>';
+		
+		if (Array.isArray(data)) {
+			data.forEach(item => {
+				const opt = document.createElement('option');
+				opt.value = item;
+				opt.textContent = item;
+				selectEl.appendChild(opt);
+			});
+		} else if (typeof data === 'object' && data !== null) {
+			for (const [val] of Object.entries(data)) {
+				const opt = document.createElement('option');
+				opt.value = val;
+				opt.textContent = val;
+				selectEl.appendChild(opt);
+			}
+		}
+	}
+	
+	// Major head -> Head cascade
+	if (majorSelect) {
+		majorSelect.addEventListener('change', function() {
+			const major = this.value;
+			headSelect.value = '';
+			subSelect.innerHTML = '<option value="">-- Select --</option>';
+			if (major && headData.Income && headData.Income[major]) {
+				setOptions(headSelect, headData.Income[major]);
+			} else {
+				headSelect.innerHTML = '<option value="">-- Select --</option>';
+			}
+		});
+	}
+	
+	// Head -> SubHead cascade
+	if (headSelect) {
+		headSelect.addEventListener('change', function() {
+			const major = majorSelect.value;
+			const head = this.value;
+			subSelect.value = '';
+			if (major && head && headData.Income && headData.Income[major] && headData.Income[major][head]) {
+				setOptions(subSelect, headData.Income[major][head]);
+			} else {
+				subSelect.innerHTML = '<option value="">-- Select --</option>';
+			}
+		});
+	}
+	
+	// Session -> Class cascade
+	sessionSelect.addEventListener('change', function() {
+		const sessionId = this.value;
+		classSelect.innerHTML = '<option value="">-- Select Class --</option>';
+		studentSelect.innerHTML = '<option value="">-- Select Student --</option>';
+		srnDisplay.value = '';
+		accountDisplay.value = '';
+		feesAccountInput.value = '';
+		
+		if (!sessionId) return;
+		
+		fetch(`/ledger-income/api/classes/${sessionId}/`)
+			.then(r => r.json())
+			.then(data => {
+				if (data.classes && data.classes.length > 0) {
+					data.classes.forEach(cls => {
+						const opt = document.createElement('option');
+						opt.value = cls.id;
+						opt.textContent = cls.name;
+						classSelect.appendChild(opt);
+					});
+				}
+			})
+			.catch(err => console.error('Error fetching classes:', err));
+	});
+	
+	// Class -> Student cascade
+	classSelect.addEventListener('change', function() {
+		const sessionId = sessionSelect.value;
+		const classId = this.value;
+		studentSelect.innerHTML = '<option value="">-- Select Student --</option>';
+		srnDisplay.value = '';
+		accountDisplay.value = '';
+		feesAccountInput.value = '';
+		
+		if (!sessionId || !classId) return;
+		
+		fetch(`/ledger-income/api/students/${sessionId}/${classId}/`)
+			.then(r => r.json())
+			.then(data => {
+				if (data.students && data.students.length > 0) {
+					data.students.forEach(student => {
+						const opt = document.createElement('option');
+						opt.value = student.id;
+						opt.textContent = student.name;
+						studentSelect.appendChild(opt);
+					});
+				}
+			})
+			.catch(err => console.error('Error fetching students:', err));
+	});
+	
+	// Student -> SRN & Fee Account
+	studentSelect.addEventListener('change', function() {
+		const studentId = this.value;
+		srnDisplay.value = '';
+		accountDisplay.value = '';
+		feesAccountInput.value = '';
+		
+		if (!studentId) return;
+		
+		fetch(`/ledger-income/api/student-srn/${studentId}/`)
+			.then(r => r.json())
+			.then(data => {
+				if (data.srn) {
+					srnDisplay.value = data.srn;
+					
+					// Now fetch fee account
+					fetch(`/ledger-income/api/fee-account/${data.srn}/`)
+						.then(r => r.json())
+						.then(accountData => {
+							if (accountData.account_id) {
+								accountDisplay.value = accountData.account_name;
+								feesAccountInput.value = accountData.account_id;
+							} else {
+								accountDisplay.value = 'No fee account found';
+								feesAccountInput.value = '';
+							}
+						})
+						.catch(err => console.error('Error fetching fee account:', err));
+				}
+			})
+			.catch(err => console.error('Error fetching SRN:', err));
+	});
+});
+
+// ========== Search Form Cascading Dropdowns ==========
+document.addEventListener('DOMContentLoaded', function() {
+	const headDataJson = '{{ head_data_json|escapejs }}';
+	const headData = JSON.parse(headDataJson);
+	
+	// Find the search form (method="get")
+	const searchForm = document.querySelector('form[method="get"]');
+	if (searchForm) {
+		const majorSel = searchForm.querySelector('[name="major_head"]');
+		const headSel = searchForm.querySelector('[name="head"]');
+		const subSel = searchForm.querySelector('[name="sub_head"]');
+		
+		if (majorSel && headSel && subSel) {
+			function setHeadOptions(select, options, placeholder = 'All') {
+				select.innerHTML = `<option value="">${placeholder}</option>`;
+				// options is an object like {Head1: [...], Head2: [...]}
+				Object.keys(options).forEach(key => {
+					const opt = document.createElement('option');
+					opt.value = key;
+					opt.textContent = key;
+					select.appendChild(opt);
+				});
+			}
+			
+			function setSubHeadOptions(select, options, placeholder = 'All') {
+				select.innerHTML = `<option value="">${placeholder}</option>`;
+				// options is an array like ["Sub1", "Sub2", "Sub3"]
+				if (Array.isArray(options)) {
+					options.forEach(sub => {
+						const opt = document.createElement('option');
+						opt.value = sub;
+						opt.textContent = sub;
+						select.appendChild(opt);
+					});
+				}
+			}
+			
+			majorSel.addEventListener('change', function() {
+				const major = this.value;
+				headSel.value = '';
+				subSel.value = '';
+				if (major && headData.Income && headData.Income[major]) {
+					setHeadOptions(headSel, headData.Income[major], 'All');
+					subSel.innerHTML = '<option value="">All</option>';
+				} else {
+					headSel.innerHTML = '<option value="">All</option>';
+					subSel.innerHTML = '<option value="">All</option>';
+				}
+			});
+
+			headSel.addEventListener('change', function() {
+				const major = majorSel.value;
+				const head = this.value;
+				subSel.value = '';
+				if (major && head && headData.Income && headData.Income[major] && headData.Income[major][head]) {
+					setSubHeadOptions(subSel, headData.Income[major][head], 'All');
+				} else {
+					subSel.innerHTML = '<option value="">All</option>';
+				}
+			});
+
+			// Trigger initial cascading if major_head is already selected
+			if (majorSel.value) {
+				majorSel.dispatchEvent(new Event('change'));
+				if (headSel.value) {
+					headSel.dispatchEvent(new Event('change'));
+				}
+			}
+		}
+	}
+});
+</script>
+
+{% endblock %}

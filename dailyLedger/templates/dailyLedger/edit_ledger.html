@@ -1,0 +1,62 @@
+{% extends "website/base.html" %}
+{% block title %}Edit Ledger Entry{% endblock %}
+
+{% block content %}
+<h2>Edit Ledger Entry</h2>
+
+<form method="post">
+  {% csrf_token %}
+
+  <div class="entry-grid">
+    <div class="field">
+      <label>VoucherNumber</label>
+      {{ form.voucher_number }}
+    </div>
+
+    <div class="field">
+      <label>Date</label>
+      {{ form.date }}
+    </div>
+
+    <div class="field">
+      <label>Amount</label>
+      {{ form.amount }}
+    </div>
+
+    <div class="field field-wide">
+      <label>Remark</label>
+      {{ form.remark }}
+    </div>
+
+    <div class="field">
+      <label>Name</label>
+      {{ form.name }}
+    </div>
+
+    <div class="field">
+      <label>Major Head</label>
+      {{ form.major_head }}
+    </div>
+
+    <div class="field">
+      <label>Head</label>
+      {{ form.head }}
+    </div>
+
+    <div class="field">
+      <label>Sub Head</label>
+      {{ form.sub_head }}
+    </div>
+
+    <div class="field field-btn">
+      <label>&nbsp;</label>
+      <button type="submit">Save Changes</button>
+    </div>
+  </div>
+<div class="edit-actions">
+  <a class="btn-cancel" href="/ledger-expense/">Cancel</a>
+</div>
+
+
+</form>
+{% endblock %}

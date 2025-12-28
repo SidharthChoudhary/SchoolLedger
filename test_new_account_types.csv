@@ -1,0 +1,7 @@
+Voucher_Number,Date,Amount,Account_Type,Account_Name,Major_Head,Head,Sub_Head,Ledger_Type,Payment_Type,Session,Details
+V001,2024-01-15,5000,employee,Poonam Gupta,Salary,Salary,Salary,Expense,Cash,2023-2024,January salary
+V002,2024-01-20,2000,Book Agency,ABC Book Publishers,Operations,Books,Student Books,Expense,Credit,2023-2024,Books purchase
+V003,2024-01-25,1500,Vinayak Patrol Pump,Van Fuel,Transport,Fuel,Van Fuel,Expense,Cash,2023-2024,Transport fuel
+V004,2024-01-28,500,other,Office Maintenance,Operations,Maintenance,Office,Expense,Cash,2023-2024,General maintenance
+V005,2024-02-01,10000,employee,Mukesh Jodha,Salary,Salary,Salary,Expense,Cash,2023-2024,February salary
+I001,2024-02-05,100000,student_fees,School Fees Account,Fee,Student Fees,,Income,Bank Transfer,2023-2024,Monthly fees collected
