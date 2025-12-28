@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.decorators.cache import never_cache
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.db.models import Q
@@ -14,6 +15,7 @@ from .forms import UserProfileForm
 
 @login_required
 @role_required('super_admin', 'admin', 'principal')
+@never_cache
 def user_list(request):
     """List all users with their roles"""
     users = User.objects.prefetch_related('user_roles__role').all()
@@ -38,6 +40,7 @@ def user_list(request):
 
 @login_required
 @role_required('super_admin', 'admin', 'principal')
+@never_cache
 def user_detail(request, user_id):
     """View user details and manage roles"""
     user = get_object_or_404(User, pk=user_id)
@@ -54,6 +57,7 @@ def user_detail(request, user_id):
 
 @login_required
 @role_required('super_admin', 'admin', 'principal')
+@never_cache
 def add_user_role(request, user_id):
     """Add a role to a user"""
     if request.method == 'POST':
@@ -77,6 +81,7 @@ def add_user_role(request, user_id):
 
 @login_required
 @role_required('super_admin', 'admin', 'principal')
+@never_cache
 def remove_user_role(request, user_id, role_id):
     """Remove a role from a user"""
     if request.method == 'POST':
@@ -94,6 +99,7 @@ def remove_user_role(request, user_id, role_id):
 
 @login_required
 @role_required('super_admin', 'admin', 'principal')
+@never_cache
 def role_list(request):
     """List all roles"""
     roles = Role.objects.all()
@@ -114,6 +120,7 @@ def role_list(request):
 
 @login_required
 @role_required('super_admin', 'admin')
+@never_cache
 def role_detail(request, role_id):
     """View role details and manage permissions"""
     role = get_object_or_404(Role, pk=role_id)
@@ -127,6 +134,7 @@ def role_detail(request, role_id):
 
 
 @login_required
+@never_cache
 def profile(request):
     """View user's own profile"""
     user_profile = request.user.profile
@@ -139,6 +147,7 @@ def profile(request):
 
 
 @login_required
+@never_cache
 def edit_profile(request):
     """Edit user's own profile"""
     user_profile = request.user.profile

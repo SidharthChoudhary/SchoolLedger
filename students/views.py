@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.urls import reverse
 from datetime import date
+from django.views.decorators.cache import never_cache
 from dailyLedger.models import Session
 from .models import (
     Student,
@@ -16,6 +17,7 @@ from .models import (
 from .forms import StudentForm, ClassForm, FeesAccountForm
 
 
+@never_cache
 def add_student(request):
     """Redirect to view_students for add/edit functionality"""
     return redirect('view_students')

@@ -45,6 +45,9 @@ def _build_head_data():
     return json.dumps(result)
 
 
+from django.views.decorators.cache import never_cache
+
+@never_cache
 def _ledger_view(request, model, form_class, template_name, page_title, ledger_type="Expense"):
     """Generic ledger view for Expense and Income"""
     edit_id = request.GET.get("edit")
@@ -156,12 +159,14 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
 
 
 @role_required('accountant', 'admin')
+@never_cache
 def expenses_home(request):
     """View for expense entries"""
     return _ledger_view(request, Expense, ExpenseForm, "dailyLedger/expense_home.html", "Expenses", ledger_type="Expense")
 
 
 @role_required('accountant', 'admin')
+@never_cache
 def income_home(request):
     """View for income entries - handles both regular and fee income"""
     from .forms import IncomeFeesForm
@@ -243,6 +248,7 @@ def income_home(request):
     })
 
 
+@never_cache
 def delete_expense(request, pk):
     """Delete an expense entry"""
     obj = get_object_or_404(Expense, pk=pk)
@@ -252,6 +258,7 @@ def delete_expense(request, pk):
     return render(request, "dailyLedger/delete_expense.html", {"entry": obj})
 
 
+@never_cache
 def delete_income(request, pk):
     """Delete an income entry"""
     obj = get_object_or_404(Income, pk=pk)
@@ -262,6 +269,7 @@ def delete_income(request, pk):
 
 
 @role_required('admin')
+@never_cache
 def heads_home(request):
     edit_id = request.GET.get("edit")
     editing_head = Head.objects.filter(pk=edit_id).first() if edit_id else None
@@ -315,6 +323,7 @@ def heads_home(request):
     )
 
 
+@never_cache
 def delete_head(request, pk):
     obj = get_object_or_404(Head, pk=pk)
     if request.method == "POST":
@@ -323,6 +332,7 @@ def delete_head(request, pk):
     return render(request, "dailyLedger/delete_head.html", {"head_obj": obj})
 
 
+@never_cache
 def sessions_home(request):
     edit_id = request.GET.get("edit")
     editing_session = Session.objects.filter(pk=edit_id).first() if edit_id else None
@@ -361,6 +371,7 @@ def sessions_home(request):
     )
 
 
+@never_cache
 def delete_session(request, pk):
     obj = get_object_or_404(Session, pk=pk)
     if request.method == "POST":
@@ -369,6 +380,7 @@ def delete_session(request, pk):
     return render(request, "dailyLedger/delete_session.html", {"session_obj": obj})
 
 
+@never_cache
 def bulk_import(request):
     """Handle bulk import of account heads from CSV"""
     import_result = None
@@ -446,6 +458,7 @@ def bulk_import(request):
     )
 
 
+@never_cache
 def download_template(request):
     """Download sample CSV template for bulk import"""
     # Create CSV response
@@ -466,6 +479,7 @@ def download_template(request):
     return response
 
 
+@never_cache
 def bulk_import_ledger(request):
     """Handle bulk import of ledger entries from CSV"""
     import_result = None
@@ -555,6 +569,7 @@ def bulk_import_ledger(request):
     )
 
 
+@never_cache
 def download_ledger_template(request):
     """Download sample CSV template for ledger entries bulk import"""
     # Create CSV response
@@ -575,6 +590,7 @@ def download_ledger_template(request):
     return response
 
 
+@never_cache
 def fees_structure_list(request):
     """View all fees structures and add/edit on same page"""
     editing_fees = None
@@ -611,17 +627,20 @@ def fees_structure_list(request):
     })
 
 
+@never_cache
 def add_fees_structure(request):
     """Redirect to fees_structure_list for add/edit functionality"""
     return redirect('fees_structure_list')
 
 
+@never_cache
 def edit_fees_structure(request, pk):
     """Redirect to fees_structure_list for add/edit functionality"""
     from django.urls import reverse
     return redirect(f'{reverse("fees_structure_list")}?edit={pk}')
 
 
+@never_cache
 def delete_fees_structure(request, pk):
     """Delete a fees structure"""
     fees_structure = get_object_or_404(FeesStructure, pk=pk)
@@ -634,6 +653,7 @@ def delete_fees_structure(request, pk):
 
 
 # API Endpoints for cascading dropdowns in fee income form
+@never_cache
 def api_get_classes(request, session_id):
     """Get all classes for a given session"""
     from students.models import SessionClassStudentMap, Class
@@ -651,6 +671,7 @@ def api_get_classes(request, session_id):
         return JsonResponse({'error': str(e)}, status=400)
 
 
+@never_cache
 def api_get_students(request, session_id, class_id):
     """Get all students for a given session and class"""
     from students.models import SessionClassStudentMap
@@ -669,6 +690,7 @@ def api_get_students(request, session_id, class_id):
         return JsonResponse({'error': str(e)}, status=400)
 
 
+@never_cache
 def api_get_student_srn(request, student_id):
     """Get SRN for a given student"""
     from students.models import Student
@@ -687,6 +709,7 @@ def api_get_student_srn(request, student_id):
         return JsonResponse({'error': str(e)}, status=400)
 
 
+@never_cache
 def api_get_fee_account(request, srn):
     """Get fee account for a given SRN"""
     from students.models import Student, FeesAccount
@@ -713,6 +736,7 @@ def api_get_fee_account(request, srn):
         return JsonResponse({'error': str(e)}, status=400)
 
 
+@never_cache
 def session_ledger_report(request):
     """Generate a ledger report for a selected session showing income and expenses by major head"""
     sessions = Session.objects.all()
@@ -833,6 +857,7 @@ def session_ledger_report(request):
     return render(request, 'dailyLedger/session_ledger_report.html', context)
 
 
+@never_cache
 def export_expenses_csv(request):
     """Export all expenses to CSV in bulk import format"""
     expenses = Expense.objects.all()
@@ -860,6 +885,7 @@ def export_expenses_csv(request):
     return response
 
 
+@never_cache
 def delete_all_expenses(request):
     """Delete all expenses with confirmation"""
     if request.method == 'POST':
@@ -876,6 +902,7 @@ def delete_all_expenses(request):
     })
 
 
+@never_cache
 def export_income_csv(request):
     """Export all income to CSV in bulk import format"""
     incomes = Income.objects.all()
@@ -903,6 +930,7 @@ def export_income_csv(request):
     return response
 
 
+@never_cache
 def delete_all_income(request):
     """Delete all income with confirmation"""
     if request.method == 'POST':
@@ -919,6 +947,7 @@ def delete_all_income(request):
     })
 
 
+@never_cache
 def export_heads_csv(request):
     """Export all heads to CSV in bulk import format"""
     heads = Head.objects.all()
@@ -943,6 +972,7 @@ def export_heads_csv(request):
     return response
 
 
+@never_cache
 def delete_all_heads(request):
     """Delete all heads with confirmation"""
     if request.method == 'POST':

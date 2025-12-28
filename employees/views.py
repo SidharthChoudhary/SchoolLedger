@@ -8,12 +8,14 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.contrib import messages
 from accounts.decorators import role_required
+from django.views.decorators.cache import never_cache
 
 from .models import Employee, EmployeeRegister, EmployeeAttendance, ManualSalaryData
 from .forms import EmployeeForm, EmployeeRegisterForm, EmployeeAttendanceForm, ManualSalaryDataForm
 from dailyLedger.models import Session, Expense, Income
 
 @role_required('accountant', 'admin', 'teacher')
+@never_cache
 def employees_home(request):
     edit_id = request.GET.get("edit")
     editing_employee = None
