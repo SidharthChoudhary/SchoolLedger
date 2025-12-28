@@ -1,0 +1,50 @@
+# ============================================================================
+# PRODUCTION SETTINGS FOR PYTHONANYWHERE - MySQL Configuration
+# 
+# Instructions:
+# 1. In PythonAnywhere bash console, open: nano schoolapp/settings.py
+# 2. Find the DATABASES section (around line 80-90)
+# 3. Replace the entire DATABASES dictionary with the code below
+# 4. Replace the placeholder values with your actual MySQL credentials
+# ============================================================================
+
+# REPLACE THIS SECTION IN schoolapp/settings.py:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dpstibariyan$schoolledger',           # Database name
+        'USER': 'dpstibariyan',                        # MySQL username
+        'PASSWORD': 'YOUR_MYSQL_PASSWORD_HERE',        # Replace with your MySQL password
+        'HOST': 'dpstibariyan.mysql.pythonanywhere-services.com',  # PythonAnywhere MySQL host
+        'PORT': '3306',                                # MySQL port
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+        }
+    }
+}
+
+# ============================================================================
+# ADD THESE SECURITY SETTINGS AT THE END OF settings.py
+# ============================================================================
+
+# Security Settings for Production
+DEBUG = False
+ALLOWED_HOSTS = ['dpstibariyan.pythonanywhere.com', 'www.dpstibariyan.pythonanywhere.com']
+
+# Static and Media Files
+STATIC_ROOT = '/home/dpstibariyan/SchoolLedger/static'
+MEDIA_ROOT = '/home/dpstibariyan/SchoolLedger/media'
+
+# Security
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Additional Security
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Host validation
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -1,0 +1,27 @@
+Dps@2025
+
+
+
+MySQL settings
+Connecting:
+Use these settings in your web applications.
+
+Database host address:dpstibariyan.mysql.pythonanywhere-services.com
+Username:dpstibariyan
+Since you have a free account, you will only be able to connect to your database using code running inside PythonAnywhere.
+
+Your databases:
+Click a database's name to start a MySQL console logged in to it.
+
+Name
+dpstibariyan$default
+Create a database
+schoolledger
+Password:schoolledger@2025
+
+Note the details that will appear:
+
+Database name: dpstibariyan$schoolledger
+Host: dpstibariyan.mysql.pythonanywhere-services.com
+Username: dpstibariyan
+Password: schoolledger@2025
