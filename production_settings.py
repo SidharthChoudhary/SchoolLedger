@@ -10,7 +10,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dpstibariyan$schoolledger',
         'USER': 'dpstibariyan',
-        'PASSWORD': 'YOUR_DB_PASSWORD_HERE',  # Set this after MySQL is created
+        'PASSWORD': 'schoolledger@2025',  # Set this after MySQL is created
         'HOST': 'dpstibariyan.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
