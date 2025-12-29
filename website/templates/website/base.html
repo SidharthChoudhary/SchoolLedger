@@ -2,12 +2,141 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <style>
+      body {
+        background: #f3f6fa;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 110px;
+        width: 100%;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 1200;
+        background: #212529;
+        color: #fff;
+        border-bottom: 2px solid #ffc107;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 0 32px;
+      }
+      .topbar-left, .topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .topbar-center {
+        flex: 1;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-width: 0;
+      }
+      .school-title {
+        font-size: 2.1rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .school-tagline, .school-address, .topbar-datetime {
+        font-size: 0.95rem;
+        margin-bottom: 0;
+        color: #e0e0e0;
+      }
+      @media (max-width: 991.98px) {
+        .topbar {
+          padding: 0 8px;
+        }
+        .school-title {
+          font-size: 1.3rem;
+        }
+        .school-tagline, .school-address, .topbar-datetime {
+          font-size: 0.8rem;
+        }
+      }
+      .main {
+        margin-left: 260px;
+        margin-top: 90px;
+        transition: margin-left 0.3s, margin-top 0.3s;
+        position: relative;
+        z-index: 1;
+      }
+      .sidebar {
+        position: fixed;
+        top: 90px;
+        left: 0;
+        height: calc(100vh - 90px);
+        width: 260px;
+        background: #0d4747;
+        color: #fff;
+        z-index: 900;
+        overflow-y: auto;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+      }
+      .sidebar .nav-link, .sidebar .section-title {
+        color: #fff;
+      }
+      .sidebar .nav-link.active, .sidebar .nav-link:hover {
+        background: #155e5e;
+        color: #fff;
+      }
+      .sidebar .section-title {
+        letter-spacing: 1px;
+        opacity: 0.8;
+      }
+      @media (max-width: 991.98px) {
+        .sidebar {
+          position: fixed;
+          left: -260px;
+          top: 90px;
+          height: calc(100vh - 90px);
+          transition: left 0.3s;
+        }
+        .sidebar.show {
+          left: 0;
+        }
+        .main {
+          margin-left: 0;
+          margin-top: 90px;
+        }
+        .sidebar-toggle-btn {
+          display: block;
+        }
+      }
+      @media (min-width: 992px) {
+        .sidebar-toggle-btn {
+          display: none;
+        }
+      }
+      .sidebar-toggle-btn {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 1100;
+        background: #0d4747;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 6px 10px;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+    </style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% block title %}Devki Public School{% endblock %}</title>
 
   <!-- Font Awesome icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ENjdO4Dr2bkBIFxQpeoA6DQD1KQ9Q8cbh6wr60P5aA1FsvH+0UjQm0k0p1Qga7c2" crossorigin="anonymous">
 
   <link rel="stylesheet" href="{% static 'website/base.css' %}">
   <link rel="icon" type="image/png" href="{% static 'website/favicon.png' %}?v=2">
@@ -16,53 +145,48 @@
 
 <body>
   <!-- TOP BAR -->
-  <div class="topbar" style="width: 100vw;">
-    <div class="topbar-inner">
-      <div class="logo-box">
-        <img src="{% static 'website/logo_left.png' %}" alt="Ganesh Ji">
-      </div>
-
-      <div class="topbar-center">
-        <h1 class="school-title">DEVKI PUBLIC SCHOOL</h1>
-        <p class="school-tagline">The new horizon of school education</p>
-        <p class="school-address">Tibariyan, Hingonia Road, Lalpur, Jobner | +91-9413442332</p>
-        <div class="topbar-datetime"><i class="fas fa-calendar"></i> {% now "l, d M Y" %} | <i class="fas fa-clock"></i> {% now "H:i" %}</div>
-      </div>
-
-      <div class="logo-box">
-        <img src="{% static 'website/logo_right.png' %}" alt="School Logo">
-      </div>
-      <div class="topbar-auth" style="display: flex; align-items: center; margin-left: 20px;">
-        {% if user.is_authenticated %}
-          <form action="{% url 'logout' %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" style="padding: 8px 18px; background: #d32f2f; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; transition: background 0.2s; border: none; cursor: pointer;">Logout</button>
-          </form>
-        {% else %}
-          <a href="/accounts/login/" class="login-btn" style="padding: 8px 18px; background: #3b82f6; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; transition: background 0.2s; border: none; cursor: pointer;">Login</a>
-        {% endif %}
-      </div>
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="sidebar-toggle-btn" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+      <img src="{% static 'website/logo_left.png' %}" alt="Ganesh Ji" style="height: 56px; width: auto;">
     </div>
-  </div>
+    <div class="topbar-center">
+      <span class="school-title">DEVKI PUBLIC SCHOOL</span>
+      <span class="school-tagline fst-italic">The new horizon of school education</span>
+      <span class="school-address">Tibariyan, Hingonia Road, Lalpur, Jobner | +91-9413442332</span>
+      <span class="topbar-datetime"><i class="fas fa-calendar"></i> {% now "l, d M Y" %} | <i class="fas fa-clock"></i> {% now "H:i" %}</span>
+    </div>
+    <div class="topbar-right">
+      {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="post" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm fw-bold px-3">Logout</button>
+        </form>
+      {% else %}
+        <a href="/accounts/login/" class="btn btn-primary btn-sm fw-bold px-3">Login</a>
+      {% endif %}
+      <img src="{% static 'website/logo_right.png' %}" alt="School Logo" style="height: 56px; width: auto;">
+    </div>
+  </header>
+  </header>
 
   <!-- SIDEBAR -->
-
   <aside class="sidebar">
-    <div class="section-title">Navigation</div>
-    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
-      <i class="fa-solid fa-house"></i> Home
+    <div class="section-title fw-bold text-uppercase small pt-3 ps-3">Navigation</div>
+    <a class="nav-link d-flex align-items-center gap-2 {% if request.path == '/' %}active{% endif %}" href="/">
+      <i class="fa-solid fa-house"></i> <span>Home</span>
     </a>
     {% if user.is_authenticated %}
       <!-- Authenticated sidebar options -->
       <div class="nav-group">
-        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'admin-menu')">
-          <i class="fa-solid fa-calendar-days"></i> Admin
-          <i class="fa-solid fa-chevron-down toggle-icon"></i>
+        <button class="nav-link nav-toggle d-flex align-items-center gap-2 w-100 text-start" onclick="toggleMenu(event, 'admin-menu')">
+          <i class="fa-solid fa-calendar-days"></i> <span>Admin</span>
+          <i class="fa-solid fa-chevron-down toggle-icon ms-auto"></i>
         </button>
-        <div id="admin-menu" class="nav-submenu">
-          <a class="nav-link nav-subitem {% if '/ledger-expense/sessions/' in request.path %}active{% endif %}"
+        <div id="admin-menu" class="nav-submenu ps-3">
+          <a class="nav-link nav-subitem d-flex align-items-center gap-2 {% if '/ledger-expense/sessions/' in request.path %}active{% endif %}"
              href="/ledger-expense/sessions/">
-            <i class="fa-solid fa-calendar-days"></i> Sessions
+            <i class="fa-solid fa-calendar-days"></i> <span>Sessions</span>
           </a>
           <a class="nav-link nav-subitem {% if '/students/classes/' in request.path %}active{% endif %}"
              href="/students/classes/">
@@ -100,11 +224,11 @@
       </div>
 
       <div class="nav-group">
-        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'ledger-menu')">
-          <i class="fa-solid fa-book"></i> Ledger
-          <i class="fa-solid fa-chevron-down toggle-icon"></i>
+        <button class="nav-link nav-toggle d-flex align-items-center gap-2 w-100 text-start" onclick="toggleMenu(event, 'ledger-menu')">
+          <i class="fa-solid fa-book"></i> <span>Ledger</span>
+          <i class="fa-solid fa-chevron-down toggle-icon ms-auto"></i>
         </button>
-        <div id="ledger-menu" class="nav-submenu">
+        <div id="ledger-menu" class="nav-submenu ps-3">
           {% if user.is_superuser or user.profile.has_any_role|default:False %}
           <a class="nav-link nav-subitem {% if request.path == '/ledger-expense/' %}active{% endif %}"
              href="/ledger-expense/">
@@ -123,11 +247,11 @@
       </div>
 
       <div class="nav-group">
-        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'statements-menu')">
-          <i class="fa-solid fa-file-invoice-dollar"></i> Statements Ledger
-          <i class="fa-solid fa-chevron-down toggle-icon"></i>
+        <button class="nav-link nav-toggle d-flex align-items-center gap-2 w-100 text-start" onclick="toggleMenu(event, 'statements-menu')">
+          <i class="fa-solid fa-file-invoice-dollar"></i> <span>Statements Ledger</span>
+          <i class="fa-solid fa-chevron-down toggle-icon ms-auto"></i>
         </button>
-        <div id="statements-menu" class="nav-submenu">
+        <div id="statements-menu" class="nav-submenu ps-3">
           {% if user.is_superuser or user.profile.is_admin|default:False %}
           <a class="nav-link nav-subitem {% if '/employees/salary-statement-full/' in request.path %}active{% endif %}"
              href="/employees/salary-statement-full/">
@@ -148,11 +272,11 @@
       </div>
 
       <div class="nav-group">
-        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'employees-menu')">
-          <i class="fa-solid fa-users"></i> Employees
-          <i class="fa-solid fa-chevron-down toggle-icon"></i>
+        <button class="nav-link nav-toggle d-flex align-items-center gap-2 w-100 text-start" onclick="toggleMenu(event, 'employees-menu')">
+          <i class="fa-solid fa-users"></i> <span>Employees</span>
+          <i class="fa-solid fa-chevron-down toggle-icon ms-auto"></i>
         </button>
-        <div id="employees-menu" class="nav-submenu">
+        <div id="employees-menu" class="nav-submenu ps-3">
           <a class="nav-link nav-subitem {% if request.path == '/employees/' %}active{% endif %}"
              href="/employees/">
             <i class="fa-solid fa-user-plus"></i> Add Employees
@@ -173,11 +297,11 @@
       </div>
 
       <div class="nav-group">
-        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'students-menu')">
-          <i class="fa-solid fa-graduation-cap"></i> Students
-          <i class="fa-solid fa-chevron-down toggle-icon"></i>
+        <button class="nav-link nav-toggle d-flex align-items-center gap-2 w-100 text-start" onclick="toggleMenu(event, 'students-menu')">
+          <i class="fa-solid fa-graduation-cap"></i> <span>Students</span>
+          <i class="fa-solid fa-chevron-down toggle-icon ms-auto"></i>
         </button>
-        <div id="students-menu" class="nav-submenu">
+        <div id="students-menu" class="nav-submenu ps-3">
           <a class="nav-link nav-subitem {% if '/students/add/' in request.path %}active{% endif %}"
              href="/students/add/">
             <i class="fa-solid fa-user-plus"></i> Add Students
@@ -205,19 +329,11 @@
         </div>
       </div>
 
-      <div class="section-title">Coming Soon</div>
-      <a class="nav-link disabled">
-        <i class="fa-solid fa-clipboard-user"></i> Attendance
-      </a>
-      <a class="nav-link disabled">
-        <i class="fa-solid fa-money-check-dollar"></i> Fees
-      </a>
-      <a class="nav-link disabled">
-        <i class="fa-solid fa-wallet"></i> Payroll
-      </a>
-      <a class="nav-link disabled">
-        <i class="fa-solid fa-message"></i> Chairman Message
-      </a>
+      <div class="section-title fw-bold text-uppercase small pt-3 ps-3">Coming Soon</div>
+      <a class="nav-link disabled d-flex align-items-center gap-2"><i class="fa-solid fa-clipboard-user"></i> <span>Attendance</span></a>
+      <a class="nav-link disabled d-flex align-items-center gap-2"><i class="fa-solid fa-money-check-dollar"></i> <span>Fees</span></a>
+      <a class="nav-link disabled d-flex align-items-center gap-2"><i class="fa-solid fa-wallet"></i> <span>Payroll</span></a>
+      <a class="nav-link disabled d-flex align-items-center gap-2"><i class="fa-solid fa-message"></i> <span>Chairman Message</span></a>
     {% endif %}
   </aside>
 
@@ -266,16 +382,26 @@ document.addEventListener('click', function(event) {
 </script>
 
   <!-- MAIN -->
-  <main class="main">
+  <main class="main container mt-5 pt-4">
+    <script>
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.classList.toggle('show');
+    }
+    </script>
     <div class="content-card">
       {% block content %}{% endblock %}
     </div>
 
-    <div class="footer">
+    <div class="footer mt-4">
       © {% now "Y" %} Devki Public School, 35 Pradhan jiki dhani, Village Tibariya, Hingoia road, Lalpura stand, Jobner road, Jaipur
     </div>
   </main>
 
+</body>
+
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qQ2a5z5FRCGDpa2Xn5Gm3QZ1p6l6Q2l5F5D5F5D5F5D5F5D5F5D5F5D5F5D5F5D5" crossorigin="anonymous"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

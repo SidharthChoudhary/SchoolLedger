@@ -1,5 +1,5 @@
 :root{
-  --sidebar-w: 345px;
+  --sidebar-w: 500px;
   --topbar-h: 110px;
 
   --teal-900: #0b3b3b;
@@ -21,61 +21,61 @@ body{
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   font-weight: 400;
   letter-spacing: 0.3px;
-  background: var(--bg);
-  color: var(--text);
-}
-
-/* Global heading styles */
-h1, h2, h3, h4, h5, h6 {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-}
-
-p, div, span, label, a {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-  font-weight: 400;
-}
-
-/* ===== Top Bar ===== */
-.topbar{
-  position: fixed;
-  top:0; left:0; right:0;
-  height: var(--topbar-h);
-  background: linear-gradient(135deg, var(--teal-900) 0%, var(--teal-800) 100%);
-  border-bottom: 3px solid var(--gold);
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.topbar-inner{
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding: 0 24px;
-  gap: 20px;
-}
-
-.topbar-center{
-  flex: 1;
-  text-align:center;
-  color: #fff;
-  line-height: 1.1;
-}
-
-.school-title{
-  margin:0;
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-}
-
-.school-tagline{
-  margin: 0 0 3px 0;
+  body {
+    background: var(--bg);
+  }
+  .main {
+    margin-left: 260px;
+    margin-top: 110px;
+    transition: margin-left 0.3s, margin-top 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+  .sidebar {
+    position: fixed;
+    top: 110px;
+    left: 0;
+    height: calc(100vh - 110px);
+    width: 260px;
+    background: #0d4747;
+    color: #fff;
+    z-index: 900;
+    overflow-y: auto;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+  }
+  .sidebar .nav-link, .sidebar .section-title {
+    color: #fff;
+  }
+  .sidebar .nav-link.active, .sidebar .nav-link:hover {
+    background: #155e5e;
+    color: #fff;
+  }
+  .sidebar .section-title {
+    letter-spacing: 1px;
+    opacity: 0.8;
+  }
+  @media (max-width: 991.98px) {
+    .sidebar {
+      position: fixed;
+      left: -260px;
+      top: 110px;
+      height: calc(100vh - 110px);
+      transition: left 0.3s;
+    }
+    .sidebar.show {
+      left: 0;
+    }
+    .main {
+      margin-left: 0;
+      margin-top: 110px;
+    }
+    .sidebar-toggle-btn {
+      display: block;
+    }
+  }
+  @media (min-width: 992px) {
+    .sidebar-toggle-btn {
+      display: none;
   font-size: 13px;
   opacity: 0.95;
   font-style: italic;
@@ -135,22 +135,22 @@ p, div, span, label, a {
 }
 
 /* ===== Sidebar ===== */
-.sidebar{
-  position: fixed;
-  top: var(--topbar-h);
-  left: 0;
-  width: var(--sidebar-w);
-  height: calc(100vh - var(--topbar-h));
-  background: linear-gradient(180deg, var(--teal-900), var(--teal-800));
-  color: #fff;
-  padding: 16px 0;
-  overflow-y: auto;
-  z-index: 900;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-}
-
-.sidebar .section-title{
-  margin: 16px 20px 12px;
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 110px;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1200;
+    background: #0d4747;
+    color: #fff;
+    border-bottom: 2px solid #ffc107;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 0 32px;
+  }
   font-size: 12px;
   opacity: 0.85;
   letter-spacing: 0.08em;
@@ -250,6 +250,8 @@ p, div, span, label, a {
   margin-left: var(--sidebar-w);
   padding: 22px 26px;
   min-height: calc(100vh - var(--topbar-h));
+  position: relative;
+  z-index: 1;
 }
 
 .content-card{
@@ -336,14 +338,14 @@ tr:hover td{ background: #fafcff; }
 }
 
 /* Responsive */
-@media (max-width: 900px){
-  .topbar-center{ text-align:left; }
-  .sidebar{ width: 220px; }
-  .main{ margin-left: 220px; }
+@media (max-width: 991.98px){
+  .sidebar{ left: -260px; transition: left 0.3s; width: 260px; }
+  .sidebar.show{ left: 0; }
+  .main{ margin-left: 0; margin-top: var(--topbar-h); }
 }
-@media (max-width: 720px){
-  .sidebar{ display:none; }
-  .main{ margin-left: 0; }
+@media (min-width: 992px){
+  .sidebar{ left: 0; width: 260px; }
+  .main{ margin-left: 260px; margin-top: var(--topbar-h); }
 }
 
 /* ===== One-row data entry grid (Excel-like) ===== */
@@ -732,25 +734,7 @@ td.actions .sep {
   .entry-grid .field-btn{ justify-self: start; }
 }
 
-/* 1) If topbar is fixed/sticky, reserve space for it */
-.topbar {
-  position: fixed;         /* or keep if you already have it */
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-}
 
-/* 2) Push sidebar + main content below the topbar */
-.sidebar,
-.main {
-  padding-top: 25px;      /* adjust this number to match your topbar height */
-}
-
-/* Optional: avoid double padding if main already has some */
-.main {
-  box-sizing: border-box;
-}
 
 /* ===== Fancy selector cards for Statement Type ===== */
 .fancy-card{
@@ -799,3 +783,58 @@ td.actions .sep {
 
 .fancy-card.pink{ background: linear-gradient(135deg, #ec4899 0%, #be185d 100%); }
 .fancy-card.pink:hover{ background: linear-gradient(135deg, #f472b6 0%, #9d174d 100%); }
+
+/* --- TOP BAR FIX --- */
+.topbar > .d-flex {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 100%;
+  gap: 0;
+}
+.topbar .sidebar-toggle-btn {
+  margin-right: 16px;
+  flex: 0 0 auto;
+}
+.topbar img {
+  display: inline-block;
+  vertical-align: middle;
+  height: 56px;
+  width: auto;
+  flex: 0 0 auto;
+}
+.topbar .ms-3 {
+  margin-left: 16px !important;
+  flex: 0 0 auto;
+}
+.topbar .flex-grow-1.text-center {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.topbar .school-title,
+.topbar .school-tagline,
+.topbar .school-address,
+.topbar .topbar-datetime {
+  margin-bottom: 0;
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+}
+@media (max-width: 991.98px) {
+  .topbar > .d-flex {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topbar .flex-grow-1.text-center {
+    margin-left: 0;
+    margin-right: 0;
+    min-width: 100%;
+  }
+}
