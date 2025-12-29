@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'schoolapp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dpstibariyan$schoolledger',
+        'USER': 'dpstibariyan',
+        'PASSWORD': 'schoolledger@2025',  # Set this after MySQL is created
+        'HOST': 'dpstibariyan.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
     }
 }
 
