@@ -2,75 +2,67 @@
 {% block title %}Ledger Statement{% endblock %}
 {% block content %}
 
-<h2 class="mt-0 text-center text-decoration-underline">Ledger Statement</h2>
+<h2 style="margin-top:0; text-align:center; text-decoration:underline;">Ledger Statement</h2>
 
-<div class="card mb-3">
-  <div class="row g-0 align-items-center">
-    <div class="col"><hr class="my-2"></div>
-    <div class="col"><hr class="my-2"></div>
+<div class="card" style="margin-bottom:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
   </div>
-  <div class="text-center fw-bold text-dark fs-5 my-2">Statement Information</div>
-  <div class="table-responsive">
-    <table class="table table-bordered mb-0">
-      <tr>
-        <th class="w-50">Session</th>
-        <td class="w-50">{{ session.session }}</td>
-      </tr>
-    </table>
-  </div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Statement Information</div>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr>
+      <th style="text-align:left; padding:10px; border:1px solid #e5e7eb; width:50%;">Session</th>
+      <td style="padding:10px; border:1px solid #e5e7eb; width:50%;">{{ session.session }}</td>
+    </tr>
+  </table>
 </div>
 
-<div class="card mb-3">
-  <div class="row g-0 align-items-center">
-    <div class="col"><hr class="my-2"></div>
-    <div class="col"><hr class="my-2"></div>
+<div class="card" style="margin-bottom:12px;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
+    <div style="flex:1; height:1px; background:#e5e7eb;"></div>
   </div>
-  <div class="text-center fw-bold text-dark fs-5 my-2">Monthly Summary</div>
+  <div style="text-align:center; font-weight:700; color:#1f2937; font-size:18px; margin:10px 0 16px;">Monthly Summary</div>
   {% if rows %}
-  <div class="table-responsive">
-    <table class="table table-bordered table-striped mb-0">
-      <thead class="table-light">
-        <tr>
-          <th>No.</th>
-          <th>Session</th>
-          <th>Month</th>
-          <th class="text-end">Total Income</th>
-          <th class="text-end">Total Expense</th>
-          <th class="text-end">Total Balance</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in rows %}
-        <tr>
-          <td>{{ forloop.counter }}</td>
-          <td>{{ row.session }}</td>
-          <td>{{ row.month_label }}</td>
-          <td class="text-end">₹{{ row.income|floatformat:2 }}</td>
-          <td class="text-end">₹{{ row.expense|floatformat:2 }}</td>
-          <td class="text-end">₹{{ row.balance|floatformat:2 }}</td>
-        </tr>
-        {% endfor %}
-        <tr class="fw-semibold bg-warning-subtle">
-          <td colspan="3">Total</td>
-          <td class="text-end">₹{{ total_income|floatformat:2 }}</td>
-          <td class="text-end">₹{{ total_expense|floatformat:2 }}</td>
-          <td class="text-end">₹{{ total_balance|floatformat:2 }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table style="width:100%; border-collapse:collapse;">
+    <tr style="background:#f3f4f6;">
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">No.</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Session</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:left;">Month</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Total Income</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Total Expense</th>
+      <th style="padding:10px; border:1px solid #e5e7eb; text-align:right;">Total Balance</th>
+    </tr>
+    {% for row in rows %}
+    <tr>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ forloop.counter }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ row.session }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb;">{{ row.month_label }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.income|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.expense|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ row.balance|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+    <tr style="background:#fef3c7; font-weight:600;">
+      <td colspan="3" style="padding:10px; border:1px solid #e5e7eb;">Total</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ total_income|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ total_expense|floatformat:2 }}</td>
+      <td style="padding:10px; border:1px solid #e5e7eb; text-align:right;">₹{{ total_balance|floatformat:2 }}</td>
+    </tr>
+  </table>
   {% else %}
-    <p class="m-0 text-secondary">No transactions found for this session.</p>
+    <p style="margin:0; color:#6b7280;">No transactions found for this session.</p>
   {% endif %}
 </div>
 
-<div class="mt-4 pt-3 border-top">
-  <p class="mb-2 text-secondary small">Statement generated on: {{ statement_date|date:"F d, Y" }}</p>
+<div style="margin-top:30px; padding:20px; border-top:2px solid #e5e7eb;">
+  <p style="margin:0 0 10px; color:#6b7280; font-size:14px;">Statement generated on: {{ statement_date|date:"F d, Y" }}</p>
 </div>
 
-<div class="mt-3 text-center">
-  <a href="{% url 'select_statement_type' %}" class="btn btn-outline-secondary me-2"><i class="fa-solid fa-arrow-left"></i> Back</a>
-  <button onclick="window.print()" class="btn btn-primary ms-2 px-4 fs-6">Print Statement</button>
+<div style="margin-top:20px; text-align:center;">
+  <a href="{% url 'select_statement_type' %}" class="btn-ghost"><i class="fa-solid fa-arrow-left"></i> Back</a>
+  <button onclick="window.print()" class="btn-primary" style="padding:10px 32px; margin-left:10px; font-size:16px;">Print Statement</button>
 </div>
 
 {% endblock %}
