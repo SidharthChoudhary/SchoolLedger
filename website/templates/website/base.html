@@ -29,8 +29,13 @@
         <div class="topbar-datetime"><i class="fas fa-calendar"></i> {% now "l, d M Y" %} | <i class="fas fa-clock"></i> {% now "H:i" %}</div>
       </div>
 
-      <div class="logo-box">
-        <img src="{% static 'website/logo_right.png' %}" alt="School Logo">
+      <div style="display:flex; align-items:center; gap:10px; margin-left:auto;">
+        <button class="mobile-menu-btn" type="button" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="logo-box">
+          <img src="{% static 'website/logo_right.png' %}" alt="School Logo">
+        </div>
       </div>
       <div class="topbar-auth" style="display: flex; align-items: center; margin-left: 20px;">
         {% if user.is_authenticated %}
@@ -235,6 +240,10 @@ function toggleMenu(event, menuId) {
   menu.classList.toggle('show');
   button.classList.toggle('active');
   icon.style.transform = menu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+function toggleSidebar() {
+  document.body.classList.toggle('sidebar-open');
 }
 
 // Auto-expand menu if any submenu item is active

@@ -57,6 +57,24 @@ p, div, span, label, a {
   gap: 20px;
 }
 
+.mobile-menu-btn{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  width:38px;
+  height:38px;
+  margin-left: 10px;
+  border-radius: 999px;
+  border:none;
+  background: rgba(255,255,255,0.14);
+  color:#fff;
+  cursor:pointer;
+}
+
+.mobile-menu-btn i{
+  font-size:18px;
+}
+
 .topbar-center{
   flex: 1;
   text-align:center;
@@ -312,21 +330,30 @@ table{
   border-collapse: collapse;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   font-weight: 400;
+  border: 1px solid rgba(0,0,0,0.12);
 }
 th{
   text-align:left;
-  padding: 10px;
+  padding: 8px 10px;
   background: #f3f6fb;
   border-bottom: 1px solid var(--border);
   color: #111827;
   font-weight: 600;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  border-right: 1px solid rgba(0,0,0,0.08);
 }
 td{
-  padding: 10px;
+  padding: 8px 10px;
   border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-right: 1px solid rgba(0,0,0,0.08);
 }
-tr:hover td{ background: #fafcff; }
+tr td:last-child,
+tr th:last-child{
+  border-right: none;
+}
+table tr:hover {
+  background: #f8fafc;
+}
 
 /* Footer */
 .footer{
@@ -335,32 +362,37 @@ tr:hover td{ background: #fafcff; }
   color: var(--muted);
 }
 
+/* Make wide tables scrollable on small screens */
+@media (max-width: 900px){
+  .content-card table,
+  .card table{
+    display:block;
+    width:100%;
+    overflow-x:auto;
+  }
+}
+
 /* Responsive */
 @media (max-width: 900px){
   .topbar-center{ text-align:left; }
-  .sidebar{ width: 220px; }
-  .main{ margin-left: 220px; }
+  .sidebar{ width: 260px; }
+  .main{ margin-left: 260px; }
 }
 @media (max-width: 720px){
-  .sidebar{ display:none; }
-  .main{ margin-left: 0; }
-}
+  .mobile-menu-btn{ display:flex; }
 
-/* ===== One-row data entry grid (Excel-like) ===== */
-.entry-grid{
-  display: grid;
-  grid-template-columns:
-    140px   /* Voucher */
-    140px   /* Date */
-    120px   /* Amount */
-    280px   /* Remark */
-    160px   /* Name */
-    140px   /* Major Head */
-    160px   /* Head */
-    160px   /* Sub Head */
-    100px;  /* Save */
-  gap: 10px;
-  align-items: end;
+  .sidebar{
+    width: 260px;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 18px rgba(0,0,0,0.25);
+    transition: transform 0.25s ease;
+  }
+
+  body.sidebar-open .sidebar{
+    transform: translateX(0);
+  }
+
+  .main{ margin-left: 0; }
 }
 
 .entry-grid .field label{
@@ -382,28 +414,6 @@ tr:hover td{ background: #fafcff; }
   padding-top: 9px;
   overflow: hidden;
 }
-
-/* Make Remark and Name a bit flexible if needed */
-.entry-grid .field-wide{
-  min-width: 240px;
-}
-
-.entry-grid .field-btn button{
-  width: 100%;
-  height: 40px;
-}
-
-/* Responsive: wrap into 2 rows on smaller screens */
-@media (max-width: 1300px){
-  .entry-grid{
-    grid-template-columns: repeat(4, minmax(180px, 1fr));
-  }
-}
-@media (max-width: 900px){
-  .entry-grid{
-    grid-template-columns: repeat(2, minmax(180px, 1fr));
-  }
-}
 td.amount {
   text-align: right;
   font-weight: 700;
@@ -413,25 +423,11 @@ td.amount {
   font-weight: 400;
 }
 
-table {
-  border: 1px solid rgba(0,0,0,0.12);
-}
-
-th, td {
-  border-right: 1px solid rgba(0,0,0,0.08);
-}
-
-tr td:last-child, tr th:last-child {
-  border-right: none;
-}
-
-th, td {
-  padding: 8px 10px;
-}
-
 .entry-grid .field-btn button{
+  width: 100%;
   height: 40px;
   border-radius: 12px;
+  white-space: nowrap;
 }
 .edit-actions{
   margin-top: 10px;
@@ -450,9 +446,6 @@ th, td {
 .btn-cancel:hover{
   background: #dde2e6;
 }
-.entry-grid .field-btn button{
-  white-space: nowrap;
-}
 .editing-row td{
   background: rgba(212,175,55,0.18) !important;
   font-weight: 600;
@@ -464,7 +457,7 @@ th, td {
 }
 /* Center + limit width */
 .employee-form-wrapper {
-  max-width: 900px;        /* controls overall form width */
+  max-width: 820px;        /* controls overall form width */
   margin: 0 auto;          /* center horizontally */
 }
 
@@ -500,46 +493,6 @@ th, td {
   max-width: 100%;
 }
 
-/* Mobile */
-@media (max-width: 900px) {
-  .employee-form-wrapper {
-    max-width: 100%;
-  }
-
-  .employee-form .row {
-    grid-template-columns: 1fr;
-  }
-
-  .employee-form .field-wide {
-    grid-column: span 1;
-  }
-}
-.employee-form-wrapper {
-  max-width: 820px;
-  margin: 0 auto;
-}
-
-.employee-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.employee-form .row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.employee-form .field {
-  display: flex;
-  flex-direction: column;
-}
-
-.employee-form .field-wide {
-  grid-column: span 2;
-}
-
 @media (max-width: 900px) {
   .employee-form-wrapper {
     max-width: 100%;
@@ -552,20 +505,13 @@ th, td {
   }
 }
 
-.form-section {
-  margin: 18px 0 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #0f766e;
-}
-.employee-form .field label {
-  margin-bottom: 6px;
-  font-weight: 600;
-}
 .form-section {
   margin: 22px 0 10px;
   padding-bottom: 4px;
   border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f766e;
 }
 .employee-form .field label {
   margin-bottom: 8px;
@@ -624,9 +570,6 @@ th, td {
 .status.Inactive {
   background: #fee2e2;
   color: #991b1b;
-}
-table tr:hover {
-  background: #f8fafc;
 }
 .btn-secondary {
   display: inline-flex;
@@ -733,13 +676,6 @@ td.actions .sep {
 }
 
 /* 1) If topbar is fixed/sticky, reserve space for it */
-.topbar {
-  position: fixed;         /* or keep if you already have it */
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-}
 
 /* 2) Push sidebar + main content below the topbar */
 .sidebar,
