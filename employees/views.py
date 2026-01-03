@@ -1689,7 +1689,7 @@ def employee_salary_statement(request):
                 'status': selected_employee.get_status_display(),
             }
             
-            # Get old dues from ManualSalaryData
+            # Get old dues from ManualSalaryData (aggregate only)
             old_dues = ManualSalaryData.objects.filter(
                 session=selected_session,
                 employee=selected_employee,
@@ -1714,23 +1714,26 @@ def employee_salary_statement(request):
             # Assuming session format is like "2024-2025" or similar
             session_year = int(selected_session.session.split('-')[0]) if '-' in selected_session.session else datetime.now().year
             
-            # Query all ManualSalaryData records for this employee (all types: salary, old_due, other)
+            # Query all ManualSalaryData records for this employee (salary, old_due, other)
             all_salary_records = ManualSalaryData.objects.filter(
                 session=selected_session,
-                employee=selected_employee
-            ).order_by('month')
+                employee=selected_employee,
+            ).order_by('month', 'amount_type')
             
             for record in all_salary_records:
                 # Extract year and month from the month field (format: YYYY-MM)
                 try:
                     record_year, record_month_num = map(int, record.month.split('-'))
                     month_name = month_name_map.get(record_month_num, record.month)
+                    month_key = f"{record_year}-{record_month_num:02d}"
                 except (ValueError, AttributeError):
                     # Fallback if month field is not in expected format
                     record_year = ''
                     month_name = record.month
+                    month_key = record.month
                 
                 monthly_salary_data.append({
+                    'month_key': month_key,
                     'month': month_name,
                     'year': record_year,
                     'salary_to_pay': float(record.amount),
@@ -1738,9 +1741,9 @@ def employee_salary_statement(request):
                     'notes': record.note or '',
                 })
             
-            # Add fallback salary entries for months without ManualSalaryData records
+            # Add fallback salary entries for months without any ManualSalaryData records
             for month_name, month_num in financial_months:
-                # Check if we already have a salary record for this month
+                # Check if we already have a record for this month
                 has_record = any(
                     record.month.endswith(f'-{month_num:02d}') 
                     for record in all_salary_records
@@ -1758,12 +1761,14 @@ def employee_salary_statement(request):
                     monthly_amount = float(base_salary_entry.payable_salary) if base_salary_entry else float(selected_employee.base_salary_per_month or 0)
                     
                     monthly_salary_data.append({
+                        'month_key': f"{year_for_month}-{month_num:02d}",
                         'month': month_name,
                         'year': year_for_month,
                         'salary_to_pay': monthly_amount,
                         'payment_type': 'Salary',
                         'notes': '',
                     })
+
             
             # Panel 3: Actual Payment Transactions
             # Query Expense table where Major Head = "Salary" and Sub Head (account_name) = Employee name
@@ -1776,6 +1781,7 @@ def employee_salary_statement(request):
             # Convert QuerySet to list of dicts with proper formatting
             transactions_list = []
             total_paid = 0
+            monthly_paid = {}
             month_name_map_short = {
                 1: 'January', 2: 'February', 3: 'March', 4: 'April',
                 5: 'May', 6: 'June', 7: 'July', 8: 'August',
@@ -1786,22 +1792,44 @@ def employee_salary_statement(request):
                 txn_year = txn_date.year
                 txn_month_num = txn_date.month
                 txn_month_name = month_name_map_short.get(txn_month_num, str(txn_month_num))
+                month_key = txn_date.strftime('%Y-%m')
+                amount_val = float(txn['amount'])
+                monthly_paid[month_key] = monthly_paid.get(month_key, 0) + amount_val
+                total_paid += amount_val
                 
                 transactions_list.append({
                     'date': txn_date.strftime('%d/%m/%Y'),
                     'year': txn_year,
                     'month': txn_month_name,
                     'remarks': txn['details'] or '',
-                    'amount': float(txn['amount']),
+                    'amount': amount_val,
                 })
-                total_paid += float(txn['amount'])
             
             payment_transactions = transactions_list
+            
+            # Attach monthly paid and net due information to salary rows
+            schedule_paid_total = 0.0
+            schedule_net_total = 0.0
+            for row in monthly_salary_data:
+                if row['payment_type'] == 'Salary':
+                    paid = monthly_paid.get(row.get('month_key', ''), 0.0)
+                    net = paid - row['salary_to_pay']
+                    # If overpaid (net > 0), show as negative
+                    row['paid_amount'] = paid
+                    row['net_due'] = -net if net > 0 else net
+                    schedule_paid_total += paid
+                else:
+                    row['paid_amount'] = None
+                    row['net_due'] = None
             
             # Calculate totals - sum all amounts from monthly_salary_data which already includes everything
             total_salary_due = sum(m['salary_to_pay'] for m in monthly_salary_data)
             # Total Due = Total Paid - Total Salary Due (negative means still owed)
             total_due = total_paid - total_salary_due
+            # Net due for schedule footer: total paid - total salary (with overpayment shown negative)
+            schedule_net_total = schedule_paid_total - total_salary_due
+            if schedule_net_total > 0:
+                schedule_net_total = -schedule_net_total
             
             # Get average monthly salary for display (only salary records, not old_due or other)
             salary_records_only = [m for m in monthly_salary_data if m['payment_type'] == 'Salary']
@@ -1813,6 +1841,8 @@ def employee_salary_statement(request):
                 'total_salary': total_salary_due,
                 'total_paid': total_paid,
                 'total_due': total_due,
+                'schedule_paid_total': schedule_paid_total,
+                'schedule_net_total': schedule_net_total,
             }
             
         except (Session.DoesNotExist, Employee.DoesNotExist):
