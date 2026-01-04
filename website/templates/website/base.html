@@ -18,34 +18,34 @@
   <!-- TOP BAR -->
   <div class="topbar" style="width: 100vw;">
     <div class="topbar-inner">
-      <div class="logo-box">
-        <img src="{% static 'website/logo_left.png' %}" alt="Ganesh Ji">
+      <div class="topbar-side topbar-side-left">
+        <div class="logo-box">
+          <img src="{% static 'website/logo_left.png' %}" alt="Ganesh Ji">
+        </div>
       </div>
 
       <div class="topbar-center">
         <h1 class="school-title">DEVKI PUBLIC SCHOOL</h1>
-        <p class="school-tagline">The new horizon of school education</p>
-        <p class="school-address">Tibariyan, Hingonia Road, Lalpur, Jobner | +91-9413442332</p>
-        <div class="topbar-datetime"><i class="fas fa-calendar"></i> {% now "l, d M Y" %} | <i class="fas fa-clock"></i> {% now "H:i" %}</div>
+        <h2 class="school-subtitle">School Management System</h2>
+        <div class="topbar-auth topbar-auth-below">
+          {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="auth-btn auth-btn-logout">Logout</button>
+            </form>
+          {% else %}
+            <a href="/accounts/login/" class="auth-btn auth-btn-login">Login</a>
+          {% endif %}
+        </div>
       </div>
 
-      <div style="display:flex; align-items:center; gap:10px; margin-left:auto;">
+      <div class="topbar-side topbar-side-right">
         <button class="mobile-menu-btn" type="button" onclick="toggleSidebar()">
           <i class="fa-solid fa-bars"></i>
         </button>
         <div class="logo-box">
           <img src="{% static 'website/logo_right.png' %}" alt="School Logo">
         </div>
-      </div>
-      <div class="topbar-auth" style="display: flex; align-items: center; margin-left: 20px;">
-        {% if user.is_authenticated %}
-          <form action="{% url 'logout' %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" style="padding: 8px 18px; background: #d32f2f; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; transition: background 0.2s; border: none; cursor: pointer;">Logout</button>
-          </form>
-        {% else %}
-          <a href="/accounts/login/" class="login-btn" style="padding: 8px 18px; background: #3b82f6; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 15px; transition: background 0.2s; border: none; cursor: pointer;">Login</a>
-        {% endif %}
       </div>
     </div>
   </div>

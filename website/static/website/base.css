@@ -52,9 +52,9 @@ p, div, span, label, a {
   height:100%;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  padding: 0 24px;
-  gap: 20px;
+  justify-content:center;
+  padding: 0 16px;
+  gap: 16px;
 }
 
 .mobile-menu-btn{
@@ -76,10 +76,20 @@ p, div, span, label, a {
 }
 
 .topbar-center{
-  flex: 1;
+  flex: 0 1 auto;
   text-align:center;
   color: #fff;
   line-height: 1.1;
+}
+
+.topbar-side{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+}
+
+.topbar-side-right{
+  margin-left: 6px;
 }
 
 .school-title{
@@ -92,31 +102,11 @@ p, div, span, label, a {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
 }
 
-.school-tagline{
-  margin: 0 0 3px 0;
-  font-size: 13px;
+.school-subtitle{
+  margin: 2px 0 0 0;
+  font-size: 16px;
   opacity: 0.95;
-  font-style: italic;
-  font-weight: 400;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-  letter-spacing: 0.2px;
-}
-
-.school-address{
-  margin: 0 0 3px 0;
-  font-size: 12px;
-  opacity: 0.90;
-  font-weight: 400;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-  letter-spacing: 0.2px;
-}
-
-.topbar-datetime{
-  color:#fff;
-  font-size:12px;
-  opacity:0.88;
-  white-space: nowrap;
-  font-weight: 400;
+  font-weight: 500;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   letter-spacing: 0.2px;
 }
@@ -150,6 +140,48 @@ p, div, span, label, a {
   height:100%;
   object-fit:contain;
   padding: 6px;
+}
+
+.topbar-auth{
+  display:flex;
+  align-items:center;
+}
+
+.topbar-auth-below{
+  justify-content:center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.auth-btn{
+  padding: 8px 14px;
+  border-radius: 999px;
+  border:none;
+  cursor:pointer;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.auth-btn-login{
+  background: transparent;
+  color:#ffffff;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  text-decoration: underline;
+}
+
+.auth-btn-logout{
+  background: transparent;
+  color:#ffffff;
+  border: none;
+  padding: 0;
+  border-radius: 0;
+  text-decoration: underline;
 }
 
 /* ===== Sidebar ===== */
@@ -374,7 +406,21 @@ table tr:hover {
 
 /* Responsive */
 @media (max-width: 900px){
-  .topbar-center{ text-align:left; }
+  .topbar-inner{
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .topbar-center{
+    flex-basis: 100%;
+    text-align:center;
+  }
+
+  .topbar-side-left,
+  .topbar-side-right{
+    flex: 1 1 auto;
+    justify-content: center;
+  }
   .sidebar{ width: 260px; }
   .main{ margin-left: 260px; }
 }
@@ -393,6 +439,27 @@ table tr:hover {
   }
 
   .main{ margin-left: 0; }
+}
+
+/* Extra-small screens: prioritize title visibility */
+@media (max-width: 600px){
+  .topbar-inner{
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .school-title{
+    font-size: 18px;
+  }
+
+  .school-subtitle{
+    font-size: 13px;
+  }
+
+  .logo-box{
+    width: 46px;
+    height: 46px;
+  }
 }
 
 .entry-grid .field label{
