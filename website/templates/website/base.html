@@ -19,14 +19,16 @@
   <div class="topbar" style="width: 100vw;">
     <div class="topbar-inner">
       <div class="topbar-side topbar-side-left">
-        <div class="logo-box">
-          <img src="{% static 'website/logo_left.png' %}" alt="Ganesh Ji">
+        <div class="logo-with-text">
+          <div class="logo-box">
+            <img src="{% static 'website/logo_right.png' %}" alt="School Logo">
+          </div>
+          <div class="logo-caption">श्री गणेशाय नमः</div>
         </div>
       </div>
 
       <div class="topbar-center">
-        <h1 class="school-title">DEVKI PUBLIC SCHOOL</h1>
-        <h2 class="school-subtitle">School Management System</h2>
+        <h3 class="school-subtitle">School Management System</h3>
         <div class="topbar-auth topbar-auth-below">
           {% if user.is_authenticated %}
             <form action="{% url 'logout' %}" method="post">
@@ -43,8 +45,11 @@
         <button class="mobile-menu-btn" type="button" onclick="toggleSidebar()">
           <i class="fa-solid fa-bars"></i>
         </button>
-        <div class="logo-box">
-          <img src="{% static 'website/logo_right.png' %}" alt="School Logo">
+        <div class="logo-with-text">
+          <div class="logo-box">
+            <img src="{% static 'website/logo_left.png' %}" alt="Ganesh Ji">
+          </div>
+          <div class="logo-caption">DPS</div>
         </div>
       </div>
     </div>

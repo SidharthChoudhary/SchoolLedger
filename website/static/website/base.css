@@ -118,28 +118,31 @@ p, div, span, label, a {
 
 /* Logo boxes */
 .logo-box{
-  width:60px; height:60px;
-  border-radius: 12px;
+  width:60px;
+  height:60px;
   display:flex;
   align-items:center;
   justify-content:center;
-  overflow:hidden;
-  background: rgba(255,255,255,0.12);
-  border: 1.5px solid rgba(212,175,55,0.3);
-  transition: all 0.3s ease;
-}
-
-.logo-box:hover{
-  background: rgba(255,255,255,0.18);
-  border-color: rgba(212,175,55,0.5);
-  transform: scale(1.05);
 }
 
 .logo-box img{
   width:100%;
   height:100%;
   object-fit:contain;
-  padding: 6px;
+}
+
+.logo-with-text{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 4px;
+}
+
+.logo-caption{
+  font-size: 11px;
+  color:#ffffff;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .topbar-auth{
@@ -443,9 +446,20 @@ table tr:hover {
 
 /* Extra-small screens: prioritize title visibility */
 @media (max-width: 600px){
+  .topbar{
+    height: auto;
+  }
+
   .topbar-inner{
-    padding: 0 12px;
-    gap: 10px;
+    padding: 6px 10px 8px;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .topbar-side-left,
+  .topbar-side-right{
+    display: none;
   }
 
   .school-title{
@@ -456,9 +470,8 @@ table tr:hover {
     font-size: 13px;
   }
 
-  .logo-box{
-    width: 46px;
-    height: 46px;
+  .topbar-auth-below{
+    margin-top: 4px;
   }
 }
 
