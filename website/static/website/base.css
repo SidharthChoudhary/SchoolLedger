@@ -458,6 +458,11 @@ table tr:hover {
   .school-subtitle{
     font-size: 14px;
   }
+
+  /* Hide the right logo but keep the hamburger visible */
+  .topbar-logo-right{
+    display: none;
+  }
 }
 
 .entry-grid .field label{
