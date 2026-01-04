@@ -452,12 +452,23 @@ table tr:hover {
 
   .topbar-inner{
     padding: 6px 10px 8px;
-    gap: 8px;
+    gap: 6px;
+    flex-wrap: nowrap;           /* keep items in one row */
   }
 
   .school-subtitle{
     font-size: 14px;
   }
+
+   /* Let the center block take remaining space so left logo and hamburger stay on same line */
+   .topbar-center{
+     flex: 1 1 auto;
+   }
+
+   .topbar-side-left,
+   .topbar-side-right{
+     flex: 0 0 auto;
+   }
 
   /* Hide the right logo but keep the hamburger visible */
   .topbar-logo-right{
