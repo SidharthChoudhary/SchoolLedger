@@ -444,7 +444,7 @@ table tr:hover {
   .main{ margin-left: 0; }
 }
 
-/* Extra-small screens: prioritize title visibility */
+/* Extra-small screens: keep layout but slightly tighten spacing */
 @media (max-width: 600px){
   .topbar{
     height: auto;
@@ -452,26 +452,11 @@ table tr:hover {
 
   .topbar-inner{
     padding: 6px 10px 8px;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .topbar-side-left,
-  .topbar-side-right{
-    display: none;
-  }
-
-  .school-title{
-    font-size: 18px;
+    gap: 8px;
   }
 
   .school-subtitle{
-    font-size: 13px;
-  }
-
-  .topbar-auth-below{
-    margin-top: 4px;
+    font-size: 14px;
   }
 }
 
