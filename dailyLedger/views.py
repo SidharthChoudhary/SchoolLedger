@@ -13,6 +13,7 @@ from .models import Expense, Income, Session, Head, FeesStructure
 from .forms import ExpenseForm, IncomeForm, IncomeFeesForm, HeadForm, SessionForm, BulkImportForm, FeesStructureForm
 from .utils import parse_csv_account_heads, import_account_heads, parse_csv_ledger_entries, import_ledger_entries
 from .forms import BulkImportLedgerForm
+from employees.models import Employee
 
 
 def _build_head_data():
@@ -72,7 +73,13 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
             form.fields["voucher_number"].widget.attrs["readonly"] = True
         else:
             active_session = Session.objects.filter(status="current_session").order_by("-id").first()
-            form = form_class(initial={"session": active_session.id}, ledger_type=ledger_type) if active_session else form_class(ledger_type=ledger_type)
+            from .models import _next_expense_voucher
+            initial = {"date": dt_date.today()}
+            if active_session:
+                initial["session"] = active_session.id
+            if ledger_type == "Expense":
+                initial["voucher_number"] = _next_expense_voucher()
+            form = form_class(initial=initial, ledger_type=ledger_type)
 
         form.fields["voucher_number"].widget.attrs["autofocus"] = True
 
@@ -154,6 +161,7 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
             "month_total": total_amount,
             "show_add": show_add,
             "page_title": page_title,
+            "employees": Employee.objects.exclude(status='left').order_by('name'),
         },
     )
 
@@ -771,8 +779,11 @@ def session_ledger_report(request):
                 session_id=selected_session_id
             ).dates('date', 'month', order='ASC')
             
-            # Combine and deduplicate months
-            all_months = sorted(set(list(income_months) + list(expense_months)))
+            # Combine and deduplicate months, sorted in financial year order (Apr → Mar)
+            all_months = sorted(
+                set(list(income_months) + list(expense_months)),
+                key=lambda d: (d.year if d.month >= 4 else d.year - 1, (d.month - 4) % 12)
+            )
             
             # Initialize column totals
             income_head_totals = {head: 0.0 for head in income_major_heads}
@@ -813,7 +824,7 @@ def session_ledger_report(request):
                 
                 report_data.append({
                     'month': month,
-                    'month_display': month.strftime('%B'),
+                    'month_display': month.strftime('%b'),
                     'income_amounts': income_amounts,
                     'expense_amounts': expense_amounts,
                     'total_income': month_total_income,

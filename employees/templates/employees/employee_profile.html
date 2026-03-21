@@ -1,0 +1,211 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% block title %}{{ employee.name }} — Profile{% endblock %}
+
+{% block content %}
+
+<div style="max-width:860px; margin:0 auto;" id="profile-wrapper">
+
+  <!-- Top bar: back + print (hidden when printing) -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;" class="no-print">
+    <a href="/employees/view/" style="display:inline-flex; align-items:center; gap:6px; color:var(--teal-700); font-size:14px; text-decoration:none;">
+      &#8592; Back to Employee List
+    </a>
+    <button onclick="window.print()" style="display:inline-flex; align-items:center; gap:8px; padding:9px 20px; border-radius:10px; background:var(--teal-700); color:#fff; font-size:13px; font-weight:600; border:none; cursor:pointer;">
+      🖨️ Print
+    </button>
+  </div>
+
+  <!-- Page title (hidden when printing) -->
+  <h2 style="margin:0 0 16px; font-size:22px; font-weight:700; color:#111827;" class="no-print">Employee Profile</h2>
+
+  <!-- Reusable print letterhead -->
+  {% include "website/_print_letterhead.html" %}
+
+  <!-- Print-only employee card (shown below letterhead when printing) -->
+  <div id="print-header" style="flex-direction:column; align-items:stretch; text-align:center; padding:0 8mm 20px; border-bottom:2px solid #e5e7eb; margin-bottom:20px;">
+    <div style="display:flex; align-items:center; gap:24px; justify-content:flex-start; flex-wrap:wrap;">
+      <div>
+        {% if employee.emp_image %}
+          <img src="{{ employee.emp_image.url }}" alt="{{ employee.name }}"
+               style="width:90px; height:90px; border-radius:12px; object-fit:cover; border:2px solid #1b4f4a;">
+        {% else %}
+          <div style="width:90px; height:90px; border-radius:12px; background:#e5e7eb; display:flex; align-items:center; justify-content:center; border:2px solid #ccc;">
+            <i class="fa-solid fa-user" style="font-size:36px; color:#9ca3af;"></i>
+          </div>
+        {% endif %}
+      </div>
+      <div style="text-align:left;">
+        <div style="font-size:22px; font-weight:700; color:#111;">{{ employee.name }}</div>
+        {% if employee.post or employee.role %}
+        <div style="font-size:14px; color:#555; margin-top:3px;">{{ employee.post }}{% if employee.role %} &nbsp;·&nbsp; {{ employee.role }}{% endif %}</div>
+        {% endif %}
+        <div style="margin-top:8px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <span style="padding:3px 12px; border-radius:20px; font-size:11px; font-weight:700;
+            background:{% if employee.status == 'active' %}#dcfce7; color:#166534{% elif employee.status == 'inactive' %}#fef9c3; color:#854d0e{% else %}#fee2e2; color:#991b1b{% endif %};">
+            {{ employee.get_status_display }}
+          </span>
+          {% if employee.emp_no %}
+          <span style="font-size:12px; color:#555;">Emp # {{ employee.emp_no }}</span>
+          {% endif %}
+          {% if employee.joining_date %}
+          <span style="font-size:12px; color:#555;">Joined: {{ employee.joining_date }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile card -->
+  <div class="card" style="padding:0; overflow:hidden; margin-bottom:20px;">
+
+    <!-- Header banner -->
+    <div id="profile-banner" style="background:var(--teal-700); padding:28px 32px 20px; display:flex; gap:28px; align-items:flex-end; flex-wrap:wrap;">
+
+      <!-- Photo -->
+      <div style="flex-shrink:0;">
+        {% if employee.emp_image %}
+          <img src="{{ employee.emp_image.url }}" alt="{{ employee.name }}"
+               style="width:110px; height:110px; border-radius:16px; object-fit:cover; border:3px solid rgba(255,255,255,0.5);">
+        {% else %}
+          <div style="width:110px; height:110px; border-radius:16px; background:rgba(255,255,255,0.15); border:3px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center;">
+            <i class="fa-solid fa-user" style="font-size:48px; color:rgba(255,255,255,0.5);"></i>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Name / post / status -->
+      <div style="flex:1; min-width:200px; padding-bottom:4px;">
+        <div style="font-size:24px; font-weight:700; color:#fff;">{{ employee.name }}</div>
+        {% if employee.display_name and employee.display_name != employee.name %}
+          <div style="font-size:14px; color:rgba(255,255,255,0.7); margin-top:2px;">{{ employee.display_name }}</div>
+        {% endif %}
+        <div style="font-size:15px; color:rgba(255,255,255,0.85); margin-top:6px;">
+          {% if employee.post %}{{ employee.post }}{% endif %}
+          {% if employee.role %} &nbsp;·&nbsp; {{ employee.role }}{% endif %}
+        </div>
+        <div style="margin-top:10px;">
+          <span style="display:inline-block; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600;
+            background:{% if employee.status == 'active' %}#22c55e{% elif employee.status == 'inactive' %}#f59e0b{% else %}#ef4444{% endif %};
+            color:#fff;">
+            {{ employee.get_status_display }}
+          </span>
+          {% if employee.emp_no %}
+            <span style="display:inline-block; margin-left:10px; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:600; background:rgba(255,255,255,0.2); color:#fff;">
+              Emp # {{ employee.emp_no }}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Edit button -->
+      <div style="padding-bottom:6px;">
+        <a href="/employees/?edit={{ employee.id }}"
+           style="display:inline-block; padding:9px 20px; border-radius:10px; background:#fff; color:var(--teal-700); font-size:13px; font-weight:700; text-decoration:none;">
+          ✏️ Edit
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Details body -->
+    <div id="profile-details" style="padding:28px 32px; display:grid; grid-template-columns:1fr 1fr; gap:32px; flex-wrap:wrap;">
+
+      <!-- Personal -->
+      <div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:1px; color:#9ca3af; text-transform:uppercase; margin-bottom:14px;">Personal Details</div>
+        {% include "employees/_profile_row.html" with label="Date of Birth" value=employee.dob|default:"—" %}
+        {% include "employees/_profile_row.html" with label="Gender" value=employee.get_gender_display|default:"—" %}
+        {% include "employees/_profile_row.html" with label="Contact" value=employee.contact_number|default:"—" %}
+        {% include "employees/_profile_row.html" with label="Address" value=employee.address|default:"—" %}
+        {% include "employees/_profile_row.html" with label="Qualification" value=employee.qualification|default:"—" %}
+      </div>
+
+      <!-- Professional -->
+      <div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:1px; color:#9ca3af; text-transform:uppercase; margin-bottom:14px;">Professional Details</div>
+        {% include "employees/_profile_row.html" with label="Post" value=employee.post|default:"—" %}
+        {% include "employees/_profile_row.html" with label="Role" value=employee.role|default:"—" %}
+        {% include "employees/_profile_row.html" with label="Role Detail" value=employee.role_detail|default:"—" %}
+        {% include "employees/_profile_row.html" with label="Experience" value=employee.experience_years|default:"—" suffix=" yrs" %}
+        {% include "employees/_profile_row.html" with label="Previous Institute" value=employee.previous_institute|default:"—" %}
+      </div>
+
+      <!-- Employment -->
+      <div>
+        <div style="font-size:11px; font-weight:700; letter-spacing:1px; color:#9ca3af; text-transform:uppercase; margin-bottom:14px;">Employment</div>
+        {% include "employees/_profile_row.html" with label="Joining Date" value=employee.joining_date|default:"—" %}
+        {% include "employees/_profile_row.html" with label="Leaving Date" value=employee.leaving_date|default:"—" %}
+        {% include "employees/_profile_row.html" with label="Base Salary / Month" value=employee.base_salary_per_month prefix="₹ " %}
+        {% include "employees/_profile_row.html" with label="Leaves Entitled" value=employee.leaves_entitled|default:"0" suffix=" days" %}
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Register entries -->
+  {% if registers %}
+  <div class="card">
+    <h3 style="margin-top:0;">Attendance Register</h3>
+    <table>
+      <tr>
+        <th>Session</th>
+        <th>Month</th>
+        <th>Paid Days</th>
+        <th>Payable Salary</th>
+      </tr>
+      {% for reg in registers %}
+      <tr>
+        <td>{{ reg.session.session }}</td>
+        <td>{{ reg.month_display }}</td>
+        <td>{{ reg.paid_days }}</td>
+        <td class="amount">₹ {{ reg.payable_salary }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+
+</div>
+
+<style>
+@media print {
+  /* Hide everything except the profile content */
+  .no-print,
+  .topbar, .sidebar, aside, nav, header, footer,
+  .nav-group, #sidebar { display: none !important; }
+
+  /* Remove site layout margins/padding */
+  body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+  .page-content, .content-wrapper, main,
+  [class*="content"], [class*="main"] {
+    margin: 0 !important; padding: 0 !important;
+    width: 100% !important; max-width: 100% !important;
+  }
+
+  /* Remove card styling for print */
+  .card { box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+
+  /* Profile wrapper full width */
+  #profile-wrapper { max-width: 100% !important; margin: 0 !important; }
+
+  /* Hide teal header banner, show print-only header instead */
+  #profile-banner { display: none !important; }
+  #print-header { display: flex !important; }
+
+  /* Details grid full width */
+  #profile-details { grid-template-columns: 1fr 1fr !important; padding: 16px 8mm !important; }
+
+  /* Add side padding to print header too */
+  #print-header { padding: 0 8mm 20px !important; }
+
+  a { text-decoration: none !important; color: inherit !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* Hide print-only elements on screen */
+#print-header { display: none; }
+.print-only { display: block; }
+</style>
+
+{% endblock %}

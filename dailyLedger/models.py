@@ -45,12 +45,41 @@ class LedgerEntryBase(models.Model):
         super().save(*args, **kwargs)
 
 
+def _next_expense_voucher():
+    """Generate next expense voucher: EXP-2526-0001 (financial year prefix, resets each year)"""
+    from datetime import date
+    today = date.today()
+    y1 = today.year if today.month >= 4 else today.year - 1
+    fy = f"{str(y1)[2:]}{str(y1+1)[2:]}"  # e.g. '2526' for 2025-26
+    prefix = f"EXP-{fy}-"
+    latest = Expense.objects.filter(voucher_number__startswith=prefix).order_by('-voucher_number').first()
+    if latest:
+        try:
+            num = int(latest.voucher_number.split('-')[-1])
+            return f"{prefix}{num+1:04d}"
+        except (ValueError, IndexError):
+            pass
+    return f"{prefix}0001"
+
+
 class Expense(LedgerEntryBase):
     """Expense ledger entries"""
-    
+    employee = models.ForeignKey(
+        'employees.Employee',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        help_text='Link to employee (for salary expense tracking)'
+    )
+
     class Meta:
         ordering = ["-date", "-id"]
-    
+
+    def save(self, *args, **kwargs):
+        if not self.voucher_number or self.voucher_number.strip() == '':
+            self.voucher_number = _next_expense_voucher()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Expense: {self.voucher_number} - {self.date} - {self.amount}"
 
@@ -133,7 +162,7 @@ class Session(models.Model):
         ordering = ["-session"]
 
     def __str__(self):
-        return f"{self.session} ({self.get_status_display()})"
+        return self.session
 
 
 class FeesStructure(models.Model):

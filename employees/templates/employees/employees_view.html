@@ -58,6 +58,7 @@
         <th>Role</th>
         <th>Role Detail</th>
         <th>Leaving</th>
+        <th>Actions</th>
       </tr>
 
       {% for emp in employees %}
@@ -82,6 +83,9 @@
         <td>{{ emp.role }}</td>
         <td>{{ emp.role_detail }}</td>
         <td>{{ emp.leaving_date|default:"—" }}</td>
+        <td class="actions">
+          <a class="btn-edit" href="{% url 'employee_profile' emp.id %}">View</a>
+        </td>
       </tr>
       {% endfor %}
     </table>

@@ -1,11 +1,16 @@
 {% extends "website/base.html" %}
+{% load static %}
+{% load custom_filters %}
 {% block title %}Session Ledger Report{% endblock %}
 {% block content %}
 
-<h2 style="margin-top:0;">Session Ledger Report</h2>
+<!-- Reusable print letterhead (hidden on screen, shown on print) -->
+{% include "website/_print_letterhead.html" %}
+
+<h2 style="margin-top:0;" class="no-print">Session Ledger Report</h2>
 
 <!-- Session Selection Panel -->
-<div class="card" style="margin-bottom:14px;">
+<div class="card no-print" style="margin-bottom:14px;">
   <h3 class="form-section">Select Session</h3>
   
   <form method="get" style="display:flex; gap:12px; align-items:flex-end;">
@@ -27,15 +32,15 @@
 <!-- Report Display -->
 {% if selected_session %}
 <div class="card">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-    <h3 class="form-section">{{ selected_session.session }} - Ledger Report</h3>
+  <h3 class="report-heading" style="text-align:center; font-size:20px; font-weight:700; margin:16px 0;">Session {{ selected_session.session }} Income Expense Statement</h3>
+  <div class="no-print" style="text-align:right; margin-bottom:16px;">
     <button onclick="window.print()" style="padding:10px 20px; background:#0284c7; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:14px;">
       🖨️ Print Report
     </button>
   </div>
-  
+
   {% if report_data %}
-    <div style="overflow-x: auto;">
+    <div class="print-scale-wrapper" style="overflow-x: auto;">
       <table style="width:100%; border-collapse:collapse; font-size:13px;">
         <thead>
           <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
@@ -107,36 +112,36 @@
           
           <!-- Totals Row -->
           <tr style="background:#f9fafb; border-top:2px solid #d1d5db; border-bottom:2px solid #d1d5db; font-weight:700;">
-            <td style="padding:10px; border:1px solid #d1d5db;">
+            <td style="padding:10px; border:1px solid #d1d5db; white-space:nowrap;">
               Total
             </td>
             
             <!-- Income totals by head -->
             {% for total in income_head_totals_list %}
-              <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#e0f2fe;">
-                {{ total|floatformat:0 }}
+              <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#e0f2fe; white-space:nowrap;">
+                ₹ {{ total|indian_number }}
               </td>
             {% endfor %}
-            <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#dbeafe;">
-              {{ total_income|floatformat:0 }}
+            <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#dbeafe; white-space:nowrap;">
+              ₹ {{ total_income|indian_number }}
             </td>
             
             <!-- Expense totals by head -->
             {% for total in expense_head_totals_list %}
-              <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fce7f3;">
-                {{ total|floatformat:0 }}
+              <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fce7f3; white-space:nowrap;">
+                ₹ {{ total|indian_number }}
               </td>
             {% endfor %}
-            <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fbecf3;">
-              {{ total_expense|floatformat:0 }}
+            <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fbecf3; white-space:nowrap;">
+              ₹ {{ total_expense|indian_number }}
             </td>
             
             <!-- Balance total -->
-            <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#f0fdf4; color:{% if total_balance >= 0 %}#15803d{% else %}#dc2626{% endif %};">
+            <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#f0fdf4; white-space:nowrap; color:{% if total_balance >= 0 %}#15803d{% else %}#dc2626{% endif %};">
               {% if total_balance >= 0 %}
-                +{{ total_balance|floatformat:0 }}
+                ₹ +{{ total_balance|indian_number }}
               {% else %}
-                {{ total_balance|floatformat:0 }}
+                ₹ {{ total_balance|indian_number }}
               {% endif %}
             </td>
           </tr>
@@ -168,81 +173,68 @@
   }
   
   /* Print Styling */
-  @page {
-    size: landscape;
-    margin: 0.5in;
-  }
-  
   @media print {
-    body {
-      background: white;
-      margin: 0;
-      padding: 0;
+    @page { size: A4 landscape; margin: 8mm 10mm; }
+
+    /* Hide site chrome */
+    .no-print,
+    .topbar, .sidebar, aside, nav, header, footer,
+    .nav-group, #sidebar { display: none !important; }
+
+    body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+    .page-content, .content-wrapper, main,
+    [class*="content"], [class*="main"] {
+      margin: 0 !important; padding: 0 !important;
+      width: 100% !important; max-width: 100% !important;
     }
-    
-    html {
-      margin: 0;
-      padding: 0;
-    }
-    
-    /* Hide everything */
-    * {
-      visibility: hidden;
-    }
-    
-    /* Show only the table and its parent card */
-    table, 
-    table * {
-      visibility: visible;
-    }
-    
-    .card:last-of-type,
-    .card:last-of-type * {
-      visibility: visible;
-    }
-    
-    /* Position and size the visible content */
-    .card:last-of-type {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      padding: 0;
-      margin: 0;
-    }
-    
-    /* Hide form div with print button */
-    .card:last-of-type > div:first-child {
-      visibility: hidden;
-    }
-    
+
+    /* Show letterhead */
+    #print-letterhead { display: block !important; }
+
+    /* Report heading */
+    .report-heading { font-size: 13px !important; margin: 6px 0 !important; }
+
+    /* Card reset */
+    .card { box-shadow: none !important; border: none !important; padding: 0 !important; margin-bottom: 6px !important; }
+
     /* Table styling */
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 9px;
+      font-size: 7.5px;
       margin: 0;
+      page-break-inside: avoid;
     }
-    
+
     table th {
-      background: #f3f4f6;
-      border: 1px solid #333;
-      padding: 3px;
+      background: #f3f4f6 !important;
+      border: 1px solid #ccc;
+      padding: 3px 4px;
       text-align: center;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
       font-weight: bold;
     }
-    
+
     table td {
-      border: 1px solid #333;
-      padding: 2px 3px;
+      border: 1px solid #ccc;
+      padding: 2px 4px;
       text-align: right;
+      white-space: nowrap;
     }
-    
-    table td:first-child {
-      text-align: left;
-    }
+
+    table td:first-child { text-align: left; }
+
+    /* Color backgrounds for print */
+    td[style*="e0f2fe"], th[style*="e0f2fe"] { background: #e0f2fe !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    td[style*="dbeafe"], th[style*="dbeafe"] { background: #dbeafe !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    td[style*="fce7f3"], th[style*="fce7f3"] { background: #fce7f3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    td[style*="fbecf3"], th[style*="fbecf3"] { background: #fbecf3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    td[style*="f0fdf4"], th[style*="f0fdf4"] { background: #f0fdf4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    tr[style*="f9fafb"] { background: #f9fafb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    a { text-decoration: none !important; color: inherit !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
 

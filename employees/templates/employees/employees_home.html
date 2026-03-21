@@ -22,9 +22,12 @@
     {% if editing_employee %}
       <input type="hidden" name="employee_id" value="{{ editing_employee.id }}">
     {% endif %}
-    <div class="employee-form-wrapper">
-      <div class="employee-form">
-       <h4 class="form-section">Personal Details</h4>
+
+    <div style="display:flex; gap:28px; align-items:flex-start; flex-wrap:wrap;">
+
+      <!-- Left: form fields -->
+      <div style="flex:1; min-width:300px;">
+        <h4 class="form-section">Personal Details</h4>
         <div class="row">
           <div class="field">
             <label>Full Name</label>
@@ -35,32 +38,39 @@
             {{ form.dob }}
           </div>
         </div>
-
         <div class="row">
           <div class="field">
             <label>Contact Number</label>
             {{ form.contact_number }}
           </div>
-          
-  
           <div class="field">
             <label>Qualification</label>
             {{ form.qualification }}
           </div>
         </div>
-
         <div class="row">
           <div class="field field-wide">
             <label>Address</label>
             {{ form.address }}
           </div>
         </div>
-                <div class="row">
-          <div class="field field-wide">
-            <label>Employee Image</label>
-            {{ form.emp_image }}
+        <div class="row">
+          <div class="field">
+            <label>Gender</label>
+            {{ form.gender }}
+          </div>
+          <div class="field">
+            <label>Role</label>
+            {{ form.role }}
           </div>
         </div>
+        <div class="row">
+          <div class="field field-wide">
+            <label>Role Detail</label>
+            {{ form.role_detail }}
+          </div>
+        </div>
+
         <h4 class="form-section">Professional Details</h4>
         <div class="row">
           <div class="field">
@@ -72,7 +82,8 @@
             {{ form.previous_institute }}
           </div>
         </div>
-<h4 class="form-section">Employment</h4>
+
+        <h4 class="form-section">Employment</h4>
         <div class="row">
           <div class="field">
             <label>Post</label>
@@ -83,7 +94,6 @@
             {{ form.joining_date }}
           </div>
         </div>
-
         <div class="row">
           <div class="field">
             <label>Base Salary / Month</label>
@@ -94,7 +104,6 @@
             {{ form.status }}
           </div>
         </div>
-
         <div class="row">
           <div class="field">
             <label>Leaves Entitled</label>
@@ -105,43 +114,58 @@
             {{ form.leaving_date }}
           </div>
         </div>
-<div class="row">
-  <div class="field">
-    <label>Gender</label>
-    {{ form.gender }}
-  </div>
-
-  <div class="field">
-    <label>Role</label>
-    {{ form.role }}
-  </div>
-</div>
-
-<div class="row">
-  <div class="field field-wide">
-    <label>Role Detail</label>
-    {{ form.role_detail }}
-  </div>
-</div>
-
-        <!--div class="row">
-          <div class="field field-wide">
-            <label>Employee Image</label>
-            {{ form.emp_image }}
-          </div>
-        </div-->
 
         <div class="row">
           <div class="field field-wide">
-    <button type="submit">{% if editing_employee %}Update{% else %}Save{% endif %}</button>
+            <button type="submit">{% if editing_employee %}Update{% else %}Save{% endif %}</button>
           </div>
         </div>
-
       </div>
-    </div>
 
+      <!-- Right: image panel -->
+      <div style="width:220px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:14px; padding-top:8px;">
+        <div id="img-preview-box" style="width:200px; height:200px; border-radius:16px; border:2px dashed #b0b0b0; background:#f8f8f8; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+          {% if editing_employee and editing_employee.emp_image %}
+            <img id="img-preview" src="{{ editing_employee.emp_image.url }}" alt="Employee photo"
+                 style="width:100%; height:100%; object-fit:cover; border-radius:14px;">
+          {% else %}
+            <img id="img-preview" src="" alt=""
+                 style="width:100%; height:100%; object-fit:cover; border-radius:14px; display:none;">
+            <span id="img-placeholder" style="color:#aaa; font-size:13px; text-align:center; padding:16px;">No photo<br>selected</span>
+          {% endif %}
+        </div>
+        <div style="width:100%;">
+          <label style="display:block; margin-bottom:6px; font-size:13px; font-weight:600;">Employee Photo</label>
+          {{ form.emp_image }}
+        </div>
+        {% if editing_employee and editing_employee.emp_image %}
+          <p style="font-size:11px; color:#888; text-align:center; margin:0;">Current photo shown above.<br>Choose a new file to replace it.</p>
+        {% endif %}
+      </div>
+
+    </div>
   </form>
 </div>
+
+<script>
+(function () {
+  const input = document.getElementById('{{ form.emp_image.id_for_label }}');
+  const preview = document.getElementById('img-preview');
+  const placeholder = document.getElementById('img-placeholder');
+  if (!input) return;
+  input.addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      if (placeholder) placeholder.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+})();
+</script>
 
 
 <div class="card">

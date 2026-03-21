@@ -33,6 +33,17 @@
 								<div class="field" style="min-width:160px;"><label>Major Head</label>{{ form.major_head }}</div>
 								<div class="field" style="min-width:160px;"><label>Head</label>{{ form.head }}</div>
 								<div class="field" style="min-width:160px;"><label>Sub-Head</label>{{ form.sub_head }}</div>
+								<div class="field" id="employee-field" style="min-width:200px;">
+									<label>Employee Name</label>
+									<select name="employee" id="id_employee"
+							{% if form.major_head.value != 'Salary' %}disabled{% endif %}
+							style="{% if form.major_head.value == 'Salary' %}opacity:1;cursor:pointer;{% else %}opacity:0.4;cursor:not-allowed;background:#f3f4f6;{% endif %}">
+										<option value="">--- Select Employee ---</option>
+										{% for emp in employees %}
+											<option value="{{ emp.id }}" {% if form.instance.employee_id == emp.id %}selected{% endif %}>{{ emp.name }}</option>
+										{% endfor %}
+									</select>
+								</div>
 								</div>
 						</div>
 						<!-- Panel 3: Voucher, Date, Amount, Transaction Type, Remark + Submit -->
@@ -127,7 +138,7 @@
 							<th>Session</th>
 							<th>Major Head</th>
 							<th>Head</th>
-							<th>Sub-Head</th>
+							<th>Employee / Sub-Head</th>
 							<th>Voucher</th>
 							<th>Date</th>
 							<th>Amount</th>
@@ -141,7 +152,7 @@
 									<td>{% if e.session %}{{ e.session.session }}{% endif %}</td>
 									<td>{{ e.major_head }}</td>
 									<td>{{ e.head }}</td>
-									<td>{{ e.sub_head }}</td>
+									<td>{% if e.employee %}{{ e.employee.name }}{% else %}{{ e.sub_head }}{% endif %}</td>
 									<td>{{ e.voucher_number }}</td>
 									<td>{{ e.date }}</td>
 									<td class="amount">{{ e.amount }}</td>
@@ -217,39 +228,70 @@
 				}
 
 				// Handle entry form (method="post") for Add Expense
-				const entryForm = document.querySelector('form[method="post"]');
-				if (entryForm) {
-					const majorSel = entryForm.querySelector('[name="major_head"]');
-					const headSel = entryForm.querySelector('[name="head"]');
-					const subSel = entryForm.querySelector('[name="sub_head"]');
-					
-					if (majorSel && headSel && subSel) {
-						majorSel.addEventListener('change', function() {
-							const major = this.value;
+				// Use getElementById for reliability - Django always gives id_fieldname IDs
+				const majorSel = document.getElementById('id_major_head');
+				const headSel = document.getElementById('id_head');
+				const subSel = document.getElementById('id_sub_head');
+				const employeeSel = document.getElementById('id_employee');
+
+				function setEmpState(enabled) {
+					if (!employeeSel) return;
+					employeeSel.disabled = !enabled;
+					employeeSel.style.opacity = enabled ? '1' : '0.4';
+					employeeSel.style.background = enabled ? '' : '#f3f4f6';
+					employeeSel.style.cursor = enabled ? 'pointer' : 'not-allowed';
+					if (!enabled) employeeSel.value = '';
+				}
+
+				if (majorSel) {
+					majorSel.addEventListener('change', function() {
+						const major = this.value;
+						if (headSel) {
 							headSel.value = '';
-							subSel.innerHTML = '<option value="">-- Select --</option>';
 							if (major && headData.Expense && headData.Expense[major]) {
 								setOptions(headSel, headData.Expense[major], '-- Select --');
 							} else {
 								headSel.innerHTML = '<option value="">-- Select --</option>';
 							}
-						});
+						}
+						if (subSel) subSel.innerHTML = '<option value="">-- Select --</option>';
+						setEmpState(major.toLowerCase() === 'salary');
+					});
+				}
 
-						headSel.addEventListener('change', function() {
-							const major = majorSel.value;
-							const head = this.value;
+				if (headSel) {
+					headSel.addEventListener('change', function() {
+						const major = majorSel ? majorSel.value : '';
+						const head = this.value;
+						if (subSel) {
 							subSel.value = '';
 							if (major && head && headData.Expense && headData.Expense[major] && headData.Expense[major][head]) {
 								setOptions(subSel, headData.Expense[major][head], '-- Select --');
 							} else {
 								subSel.innerHTML = '<option value="">-- Select --</option>';
 							}
-						});
-
-						if (majorSel.value) {
-							majorSel.dispatchEvent(new Event('change'));
 						}
-					}
+					});
+				}
+
+				// Auto-fill sub_head when employee is selected
+				if (employeeSel) {
+					employeeSel.addEventListener('change', function() {
+						if (!subSel) return;
+						const empName = this.options[this.selectedIndex].text;
+						if (!this.value) return;
+						let found = false;
+						for (let opt of subSel.options) {
+							if (opt.text === empName) { subSel.value = opt.value; found = true; break; }
+						}
+						if (!found) {
+							const newOpt = document.createElement('option');
+							newOpt.value = empName;
+							newOpt.text = empName;
+							newOpt.selected = true;
+							subSel.appendChild(newOpt);
+						}
+					});
 				}
 			});
 		</script>

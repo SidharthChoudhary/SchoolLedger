@@ -26,6 +26,9 @@
 
       <div class="topbar-center">
         <h3 class="school-subtitle">Devki Public School</h3>
+        <div class="school-tagline school-tagline--motto">A new horizon in school education</div>
+        <div class="school-tagline">Devki Education Society (R) &nbsp;|&nbsp; 35 Pradhan Jiki Dhani, Tibariyan, Hingonia Road, Jaipur (Rajasthan)</div>
+        <div class="school-tagline">9887005428 &nbsp;&bull;&nbsp; 9610211173</div>
         <div class="topbar-auth topbar-auth-below">
           {% if user.is_authenticated %}
             <form action="{% url 'logout' %}" method="post">
@@ -96,10 +99,6 @@
              href="/employees/attendance/">
             <i class="fa-solid fa-calendar-check"></i> Attendance Records
           </a>
-          <a class="nav-link nav-subitem {% if '/employees/manual-salary-data/' in request.path %}active{% endif %}"
-             href="/employees/manual-salary-data/">
-            <i class="fa-solid fa-hand-holding-dollar"></i> Manual Salary Data
-          </a>
         </div>
       </div>
 
@@ -118,10 +117,6 @@
              href="/ledger-income/">
             <i class="fa-solid fa-plus"></i> Ledger Income
           </a>
-          <a class="nav-link nav-subitem {% if '/employees/manual-salary-data/' in request.path %}active{% endif %}"
-             href="/employees/manual-salary-data/">
-            <i class="fa-solid fa-hand-holding-dollar"></i> Manual Salary Data
-          </a>
           {% endif %}
           <a class="nav-link nav-subitem {% if '/ledger-expense/heads/' in request.path %}active{% endif %}"
              href="/ledger-expense/heads/">
@@ -131,20 +126,25 @@
       </div>
 
       <div class="nav-group">
+        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'account-entry-menu')">
+          <i class="fa-solid fa-pen-to-square"></i> Account Entry
+          <i class="fa-solid fa-chevron-down toggle-icon"></i>
+        </button>
+        <div id="account-entry-menu" class="nav-submenu">
+          <a class="nav-link nav-subitem {% if '/employees/manual-salary-data/' in request.path %}active{% endif %}"
+             href="/employees/manual-salary-data/">
+            <i class="fa-solid fa-hand-holding-dollar"></i> Manual Salary Data
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-group">
         <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'statements-menu')">
-          <i class="fa-solid fa-file-invoice-dollar"></i> Statements Ledger
+          <i class="fa-solid fa-file-invoice-dollar"></i> Reports
           <i class="fa-solid fa-chevron-down toggle-icon"></i>
         </button>
         <div id="statements-menu" class="nav-submenu">
           {% if user.is_superuser or user.profile.is_admin|default:False %}
-          <a class="nav-link nav-subitem {% if '/employees/salary-statement-full/' in request.path %}active{% endif %}"
-             href="/employees/salary-statement-full/">
-            <i class="fa-solid fa-receipt"></i> Employee Full Salary Statement
-          </a>
-          <a class="nav-link nav-subitem {% if '/employees/employees-salary-statement/' in request.path %}active{% endif %}"
-             href="/employees/employees-salary-statement/">
-            <i class="fa-solid fa-list"></i> Employees Salary Statement
-          </a>
           <a class="nav-link nav-subitem {% if '/ledger-expense/session-ledger-report/' in request.path %}active{% endif %}"
              href="/ledger-expense/session-ledger-report/">
             <i class="fa-solid fa-chart-bar"></i> Session Ledger Report
@@ -152,6 +152,14 @@
           {% else %}
           <p style="padding: 12px 16px; color: #999; font-size: 12px;">Admin access required</p>
           {% endif %}
+          <a class="nav-link nav-subitem {% if '/employees/salary-statement/' in request.path %}active{% endif %}"
+             href="/employees/salary-statement/">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Staff Salary Detail
+          </a>
+          <a class="nav-link nav-subitem {% if '/employees/employees-salary-statement/' in request.path %}active{% endif %}"
+             href="/employees/employees-salary-statement/">
+            <i class="fa-solid fa-users"></i> Staff Salary Summary
+          </a>
         </div>
       </div>
 
@@ -167,15 +175,11 @@
           </a>
           <a class="nav-link nav-subitem {% if '/employees/view/' in request.path %}active{% endif %}"
              href="/employees/view/">
-            <i class="fa-solid fa-eye"></i> View Employees
+            <i class="fa-solid fa-eye"></i> List Employees
           </a>
           <a class="nav-link nav-subitem {% if '/employees/register/' in request.path %}active{% endif %}"
              href="/employees/register/">
             <i class="fa-solid fa-clipboard-check"></i> Employee Register
-          </a>
-          <a class="nav-link nav-subitem {% if '/employees/select-type/' in request.path %}active{% endif %}"
-             href="/employees/select-type/">
-            <i class="fa-solid fa-file-lines"></i> New Employee Statements
           </a>
         </div>
       </div>
@@ -284,7 +288,7 @@ document.addEventListener('click', function(event) {
     </div>
 
     <div class="footer">
-      © {% now "Y" %} Devki Public School, 35 Pradhan jiki dhani, Village Tibariya, Hingoia road, Lalpura stand, Jobner road, Jaipur
+      © {% now "Y" %} Devki Public School &nbsp;|&nbsp; Devki Education Society (R), 35 Pradhan Jiki Dhani, Tibariyan, Hingonia Road, Jaipur (Rajasthan) &nbsp;|&nbsp; 9887005428, 9610211173
     </div>
   </main>
 

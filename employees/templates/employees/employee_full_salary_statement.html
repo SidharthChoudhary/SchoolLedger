@@ -1,0 +1,273 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% block title %}Staff Salary Detail{% endblock %}
+
+{% block content %}
+
+<!-- Top bar: title + print button -->
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;" class="no-print">
+  <h2 style="margin:0; font-size:22px; font-weight:700; color:#111827;">Staff Salary Detail</h2>
+  {% if selected_employee %}
+  <button onclick="window.print()" style="display:inline-flex; align-items:center; gap:8px; padding:9px 20px; border-radius:10px; background:var(--teal-700); color:#fff; font-size:13px; font-weight:600; border:none; cursor:pointer;">
+    🖨️ Print
+  </button>
+  {% endif %}
+</div>
+
+<!-- Reusable print letterhead -->
+{% include "website/_print_letterhead.html" %}
+
+<!-- Print-only employee card -->
+{% if selected_employee %}
+<div id="salary-print-header" style="display:none; padding:0 8mm 16px; border-bottom:2px solid #e5e7eb; margin-bottom:16px;">
+  <div style="display:flex; align-items:center; gap:20px;">
+    <div>
+      {% if selected_employee.emp_image %}
+        <img src="{{ selected_employee.emp_image.url }}" alt="{{ selected_employee.name }}"
+             style="width:80px; height:80px; border-radius:10px; object-fit:cover; border:2px solid #1b4f4a;">
+      {% else %}
+        <div style="width:80px; height:80px; border-radius:10px; background:#e5e7eb; display:flex; align-items:center; justify-content:center; font-size:28px; color:#9ca3af;">👤</div>
+      {% endif %}
+    </div>
+    <div>
+      <div style="font-size:22px; font-weight:800; color:#1b4f4a;">{{ selected_employee.name }}</div>
+      <div style="font-size:13px; color:#555; margin-top:3px;">
+        {{ selected_employee.post|default:"" }}{% if selected_employee.post and selected_employee.role %} &middot; {% endif %}{{ selected_employee.role|default:"" }}
+      </div>
+      <div style="display:flex; gap:16px; margin-top:6px; font-size:12px; color:#374151;">
+        <span>Emp # {{ selected_employee.emp_no }}</span>
+        <span>Session: {{ selected_session.session }}</span>
+        {% if selected_employee.joining_date %}<span>Joined: {{ selected_employee.joining_date }}</span>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Select Session & Employee -->
+<div class="card no-print" style="margin-bottom:16px;">
+  <p style="font-size:13px; color:#1b4f4a; font-weight:600; margin:0 0 12px;">Select Session &amp; Employee</p>
+  <form method="get" style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end;">
+
+    <div class="field" style="flex:1; min-width:220px;">
+      <label>Session</label>
+      <select name="session">
+        {% for s in sessions %}
+          <option value="{{ s.id }}" {% if selected_session_id == s.id|stringformat:"s" %}selected{% endif %}>
+            {{ s.session }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field" style="flex:2; min-width:260px;">
+      <label>Employee</label>
+      <select name="employee">
+        <option value="">-- Select Employee --</option>
+        {% for emp in employees %}
+          <option value="{{ emp.id }}" {% if selected_employee_id == emp.id|stringformat:"s" %}selected{% endif %}>
+            {{ emp.name }}{% if emp.post %} ({{ emp.post }}){% endif %}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field">
+      <button type="submit" style="padding:9px 22px; background:var(--teal-700); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+        Generate Statement
+      </button>
+    </div>
+  </form>
+</div>
+
+{% if selected_session and selected_employee %}
+
+<!-- Employee Info Bar -->
+<div class="card" style="margin-bottom:16px; background:#f8fffe; border:1px solid #d1e9e7;">
+  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; font-size:13px;">
+    <div>
+      <div style="color:#888; font-size:11px; text-transform:uppercase; letter-spacing:.5px;">Name</div>
+      <div style="font-weight:700; color:#1b4f4a; margin-top:2px;">{{ selected_employee.name }}</div>
+    </div>
+    <div>
+      <div style="color:#888; font-size:11px; text-transform:uppercase; letter-spacing:.5px;">Post</div>
+      <div style="font-weight:700; color:#374151; margin-top:2px;">{{ selected_employee.post|default:"—" }}</div>
+    </div>
+    <div>
+      <div style="color:#888; font-size:11px; text-transform:uppercase; letter-spacing:.5px;">Session</div>
+      <div style="font-weight:700; color:#374151; margin-top:2px;">{{ selected_session.session }}</div>
+    </div>
+    <div>
+      <div style="color:#888; font-size:11px; text-transform:uppercase; letter-spacing:.5px;">Status</div>
+      <div style="font-weight:700; color:#374151; margin-top:2px;">{{ selected_employee.get_status_display }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Monthly Salary Schedule -->
+<div class="card" style="margin-bottom:16px; padding:0; overflow:hidden;">
+  <div style="padding:14px 20px 10px; border-bottom:1px solid #e5e7eb;">
+    <h3 style="margin:0; font-size:14px; color:#1b4f4a;">
+      Monthly Salary Schedule <span style="font-weight:400; color:#888;">(Financial Year: April – March)</span>
+    </h3>
+  </div>
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="background:#f0f9f8;">
+        <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Year</th>
+        <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Month</th>
+        <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Payment Type</th>
+        <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Notes</th>
+        <th style="text-align:right; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151; background:#e8f4fd;">Amount</th>
+        <th style="text-align:right; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151; background:#e8f4fd;">Paid Amount</th>
+        <th style="text-align:right; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151; background:#fefce8;">Net Due Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in monthly_schedule %}
+      <tr style="{% cycle 'background:#fff;' 'background:#fafafa;' %}">
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.year }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.month }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.payment_type }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; color:#888;">{{ row.notes }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;">{{ row.amount }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;">{{ row.paid }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#fefce8;
+          {% if row.net_due < 0 %}color:#dc2626;{% else %}color:#16a34a;{% endif %}">
+          {{ row.net_due }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr style="background:#f0f9f8; font-weight:700;">
+        <td colspan="4" style="padding:10px 16px; text-align:right; color:#374151; font-size:13px;">Total Salary to Pay</td>
+        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">{{ monthly_total }}</td>
+        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">{{ total_paid }}</td>
+        <td style="padding:10px 16px; text-align:right; background:#fef9c3;
+          {% if net_due < 0 %}color:#dc2626;{% else %}color:#16a34a;{% endif %}">
+          {{ net_due }}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- Payment Transactions -->
+<div class="card" style="margin-bottom:16px; padding:0; overflow:hidden;">
+  <div style="padding:14px 20px 10px; border-bottom:1px solid #e5e7eb;">
+    <h3 style="margin:0; font-size:14px; color:#1b4f4a;">Payment Transactions</h3>
+  </div>
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="background:#f0f9f8;">
+        <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Year</th>
+        <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Month</th>
+        <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Payment Date</th>
+        <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Remarks</th>
+        <th style="text-align:right; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if payment_transactions %}
+        {% for tx in payment_transactions %}
+        <tr>
+          <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ tx.year }}</td>
+          <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ tx.month }}</td>
+          <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ tx.payment_date }}</td>
+          <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; color:#555;">{{ tx.remarks }}</td>
+          <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right;">{{ tx.amount }}</td>
+        </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="5" style="padding:20px; text-align:center; color:#9ca3af; font-style:italic;">No payments recorded</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Summary -->
+<div style="margin-bottom:20px;">
+  <h3 style="font-size:14px; color:#1b4f4a; margin:0 0 10px;">Summary</h3>
+  <div id="summary-cards" style="display:grid; grid-template-columns:repeat(3,1fr); gap:14px;">
+
+    <div style="background:#f0f9f8; border:1px solid #d1e9e7; border-radius:10px; padding:16px 20px;">
+      <div style="font-size:12px; color:#6b7280; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Total Salary Due</div>
+      <div class="summary-value" style="font-size:28px; font-weight:800; color:#1b4f4a; margin:6px 0 4px;">{{ total_salary_due }}</div>
+      <div style="font-size:11px; color:#9ca3af;">
+        Old Dues: {{ old_dues }} &nbsp;&middot;&nbsp; Monthly: {{ base_salary }} &times; 12
+      </div>
+    </div>
+
+    <div style="background:#f0f9f8; border:1px solid #d1e9e7; border-radius:10px; padding:16px 20px;">
+      <div style="font-size:12px; color:#6b7280; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Total Amount Paid</div>
+      <div class="summary-value" style="font-size:28px; font-weight:800; color:#1b4f4a; margin:6px 0 4px;">{{ total_paid }}</div>
+    </div>
+
+    <div style="background:#fff5f5; border:1px solid #fecaca; border-radius:10px; padding:16px 20px;">
+      <div style="font-size:12px; color:#6b7280; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Total Amount Due</div>
+      <div class="summary-value" style="font-size:28px; font-weight:800; color:#dc2626; margin:6px 0 4px;">{{ net_due }}</div>
+    </div>
+
+  </div>
+</div>
+
+{% endif %}
+
+<style>
+@media print {
+  @page { size: A4 landscape; margin: 8mm 10mm; }
+
+  .no-print,
+  .topbar, .sidebar, aside, nav, header, footer,
+  .nav-group, #sidebar { display: none !important; }
+
+  body { background: #fff !important; margin: 0 !important; padding: 0 !important; font-size: 9px !important; }
+  .page-content, .content-wrapper, main,
+  [class*="content"], [class*="main"] {
+    margin: 0 !important; padding: 0 !important;
+    width: 100% !important; max-width: 100% !important;
+  }
+
+  /* Compact letterhead */
+  #print-letterhead { padding-bottom: 6px !important; margin-bottom: 8px !important; }
+  #print-letterhead img { width: 48px !important; height: 48px !important; }
+
+  /* Compact employee card */
+  #salary-print-header { display: block !important; padding: 0 0 8px !important; margin-bottom: 8px !important; }
+  #salary-print-header img,
+  #salary-print-header > div > div:first-child > div { width: 52px !important; height: 52px !important; font-size: 18px !important; }
+
+  /* Compact info bar */
+  .card { box-shadow: none !important; border: 1px solid #e5e7eb !important; margin-bottom: 6px !important; padding: 6px 10px !important; }
+
+  /* Compact tables */
+  table { font-size: 9px !important; }
+  th, td { padding: 4px 7px !important; }
+
+  /* Compact section headings */
+  h3 { font-size: 10px !important; margin: 0 !important; padding: 5px 10px !important; }
+
+  /* Summary cards inline */
+  #summary-cards { display: flex !important; gap: 8px !important; }
+  #summary-cards > div { padding: 8px 12px !important; border-radius: 6px !important; }
+  #summary-cards .summary-value { font-size: 16px !important; margin: 3px 0 2px !important; }
+
+  #salary-print-header { display: block !important; }
+
+  a { text-decoration: none !important; color: inherit !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+  .card { box-shadow: none !important; border: 1px solid #e5e7eb !important; margin-bottom: 12px !important; }
+
+  #salary-print-header { display: block !important; }
+
+  a { text-decoration: none !important; color: inherit !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+
+{% endblock %}

@@ -29,3 +29,16 @@ git clone https://github.com/SidharthChoudhary/SchoolLedger.git
 
 python manage.py dbshell
 python manage.py collectstatic --noinput
+
+--
+on PAW.com
+1, git pull 
+2. reset db details on schoolapp/settings.py ( same DATABSE details as in production_settings.py)
+3.
+for database changes, 
+3.1 python manage.py migrate
+for css changes 
+python manage.py collectstatic --settings=production_settings
+
+Git hardreset 
+git reset --hard

@@ -50,8 +50,36 @@ class LedgerEntryFormBase(forms.ModelForm):
         }
 
 class ExpenseForm(LedgerEntryFormBase):
+    employee = forms.ModelChoiceField(
+        queryset=Employee.objects.exclude(status='left').order_by('name'),
+        required=False,
+        empty_label="--- Select Employee ---",
+        label="Employee",
+        help_text="Select employee when Major Head is Salary"
+    )
+
     class Meta(LedgerEntryFormBase.Meta):
         model = Expense
+        fields = LedgerEntryFormBase.Meta.fields + ['employee']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Replace sub_head ChoiceField with CharField so employee names
+        # (which aren't in Head choices) pass validation. The Select widget
+        # is kept so the dropdown still shows the original options.
+        self.fields['sub_head'] = forms.CharField(
+            required=False,
+            widget=forms.Select(choices=self.fields['sub_head'].choices),
+        )
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        # Auto-fill sub_head from selected employee name
+        if instance.employee:
+            instance.sub_head = instance.employee.name
+        if commit:
+            instance.save()
+        return instance
 
 class IncomeForm(LedgerEntryFormBase):
     def __init__(self, *args, ledger_type="Income", **kwargs):

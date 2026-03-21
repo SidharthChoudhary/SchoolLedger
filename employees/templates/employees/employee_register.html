@@ -101,8 +101,6 @@
                 <a class="btn-delete"
                    onclick="return confirm('Delete this register entry?')"
                    href="{% url 'delete_register' reg.id %}">Delete</a>
-                <a class="btn-edit" href="{% url 'employee_monthly_statement' %}?employee={{ reg.employee.id }}&session={{ reg.session.id|default:'' }}&month={{ reg.month }}" style="margin-left:8px;">Monthly Statement</a>
-                <a class="btn-edit" href="{% url 'pay_slip_view' %}?employee={{ reg.employee.id }}&session={{ reg.session.id|default:'' }}&month={{ reg.month }}">Pay Slip</a>
             </td>
         </tr>
         {% empty %}

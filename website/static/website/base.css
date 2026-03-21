@@ -1,6 +1,6 @@
 :root{
-  --sidebar-w: 345px;
-  --topbar-h: 110px;
+  --sidebar-w: 275px;
+  --topbar-h: 148px;
 
   --teal-900: #0b3b3b;
   --teal-800: #0f4b4b;
@@ -109,6 +109,20 @@ p, div, span, label, a {
   font-weight: 500;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
   letter-spacing: 0.2px;
+}
+
+.school-tagline{
+  margin: 2px 0 0 0;
+  font-size: 11px;
+  color: rgba(255,255,255,0.75);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.1px;
+}
+.school-tagline--motto{
+  font-style: italic;
+  color: rgba(255,255,255,0.9);
+  font-size: 11.5px;
+  letter-spacing: 0.3px;
 }
 
 .topbar-datetime i{
