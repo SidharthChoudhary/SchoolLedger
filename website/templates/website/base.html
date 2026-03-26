@@ -91,13 +91,22 @@
              href="/students/attendance-records/">
             <i class="fa-solid fa-table-list"></i> Student Attendance Records
            </a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'attendance-menu')">
+          <i class="fa-solid fa-clipboard-user"></i> Attendance Register
+          <i class="fa-solid fa-chevron-down toggle-icon"></i>
+        </button>
+        <div id="attendance-menu" class="nav-submenu">
           <a class="nav-link nav-subitem {% if '/employees/attendance-rally/' in request.path %}active{% endif %}"
              href="/employees/attendance-rally/">
-            <i class="fa-solid fa-clipboard-check"></i> Employee Attendance
+            <i class="fa-solid fa-clipboard-check"></i> Daily Attendance
           </a>
-          <a class="nav-link nav-subitem {% if '/employees/attendance/' in request.path %}active{% endif %}"
-             href="/employees/attendance/">
-            <i class="fa-solid fa-calendar-check"></i> Attendance Records
+          <a class="nav-link nav-subitem {% if '/employees/attendance-register/' in request.path %}active{% endif %}"
+             href="/employees/attendance-register/">
+            <i class="fa-solid fa-table-list"></i> Attendance Register
           </a>
         </div>
       </div>
@@ -127,13 +136,13 @@
 
       <div class="nav-group">
         <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'account-entry-menu')">
-          <i class="fa-solid fa-pen-to-square"></i> Account Entry
+          <i class="fa-solid fa-pen-to-square"></i> Payroll
           <i class="fa-solid fa-chevron-down toggle-icon"></i>
         </button>
         <div id="account-entry-menu" class="nav-submenu">
-          <a class="nav-link nav-subitem {% if '/employees/manual-salary-data/' in request.path %}active{% endif %}"
-             href="/employees/manual-salary-data/">
-            <i class="fa-solid fa-hand-holding-dollar"></i> Manual Salary Data
+          <a class="nav-link nav-subitem {% if '/employees/payroll/' in request.path %}active{% endif %}"
+             href="/employees/payroll/">
+            <i class="fa-solid fa-money-bill-wave"></i> Monthly Payroll
           </a>
         </div>
       </div>
@@ -176,10 +185,6 @@
           <a class="nav-link nav-subitem {% if '/employees/view/' in request.path %}active{% endif %}"
              href="/employees/view/">
             <i class="fa-solid fa-eye"></i> List Employees
-          </a>
-          <a class="nav-link nav-subitem {% if '/employees/register/' in request.path %}active{% endif %}"
-             href="/employees/register/">
-            <i class="fa-solid fa-clipboard-check"></i> Employee Register
           </a>
         </div>
       </div>

@@ -4,49 +4,6 @@ from django.db import models
 from django.db.models import Max
 
 
-class EmployeeRegister(models.Model):
-    """Track employee attendance and paid days for salary calculation"""
-    session = models.ForeignKey('dailyLedger.Session', on_delete=models.CASCADE)
-    employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
-    month = models.CharField(max_length=7, default="2024-01", help_text="Format: YYYY-MM (e.g., 2024-01)")
-    paid_days = models.DecimalField(max_digits=5, decimal_places=2, default=0, help_text="Number of days to be paid")
-    payable_salary = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Calculated monthly payable salary")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ["-session", "-month", "employee__name"]
-        unique_together = ["session", "employee", "month"]
-
-    def __str__(self):
-        return f"{self.employee.name} - {self.session.session} - {self.month} ({self.paid_days} days)"
-
-    @property
-    def month_display(self):
-        try:
-            return datetime.strptime(self.month, "%Y-%m").strftime("%B %Y")
-        except (ValueError, TypeError):
-            return self.month
-
-    def save(self, *args, **kwargs):
-        """Calculate payable salary based on paid_days and employee's entitled leaves"""
-        if self.employee:
-            base_salary = self.employee.base_salary_per_month or 0
-            entitled_leaves = self.employee.leaves_entitled or 0
-            paid_days = self.paid_days or 0
-            
-            # If paid_days >= (30 - entitled_leaves), pay full salary
-            # Otherwise, pro-rata: paid_days * (base_salary / 30)
-            min_work_days = 30 - entitled_leaves
-            
-            if paid_days >= min_work_days:
-                self.payable_salary = base_salary
-            else:
-                self.payable_salary = (paid_days * base_salary) / 30
-        
-        super().save(*args, **kwargs)
-
-
 class Employee(models.Model):
     STATUS_CHOICES = [
         ("active", "Active"),
@@ -131,26 +88,24 @@ class EmployeeAttendance(models.Model):
         return f"{self.employee.name} - {self.date} - {self.get_attendance_display()}"
 
 
-class ManualSalaryData(models.Model):
-    """Track manual salary data for old dues or adjustments"""
-    AMOUNT_TYPE_CHOICES = [
-        ('salary', 'Salary'),
-        ('old_due', 'Old Due'),
-        ('other', 'Other'),
-    ]
-    
-    session = models.ForeignKey('dailyLedger.Session', on_delete=models.CASCADE, related_name='manual_salary_data')
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='manual_salary_records')
-    amount_type = models.CharField(max_length=20, choices=AMOUNT_TYPE_CHOICES)
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Amount in rupees")
-    month = models.CharField(max_length=7, help_text="Format: YYYY-MM (e.g., 2024-01)")
-    note = models.TextField(blank=True, help_text="Optional notes")
+class EmployeePayrollEntry(models.Model):
+    """Unified payroll entry — accountant-validated salary per employee per month"""
+    session = models.ForeignKey('dailyLedger.Session', on_delete=models.CASCADE, related_name='payroll_entries')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='payroll_entries')
+    month = models.CharField(max_length=7, help_text="Format: YYYY-MM")
+    payable_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Final validated salary")
+    old_dues = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    other_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    note = models.TextField(blank=True)
+    # Manual override when attendance register is not filled
+    manual_work_days = models.DecimalField(max_digits=5, decimal_places=1, null=True, blank=True, help_text="Override: working days if attendance register not filled")
+    manual_leave_days = models.IntegerField(null=True, blank=True, help_text="Override: leave days if attendance register not filled")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
-        ordering = ['-session', '-month', 'employee__name']
-        verbose_name_plural = "Manual Salary Data"
-    
+        unique_together = ['session', 'employee', 'month']
+        ordering = ['employee__name']
+
     def __str__(self):
-        return f"{self.employee.name} - {self.month} - {self.get_amount_type_display()}"
+        return f"{self.employee.name} - {self.month}"

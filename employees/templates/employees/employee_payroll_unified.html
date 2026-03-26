@@ -1,0 +1,435 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% block title %}Monthly Payroll{% endblock %}
+
+{% block content %}
+{% include "website/_print_letterhead.html" %}
+
+<div class="no-print">
+<h2 style="margin-top:0;">Monthly Payroll</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <div style="padding:10px 16px; margin-bottom:12px; border-radius:8px; font-weight:600;
+                background:{% if message.tags == 'error' %}#fee2e2{% elif message.tags == 'warning' %}#fef9c3{% else %}#dcfce7{% endif %};
+                color:{% if message.tags == 'error' %}#b91c1c{% elif message.tags == 'warning' %}#92400e{% else %}#15803d{% endif %};">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!-- Filter / Generate bar -->
+<div class="card" style="margin-bottom:16px;">
+  <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end;">
+
+    <form method="get" style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end; flex:1;">
+      <div class="field" style="flex:1; min-width:180px;">
+        <label>Session</label>
+        <select name="session">
+          {% for s in sessions %}
+            <option value="{{ s.id }}"
+              {% if current_session and current_session.id == s.id %}selected{% endif %}>
+              {{ s.session }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field" style="flex:1; min-width:160px;">
+        <label>Month</label>
+        <input type="month" name="month" value="{{ selected_month }}">
+      </div>
+      <div class="field">
+        <button type="submit"
+                style="padding:9px 22px; background:var(--teal-700); color:#fff; border:none;
+                       border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+          Load
+        </button>
+      </div>
+    </form>
+
+    {% if selected_month and current_session %}
+    <form method="post" style="align-self:flex-end;">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="generate">
+      <input type="hidden" name="session" value="{{ current_session.id }}">
+      <input type="hidden" name="month" value="{{ selected_month }}">
+      <button type="submit"
+              style="padding:9px 22px; background:#6366f1; color:#fff; border:none;
+                     border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-bolt"></i> Generate Payroll
+      </button>
+    </form>
+    {% endif %}
+
+  </div>
+  {% if selected_month %}
+  <p style="margin:8px 0 0; font-size:11.5px; color:#9ca3af;">
+    <strong>Generate Payroll</strong> creates one row per active employee and pre-fills
+    <em>Payable Salary</em> from the attendance-derived Register Salary.
+    Existing rows are not overwritten.
+  </p>
+  {% endif %}
+</div>
+</div><!-- /no-print -->
+
+{% if rows %}
+
+<!-- Print heading -->
+<div class="print-only" style="display:none; margin-bottom:10px;">
+  <h3 style="margin:0; font-size:14px; color:#1b4f4a;">
+    Monthly Payroll &mdash; {{ selected_month }}
+    {% if current_session %}&mdash; {{ current_session.session }}{% endif %}
+  </h3>
+</div>
+
+<!-- Save All form (wraps the table) -->
+<form method="post" id="payroll-form">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="save">
+  <input type="hidden" name="session" value="{{ current_session.id }}">
+  <input type="hidden" name="month" value="{{ selected_month }}">
+
+  <div class="card no-print" style="padding:10px 16px; margin-bottom:10px;
+              display:flex; justify-content:space-between; align-items:center;">
+    <span style="font-size:13px; color:#374151;">
+      <strong>{{ rows|length }}</strong> employee(s) &mdash; {{ selected_month }}
+      {% if days_in_month %}&nbsp;({{ days_in_month }} days){% endif %}
+    </span>
+    <div style="display:flex; gap:8px;">
+      <button type="button" onclick="window.print()"
+              style="padding:8px 16px; background:#e5e7eb; color:#374151; border:none;
+                     border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-print"></i> Print
+      </button>
+      <button type="submit"
+              style="padding:8px 22px; background:var(--teal-700); color:#fff; border:none;
+                     border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-floppy-disk"></i> Save All
+      </button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0; overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; font-size:13px; min-width:900px;">
+      <thead>
+        <tr style="background:#f0f9f8;">
+          <th style="text-align:left;   padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#374151; width:32px;">#</th>
+          <th style="text-align:left;   padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#374151;">Employee Name</th>
+          <th style="text-align:center; padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#374151;">Emp ID</th>
+          <th style="text-align:right;  padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#374151;">Basic Salary</th>
+          <th style="text-align:center; padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#374151;">Work Days</th>
+          <th style="text-align:center; padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#b45309; background:#fff7ed; min-width:100px;" title="Fill when attendance register is not available">Manual<br>Work Days</th>
+          <th style="text-align:center; padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#b45309; background:#fff7ed; min-width:90px;" title="Fill when attendance register is not available">Manual<br>Leaves</th>
+          <th style="text-align:right;  padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#1b4f4a; background:#f0fdf4;">Register Salary</th>
+          <th style="text-align:right;  padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#92400e; background:#fefce8; min-width:130px;">Payable Salary</th>
+          <th style="text-align:right;  padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#2563eb; background:#eff6ff; min-width:110px;">Old Dues</th>
+          <th style="text-align:right;  padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#7c3aed; background:#f5f3ff; min-width:110px;">Other Amount</th>
+          <th style="text-align:left;   padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#374151; min-width:160px;">Note</th>
+          <th class="no-print" style="text-align:center; padding:10px 12px; border-bottom:1px solid #e5e7eb; color:#374151; width:80px;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr style="border-bottom:1px solid #f3f4f6;">
+          <td style="padding:8px 12px; color:#9ca3af;">{{ forloop.counter }}</td>
+          <td style="padding:8px 12px; font-weight:600;">{{ row.employee.name }}</td>
+          <td style="text-align:center; padding:8px 12px; color:#6b7280;">{{ row.employee.emp_no }}</td>
+          <td style="text-align:right; padding:8px 12px; color:#374151;">&#8377; {{ row.employee.base_salary_per_month|floatformat:2 }}</td>
+          <td style="text-align:center; padding:8px 12px;"
+              title="{% if row.att_source == 'register' %}From attendance register{% elif row.att_source == 'manual' %}From manual override{% else %}No data — full month leave assumed{% endif %}">
+            {{ row.work_days }}
+            {% if row.att_source == 'manual' %}<span style="font-size:10px;color:#b45309;"> ✎</span>{% elif row.att_source == 'none' %}<span style="font-size:10px;color:#dc2626;"> !</span>{% endif %}
+          </td>
+          <!-- Manual Work Days -->
+          <td style="padding:6px 8px; background:#fff7ed;" class="no-print">
+            <input type="number" name="manual_work_{{ row.employee.id }}"
+                   value="{{ row.manual_work_days }}" step="0.5" min="0"
+                   placeholder="—"
+                   style="width:100%; border:1px solid #d1d5db; border-radius:6px;
+                          padding:5px 8px; font-size:13px; text-align:right;">
+          </td>
+          <!-- Manual Leave Days -->
+          <td style="padding:6px 8px; background:#fff7ed;" class="no-print">
+            <input type="number" name="manual_leave_{{ row.employee.id }}"
+                   value="{{ row.manual_leave_days }}" step="1" min="0"
+                   placeholder="—"
+                   style="width:100%; border:1px solid #d1d5db; border-radius:6px;
+                          padding:5px 8px; font-size:13px; text-align:right;">
+          </td>
+          <!-- Register Salary - read only -->
+          <td style="text-align:right; padding:8px 12px; font-weight:600; color:#15803d; background:#f0fdf4;">
+            &#8377; {{ row.register_salary|floatformat:2 }}
+          </td>
+          <!-- Payable Salary - editable -->
+          <td style="padding:6px 8px; background:#fffbeb;">
+            <input type="number" name="payable_{{ row.employee.id }}"
+                   value="{{ row.payable_salary }}" step="0.01" min="0"
+                   class="no-print"
+                   style="width:100%; border:1px solid #d1d5db; border-radius:6px;
+                          padding:5px 8px; font-size:13px; text-align:right;">
+            <span class="print-only" style="display:none; float:right;">
+              {% if row.payable_salary %}&#8377; {{ row.payable_salary|floatformat:2 }}{% endif %}
+            </span>
+          </td>
+          <!-- Old Dues - editable -->
+          <td style="padding:6px 8px; background:#eff6ff;">
+            <input type="number" name="old_dues_{{ row.employee.id }}"
+                   value="{{ row.old_dues }}" step="0.01" min="0"
+                   class="no-print"
+                   style="width:100%; border:1px solid #d1d5db; border-radius:6px;
+                          padding:5px 8px; font-size:13px; text-align:right;">
+            <span class="print-only" style="display:none; float:right;">&#8377; {{ row.old_dues|floatformat:2 }}</span>
+          </td>
+          <!-- Other Amount - editable -->
+          <td style="padding:6px 8px; background:#f5f3ff;">
+            <input type="number" name="other_{{ row.employee.id }}"
+                   value="{{ row.other_amount }}" step="0.01" min="0"
+                   class="no-print"
+                   style="width:100%; border:1px solid #d1d5db; border-radius:6px;
+                          padding:5px 8px; font-size:13px; text-align:right;">
+            <span class="print-only" style="display:none; float:right;">&#8377; {{ row.other_amount|floatformat:2 }}</span>
+          </td>
+          <!-- Note - editable -->
+          <td style="padding:6px 8px;">
+            <input type="text" name="note_{{ row.employee.id }}"
+                   value="{{ row.note }}"
+                   class="no-print"
+                   style="width:100%; border:1px solid #d1d5db; border-radius:6px;
+                          padding:5px 8px; font-size:12px;">
+            <span class="print-only" style="display:none; font-size:11px; color:#6b7280;">{{ row.note }}</span>
+          </td>
+          <!-- Payslip action -->
+          <td class="no-print" style="padding:6px 8px; text-align:center;">
+            <button type="button"
+              onclick="openPayslip(
+                '{{ row.employee.id }}',
+                '{{ row.employee.name|escapejs }}',
+                '{{ row.employee.emp_no }}',
+                '{{ row.employee.post|escapejs }}',
+                '{{ row.employee.joining_date|date:"d M Y" }}',
+                '{{ row.work_days }}',
+                '{{ row.register_salary|floatformat:2 }}',
+                '{{ row.leave }}',
+                '{{ row.leaves_entitled }}',
+                '{{ row.employee.base_salary_per_month|floatformat:2 }}'
+              )"
+              style="padding:5px 12px; background:#0f766e; color:#fff; border:none;
+                     border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;
+                     white-space:nowrap;">
+              <i class="fa-solid fa-file-invoice"></i> Payslip
+            </button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr style="background:#f0f9f8; font-weight:700; border-top:2px solid #e5e7eb;">
+          <td colspan="4" style="padding:10px 12px; color:#374151;">Total</td>
+          <td style="text-align:right; padding:10px 12px; color:#15803d;">&#8377; {{ total_register|floatformat:2 }}</td>
+          <td style="text-align:right; padding:10px 12px; color:#92400e;">&#8377; {{ total_payable|floatformat:2 }}</td>
+          <td style="text-align:right; padding:10px 12px; color:#2563eb;">&#8377; {{ total_old_dues|floatformat:2 }}</td>
+          <td style="text-align:right; padding:10px 12px; color:#7c3aed;">&#8377; {{ total_other|floatformat:2 }}</td>
+          <td></td>
+          <td class="no-print"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Save All bottom -->
+  <div class="no-print" style="text-align:right; margin-top:10px;">
+    <button type="submit"
+            style="padding:9px 26px; background:var(--teal-700); color:#fff; border:none;
+                   border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+      <i class="fa-solid fa-floppy-disk"></i> Save All
+    </button>
+  </div>
+
+</form>
+
+<p style="font-size:11.5px; color:#9ca3af; margin-top:8px;" class="no-print">
+  Register Salary rule: Leave &le; 2 &rarr; full monthly salary &nbsp;|&nbsp;
+  Leave &gt; 2 &rarr; (Monthly Salary &divide; {{ days_in_month }} days) &times; present days
+</p>
+
+{% elif selected_month %}
+<div class="card" style="padding:40px; text-align:center; color:#9ca3af; font-style:italic;">
+  No payroll records found for {{ selected_month }}.
+  Click <strong>Generate Payroll</strong> to create entries for all active employees.
+</div>
+{% else %}
+<div class="card" style="padding:40px; text-align:center; color:#9ca3af; font-style:italic;">
+  Select a session and month, then click <strong>Load</strong> or <strong>Generate Payroll</strong>.
+</div>
+{% endif %}
+
+<script>
+{% load static %}
+function openPayslip(empId, empName, empNo, empPost, joiningDate, workDays, registerSalary, leavesTaken, clEntitled, baseSalary) {
+  const month   = '{{ selected_month|escapejs }}';
+  const session = '{{ current_session.session|default:""|escapejs }}';
+  const logoUrl = '{% static "website/logo_leftnew.png" %}';
+
+  // Read live input values from the form
+  const payable  = parseFloat(document.querySelector('input[name="payable_'  + empId + '"]').value)  || parseFloat(registerSalary);
+  const oldDues  = parseFloat(document.querySelector('input[name="old_dues_' + empId + '"]').value)  || 0;
+  const other    = parseFloat(document.querySelector('input[name="other_'    + empId + '"]').value)  || 0;
+  const note     = document.querySelector('input[name="note_' + empId + '"]').value || '';
+
+  // Format month label e.g. "2026-05" → "May 2026"
+  const parts = month.split('-');
+  const monthNames = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+  const monthLabel = parts.length === 2 ? monthNames[parseInt(parts[1]) - 1] + ' ' + parts[0] : month;
+
+  // Payslip serial: academic year April=1 … March=12
+  const moNum = parts.length === 2 ? parseInt(parts[1]) : 0;
+  const payslipNo = moNum ? ((moNum - 4 + 12) % 12) + 1 : '—';
+
+  const regSal      = parseFloat(registerSalary);
+  const basicSal    = baseSalary ? parseFloat(baseSalary) : regSal;
+  const totalEarnings = regSal + other;
+  // Deduction = register minus payable (if register > payable);
+  const salAdj      = Math.max(0, regSal - payable);
+  const totalDed    = salAdj;
+  const netPay      = payable;   // what is paid this month
+  const grandTotal  = netPay + other;
+
+  const joiningStr = (joiningDate && joiningDate !== 'None') ? joiningDate : '—';
+
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<title>Payslip – ${empName} – ${monthLabel}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;font-size:12px;color:#222;background:#fff;padding:20px}
+@page{size:A4 portrait;margin:10mm 15mm}
+.lh{display:flex;align-items:center;gap:16px;border-bottom:3px double #1b4f4a;padding-bottom:12px;margin-bottom:16px}
+.lh img{width:64px;height:64px;object-fit:contain}
+.lh-txt{flex:1;text-align:center}
+.sname{font-size:22px;font-weight:800;color:#1b4f4a}
+.ssub{font-size:11px;color:#555;font-style:italic}
+.saddr{font-size:10.5px;color:#666;margin-top:2px}
+.slip-title{text-align:center;font-size:14px;font-weight:700;color:#1b4f4a;margin-bottom:14px;background:#f0f9f8;padding:7px;border-radius:6px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 30px;margin-bottom:16px;border:1px solid #ddd;padding:12px;border-radius:6px}
+.info-item{display:flex;gap:6px}
+.ilabel{color:#6b7280;min-width:110px;white-space:nowrap}
+.ival{font-weight:600}
+table{width:100%;border-collapse:collapse;margin-bottom:14px}
+th{background:#374151;color:#fff;padding:8px 12px;text-align:left;font-size:12px}
+th.r{text-align:right}
+td{padding:7px 12px;border-bottom:1px solid #e5e7eb}
+td.r{text-align:right}
+.trow{font-weight:700;background:#f9fafb}
+.net-box{border:2px solid #1b4f4a;padding:10px 14px;border-radius:6px;display:flex;justify-content:space-between;margin-bottom:12px;font-weight:700;font-size:13px}
+.dues-box{border:1px solid #bfdbfe;background:#eff6ff;padding:8px 14px;border-radius:6px;display:flex;justify-content:space-between;margin-bottom:16px;font-size:12px;color:#1d4ed8}
+.note-box{font-size:11px;color:#6b7280;margin-bottom:16px;padding:6px 10px;border-left:3px solid #d1d5db;}
+.sig-row{display:flex;justify-content:space-between;margin-top:36px}
+.sig-col{text-align:center;width:160px}
+.sig-line{border-top:1px solid #374151;padding-top:4px;margin-top:30px;font-size:11px;color:#374151}
+.footer-note{text-align:center;font-size:10px;color:#9ca3af;margin-top:20px}
+</style></head>
+<body>
+<div class="lh">
+  <img src="${logoUrl}" alt="Logo">
+  <div class="lh-txt">
+    <div class="sname">Devki Public School</div>
+    <div class="ssub">A new horizon in school education</div>
+    <div class="saddr" style="font-weight:600;margin-top:3px;">Devki Education Society (R)</div>
+    <div class="saddr">35 Pradhan Jiki Dhani, Tibariyan, Hingonia Road, Jaipur (Rajasthan)</div>
+    <div class="saddr">Mobile: 9887005428, 9610211173</div>
+  </div>
+</div>
+
+<div class="slip-title">Salary Slip &mdash; ${monthLabel} &nbsp;|&nbsp; Session: ${session}</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+  <!-- Section 1: Personal Info -->
+  <div style="border:1px solid #ddd;padding:10px 12px;border-radius:6px;">
+    <div style="font-size:10px;font-weight:700;color:#1b4f4a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;border-bottom:1px solid #e5e7eb;padding-bottom:4px;">Employee Details</div>
+    <div class="info-item"><span class="ilabel">Name</span><span class="ival">: ${empName}</span></div>
+    <div class="info-item" style="margin-top:4px;"><span class="ilabel">Designation</span><span class="ival">: ${empPost || '—'}</span></div>
+    <div class="info-item" style="margin-top:4px;"><span class="ilabel">Date of Joining</span><span class="ival">: ${joiningStr}</span></div>
+  </div>
+  <!-- Section 2: Pay Info -->
+  <div style="border:1px solid #ddd;padding:10px 12px;border-radius:6px;">
+    <div style="font-size:10px;font-weight:700;color:#1b4f4a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;border-bottom:1px solid #e5e7eb;padding-bottom:4px;">Pay Details</div>
+    <div class="info-item"><span class="ilabel">Employee ID</span><span class="ival">: ${empNo}</span></div>
+    <div class="info-item" style="margin-top:4px;"><span class="ilabel">Pay Period</span><span class="ival">: ${monthLabel}</span></div>
+    <div class="info-item" style="margin-top:4px;"><span class="ilabel">Payslip No.</span><span class="ival">: ${payslipNo}</span></div>
+  </div>
+  <!-- Section 3: Attendance Info -->
+  <div style="border:1px solid #ddd;padding:10px 12px;border-radius:6px;">
+    <div style="font-size:10px;font-weight:700;color:#1b4f4a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;border-bottom:1px solid #e5e7eb;padding-bottom:4px;">Attendance</div>
+    <div class="info-item"><span class="ilabel">CL Entitled</span><span class="ival">: ${clEntitled || 0}</span></div>
+    <div class="info-item" style="margin-top:4px;"><span class="ilabel">Leaves Taken</span><span class="ival">: ${leavesTaken || 0}</span></div>
+    <div class="info-item" style="margin-top:4px;"><span class="ilabel">Worked Days</span><span class="ival">: ${workDays}</span></div>
+  </div>
+</div>
+
+<table>
+  <thead><tr><th>Earnings</th><th class="r">Amount</th></tr></thead>
+  <tbody>
+    <tr><td>Basic Pay (Monthly Salary)</td><td class="r">&#8377; ${basicSal.toFixed(2)}</td></tr>
+    ${other > 0 ? `<tr><td>Other Allowance</td><td class="r">&#8377; ${other.toFixed(2)}</td></tr>` : ''}
+    <tr class="trow"><td>Total Earnings</td><td class="r">&#8377; ${totalEarnings.toFixed(2)}</td></tr>
+  </tbody>
+</table>
+
+${totalDed > 0 ? `
+<table>
+  <thead><tr><th>Deductions</th><th class="r">Amount</th></tr></thead>
+  <tbody>
+    ${salAdj > 0 ? `<tr><td>Salary Adjustment</td><td class="r">&#8377; ${salAdj.toFixed(2)}</td></tr>` : ''}
+    <tr class="trow"><td>Total Deductions</td><td class="r">&#8377; ${totalDed.toFixed(2)}</td></tr>
+  </tbody>
+</table>` : ''}
+
+<div class="net-box">
+  <span>Net Payable This Month:</span>
+  <span style="font-size:15px;color:#1b4f4a;">&#8377; ${grandTotal.toFixed(2)}</span>
+</div>
+
+${oldDues > 0 ? `<div class="dues-box"><span>&#9432; Old Dues (Outstanding from previous months):</span><span style="font-weight:700;">&#8377; ${oldDues.toFixed(2)}</span></div>` : ''}
+
+<div class="net-box" style="background:#1b4f4a;color:#fff;border-color:#1b4f4a;">
+  <span style="font-size:13px;">Total Payable Amount (Net + Old Dues):</span>
+  <span style="font-size:16px;font-weight:800;">&#8377; ${(grandTotal + oldDues).toFixed(2)}</span>
+</div>
+
+${note ? `<div class="note-box"><strong>Note:</strong> ${note}</div>` : ''}
+
+<div class="sig-row">
+  <div class="sig-col"><div class="sig-line">Authorised Signatory</div></div>
+  <div class="sig-col"><div class="sig-line">Employee Signature</div></div>
+</div>
+<div class="footer-note">This is a system generated payslip.</div>
+<script>window.onload=function(){window.print();};<\/script>
+</body></html>`;
+
+  const w = window.open('', '_blank', 'width=760,height=970');
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+}
+</script>
+
+<style>
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: inline !important; }
+  @page { size: A4 landscape; margin: 8mm 10mm; }
+  body, table { font-size: 10px; }
+  input { display: none; }
+  /* Hide navigation chrome */
+  aside.sidebar,
+  div.topbar,
+  .mobile-menu-btn,
+  .footer { display: none !important; }
+  /* Content fills full page width */
+  main.main { margin: 0 !important; padding: 0 !important; width: 100% !important; }
+  .content-card { box-shadow: none !important; padding: 0 !important; }
+}
+</style>
+
+{% endblock %}

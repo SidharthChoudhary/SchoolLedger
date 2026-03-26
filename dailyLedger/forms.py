@@ -74,9 +74,6 @@ class ExpenseForm(LedgerEntryFormBase):
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        # Auto-fill sub_head from selected employee name
-        if instance.employee:
-            instance.sub_head = instance.employee.name
         if commit:
             instance.save()
         return instance

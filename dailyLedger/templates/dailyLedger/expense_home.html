@@ -22,6 +22,14 @@
 	<div class="card" style="margin-bottom:14px;">
 	    <form method="post">
 				{% csrf_token %}
+				{% if form.errors %}
+				<div style="background:#fee2e2;color:#b91c1c;padding:10px 14px;border-radius:6px;margin-bottom:10px;font-size:13px;">
+				  <strong>Please correct the following errors:</strong><br>
+				  {% for field, errors in form.errors.items %}
+				    {% for error in errors %}<b>{{ field }}:</b> {{ error }}<br>{% endfor %}
+				  {% endfor %}
+				</div>
+				{% endif %}
 				{% if editing_entry %}
 				<input type="hidden" name="entry_id" value="{{ editing_entry.id }}">
 					{% endif %}
@@ -275,23 +283,26 @@
 				}
 
 				// Auto-fill sub_head when employee is selected
-				if (employeeSel) {
-					employeeSel.addEventListener('change', function() {
-						if (!subSel) return;
-						const empName = this.options[this.selectedIndex].text;
-						if (!this.value) return;
-						let found = false;
-						for (let opt of subSel.options) {
-							if (opt.text === empName) { subSel.value = opt.value; found = true; break; }
+				// (removed: sub_head is preserved as-is; employee links via FK)
+
+				// --- Initialise state on page load ---
+
+				// 1. Employee field: enable if form already has Salary selected (e.g. after POST re-render)
+				if (majorSel) setEmpState(majorSel.value.toLowerCase() === 'salary');
+
+				// 2. Filter form: restore head + sub_head dropdowns from URL params
+				const initialMajor = "{{ selected_major_head|escapejs }}";
+				const initialHead  = "{{ selected_head|escapejs }}";
+				const initialSub   = "{{ selected_sub_head|escapejs }}";
+				if (filterMajor && filterHead && filterSub && initialMajor && headData.Expense && headData.Expense[initialMajor]) {
+					setOptions(filterHead, headData.Expense[initialMajor], 'All');
+					if (initialHead) {
+						filterHead.value = initialHead;
+						if (headData.Expense[initialMajor][initialHead]) {
+							setOptions(filterSub, headData.Expense[initialMajor][initialHead], 'All');
+							if (initialSub) filterSub.value = initialSub;
 						}
-						if (!found) {
-							const newOpt = document.createElement('option');
-							newOpt.value = empName;
-							newOpt.text = empName;
-							newOpt.selected = true;
-							subSel.appendChild(newOpt);
-						}
-					});
+					}
 				}
 			});
 		</script>

@@ -7,8 +7,8 @@ from django.contrib import messages
 from accounts.decorators import role_required
 from django.views.decorators.cache import never_cache
 
-from .models import Employee, EmployeeRegister, EmployeeAttendance, ManualSalaryData
-from .forms import EmployeeForm, EmployeeRegisterForm, EmployeeAttendanceForm, ManualSalaryDataForm
+from .models import Employee, EmployeeAttendance, EmployeePayrollEntry
+from .forms import EmployeeForm, EmployeeAttendanceForm
 from dailyLedger.models import Session, Expense
 
 @role_required('accountant', 'admin', 'teacher')
@@ -153,242 +153,6 @@ def download_employees_template(request):
     return response
 
 
-def bulk_import_manual_salary_data(request):
-    """Handle bulk import of manual salary data from CSV"""
-    from .forms import BulkImportManualSalaryDataForm
-    from .utils import parse_csv_manual_salary_data, import_manual_salary_data
-    
-    import_result = None
-    
-    if request.method == "POST":
-        form = BulkImportManualSalaryDataForm(request.POST, request.FILES)
-        if form.is_valid():
-            csv_file = form.cleaned_data["csv_file"]
-            handle_duplicates = form.cleaned_data["handle_duplicates"]
-            dry_run = form.cleaned_data["dry_run"]
-            
-            try:
-                # Read CSV file
-                csv_content = csv_file.read().decode('utf-8')
-                
-                # Parse and validate CSV
-                parse_result = parse_csv_manual_salary_data(csv_content, handle_duplicates)
-                
-                if parse_result["errors"]:
-                    for row_num, error_msg in parse_result["errors"]:
-                        messages.error(request, f"Row {row_num}: {error_msg}")
-                
-                if parse_result["warnings"]:
-                    for row_num, warning_msg in parse_result["warnings"]:
-                        messages.warning(request, f"Row {row_num}: {warning_msg}")
-                
-                # Process import if no critical errors
-                if parse_result["valid_rows"] or parse_result["duplicate_rows"]:
-                    if not dry_run:
-                        # Actually import the data
-                        import_result = import_manual_salary_data(
-                            parse_result["valid_rows"],
-                            parse_result["duplicate_rows"],
-                            handle_duplicates
-                        )
-                        
-                        # Show success messages
-                        if import_result["created"]:
-                            messages.success(request, f"Created {import_result['created']} new entry/entries")
-                        if import_result["updated"]:
-                            messages.success(request, f"Updated {import_result['updated']} entry/entries")
-                        if import_result["skipped"]:
-                            messages.info(request, f"Skipped {import_result['skipped']} duplicate(s)")
-                        if import_result["errors"]:
-                            for row_num, error_msg in import_result["errors"]:
-                                messages.error(request, f"Row {row_num}: {error_msg}")
-                    else:
-                        # Dry-run mode: show what would happen
-                        import_result = {
-                            "created": len(parse_result["valid_rows"]),
-                            "updated": len(parse_result["duplicate_rows"]) if handle_duplicates == "update" else 0,
-                            "skipped": len(parse_result["duplicate_rows"]) if handle_duplicates == "skip" else 0,
-                            "dry_run": True,
-                            "valid_rows": parse_result["valid_rows"],
-                            "duplicate_rows": parse_result["duplicate_rows"],
-                            "handle_duplicates": handle_duplicates
-                        }
-                        messages.info(request, "Dry-run mode: No data was imported. Review above and uncheck 'Dry Run' to proceed.")
-                else:
-                    messages.error(request, "No valid data to import")
-                    
-            except Exception as e:
-                messages.error(request, f"Error processing file: {str(e)}")
-    else:
-        form = BulkImportManualSalaryDataForm()
-    
-    return render(
-        request,
-        "employees/bulk_import_manual_salary_data.html",
-        {
-            "form": form,
-            "import_result": import_result,
-        }
-    )
-
-
-def download_manual_salary_data_template(request):
-    """Download sample CSV template for manual salary data bulk import"""
-    
-    # Create CSV response
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="manual_salary_data_template.csv"'
-    
-    writer = csv.writer(response)
-    
-    # Header row
-    writer.writerow(['Session', 'Employee_Name', 'Amount_Type', 'Amount', 'Month', 'Note'])
-    
-    # Sample rows
-    writer.writerow(['2024', 'John Smith', 'salary', '50000', '2024-01', 'January salary adjustment'])
-    writer.writerow(['2024', 'Jane Doe', 'old_due', '15000', '2024-01', 'Previous month arrears'])
-    writer.writerow(['2024', 'Robert Johnson', 'salary', '45000', '2024-02', 'February salary'])
-    
-    return response
-
-
-def employee_register(request):
-    """Employee Register page for tracking attendance and paid days"""
-    edit_id = request.GET.get("edit")
-    editing_register = None
-
-    if edit_id:
-        editing_register = get_object_or_404(EmployeeRegister, pk=edit_id)
-
-    if request.method == "POST":
-        register_id = request.POST.get("register_id")
-
-        if register_id:
-            register = get_object_or_404(EmployeeRegister, pk=register_id)
-            form = EmployeeRegisterForm(request.POST, instance=register)
-        else:
-            form = EmployeeRegisterForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            return redirect("employee_register")
-
-    else:
-        form = EmployeeRegisterForm(instance=editing_register) if editing_register else EmployeeRegisterForm()
-
-    # Filters
-    selected_session = request.GET.get("session")
-    
-    registers = EmployeeRegister.objects.select_related("employee", "session").all()
-    
-    if selected_session:
-        registers = registers.filter(session_id=selected_session)
-    else:
-        # Default to Current Session
-        active_session = Session.objects.filter(status="current_session").first()
-        if active_session:
-            registers = registers.filter(session=active_session)
-            selected_session = str(active_session.id)
-
-    session_choices = Session.objects.all()
-
-    return render(
-        request,
-        "employees/employee_register.html",
-        {
-            "form": form,
-            "registers": registers,
-            "editing_register": editing_register,
-            "session_choices": session_choices,
-            "selected_session": selected_session,
-        },
-    )
-
-
-def delete_register(request, pk):
-    """Delete an employee register entry"""
-    register = get_object_or_404(EmployeeRegister, pk=pk)
-    if request.method == "POST":
-        register.delete()
-        return redirect("employee_register")
-    return render(request, "employees/delete_register.html", {"register": register})
-
-
-def manual_salary_data(request):
-    """Manage manual salary data (old dues and adjustments)"""
-    edit_id = request.GET.get("edit")
-    editing_record = ManualSalaryData.objects.filter(pk=edit_id).first() if edit_id else None
-
-    if request.method == "POST":
-        record_id = request.POST.get("record_id")
-        if record_id:
-            form = ManualSalaryDataForm(request.POST, instance=get_object_or_404(ManualSalaryData, pk=record_id))
-        else:
-            form = ManualSalaryDataForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("manual_salary_data")
-    else:
-        form = ManualSalaryDataForm(instance=editing_record) if editing_record else ManualSalaryDataForm()
-        if not editing_record:
-            form.fields["employee"].widget.attrs["autofocus"] = True
-
-    # Filter records by employee name, month, and session
-    selected_employee = request.GET.get("employee", "").strip()
-    selected_month = request.GET.get("month", "").strip()
-    selected_session = request.GET.get("session", "").strip()
-    
-    records = ManualSalaryData.objects.select_related('session', 'employee').all()
-    
-    if selected_employee:
-        records = records.filter(employee__name__icontains=selected_employee)
-    
-    if selected_month:
-        records = records.filter(month=selected_month)
-    
-    if selected_session:
-        records = records.filter(session__session=selected_session)
-    
-    records = records.order_by('-id')
-    
-    # Calculate total amount
-    total_amount = sum(record.amount for record in records)
-    
-    # Get list of employee names for filter dropdown
-    employee_list = Employee.objects.filter(status='active').values_list('name', flat=True).distinct().order_by('name')
-    
-    # Get list of months from ManualSalaryData
-    month_list = ManualSalaryData.objects.values_list('month', flat=True).distinct().order_by('-month')
-    
-    # Get list of sessions from ManualSalaryData
-    session_list = ManualSalaryData.objects.select_related('session').values_list('session__session', flat=True).distinct().order_by('-session__session')
-
-    return render(
-        request,
-        "employees/manual_salary_data.html",
-        {
-            "form": form,
-            "records": records,
-            "editing_record": editing_record,
-            "selected_employee": selected_employee,
-            "selected_month": selected_month,
-            "selected_session": selected_session,
-            "employee_list": employee_list,
-            "month_list": month_list,
-            "session_list": session_list,
-            "total_amount": total_amount,
-        },
-    )
-
-
-def delete_manual_salary_data(request, pk):
-    """Delete a manual salary data entry"""
-    record = get_object_or_404(ManualSalaryData, pk=pk)
-    if request.method == "POST":
-        record.delete()
-        return redirect("manual_salary_data")
-    return render(request, "employees/delete_manual_salary_data.html", {"record": record})
-
 
 def employees_view(request):
     employees = Employee.objects.all()
@@ -433,10 +197,10 @@ def employees_view(request):
 
 def employee_profile(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
-    registers = EmployeeRegister.objects.filter(employee=employee).select_related("session").order_by("-month")
-    return render(request, "employees/employee_profile.html", {
-        "employee": employee,
-        "registers": registers,
+    payroll_entries = EmployeePayrollEntry.objects.filter(employee=employee).select_related('session').order_by('-month')
+    return render(request, 'employees/employee_profile.html', {
+        'employee': employee,
+        'registers': payroll_entries,
     })
 
 
@@ -485,6 +249,251 @@ def delete_attendance(request, pk):
         return redirect('employee_attendance')
     
     return render(request, 'employees/delete_attendance.html', {'attendance': attendance})
+
+
+def attendance_register(request):
+    """View attendance register with filters on month, employee name, and status"""
+    from datetime import date as date_class
+
+    sessions = Session.objects.all().order_by('-session')
+    employees_list = Employee.objects.filter(status='active').order_by('name')
+
+    # --- read filters ---
+    selected_session_id = request.GET.get('session', '')
+    selected_month = request.GET.get('month', '')        # YYYY-MM
+    selected_employee = request.GET.get('employee', '')  # employee id
+    selected_status = request.GET.get('attendance', '')  # present/absent/half-day/leave
+
+    # default session
+    current_session = Session.objects.filter(status='current_session').first()
+    if not current_session and sessions.exists():
+        current_session = sessions.first()
+    if selected_session_id:
+        current_session = Session.objects.filter(pk=selected_session_id).first() or current_session
+
+    qs = EmployeeAttendance.objects.select_related('employee', 'session').order_by('-date', 'employee__name')
+
+    if current_session:
+        qs = qs.filter(session=current_session)
+
+    if selected_month:
+        try:
+            year, month = selected_month.split('-')
+            qs = qs.filter(date__year=int(year), date__month=int(month))
+        except ValueError:
+            pass
+
+    if selected_employee:
+        qs = qs.filter(employee_id=selected_employee)
+
+    if selected_status:
+        qs = qs.filter(attendance=selected_status)
+
+    # summary counts for the filtered queryset
+    from django.db.models import Count
+    total = qs.count()
+    status_counts = {
+        item['attendance']: item['count']
+        for item in qs.values('attendance').annotate(count=Count('id'))
+    }
+
+    # Monthly Register Salary summary — shown when a month is selected
+    salary_summary = []
+    days_in_month = None
+    if selected_month and current_session:
+        from calendar import monthrange
+        try:
+            yr, mo = selected_month.split('-')
+            _, days_in_month = monthrange(int(yr), int(mo))
+
+            # Base qs: session + month only — no employee/status filter so we get full per-employee picture
+            summary_base = EmployeeAttendance.objects.filter(
+                session=current_session,
+                date__year=int(yr),
+                date__month=int(mo),
+            )
+
+            summary_emps = employees_list
+            if selected_employee:
+                summary_emps = summary_emps.filter(pk=selected_employee)
+
+            for emp in summary_emps:
+                emp_qs = summary_base.filter(employee=emp)
+                present  = emp_qs.filter(attendance='present').count()
+                halfday  = emp_qs.filter(attendance='half-day').count()
+                leave    = emp_qs.filter(attendance='leave').count()
+                absent   = emp_qs.filter(attendance='absent').count()
+
+                monthly_salary = float(emp.base_salary_per_month or 0)
+                present_days   = present + halfday * 0.5
+
+                if leave <= 2:
+                    register_salary = monthly_salary
+                else:
+                    salary_per_day  = monthly_salary / days_in_month if days_in_month else 0
+                    register_salary = round(salary_per_day * present_days, 2)
+
+                salary_summary.append({
+                    'employee': emp,
+                    'present': present,
+                    'halfday': halfday,
+                    'leave': leave,
+                    'absent': absent,
+                    'monthly_salary': monthly_salary,
+                    'register_salary': register_salary,
+                })
+        except (ValueError, TypeError):
+            pass
+
+    context = {
+        'sessions': sessions,
+        'current_session': current_session,
+        'employees_list': employees_list,
+        'records': qs,
+        'selected_month': selected_month,
+        'selected_employee': selected_employee,
+        'selected_status': selected_status,
+        'total': total,
+        'count_present': status_counts.get('present', 0),
+        'count_absent': status_counts.get('absent', 0),
+        'count_halfday': status_counts.get('half-day', 0),
+        'count_leave': status_counts.get('leave', 0),
+        'attendance_choices': EmployeeAttendance.ATTENDANCE_CHOICES,
+        'salary_summary': salary_summary,
+        'days_in_month': days_in_month,
+        'total_monthly_salary': sum(r['monthly_salary'] for r in salary_summary),
+        'total_register_salary': sum(r['register_salary'] for r in salary_summary),
+    }
+    return render(request, 'employees/attendance_register.html', context)
+
+
+def delete_filtered_attendance(request):
+    """Delete all attendance records matching the current filter (POST only)"""
+    if request.method != 'POST':
+        return redirect('attendance_register')
+    session_id      = request.POST.get('session', '')
+    selected_month  = request.POST.get('month', '')
+    selected_employee = request.POST.get('employee', '')
+    selected_status = request.POST.get('attendance', '')
+
+    current_session = Session.objects.filter(pk=session_id).first() if session_id else None
+    qs = EmployeeAttendance.objects.all()
+    if current_session:
+        qs = qs.filter(session=current_session)
+    if selected_month:
+        try:
+            year, month = selected_month.split('-')
+            qs = qs.filter(date__year=int(year), date__month=int(month))
+        except ValueError:
+            pass
+    if selected_employee:
+        qs = qs.filter(employee_id=selected_employee)
+    if selected_status:
+        qs = qs.filter(attendance=selected_status)
+
+    count, _ = qs.delete()
+    messages.success(request, f'{count} attendance record(s) deleted.')
+    params = []
+    if session_id:        params.append(f'session={session_id}')
+    if selected_month:    params.append(f'month={selected_month}')
+    if selected_employee: params.append(f'employee={selected_employee}')
+    if selected_status:   params.append(f'attendance={selected_status}')
+    qs_str = '&'.join(params)
+    return redirect(f"/employees/attendance-register/?{qs_str}" if qs_str else '/employees/attendance-register/')
+
+
+def import_attendance_csv(request):
+    """Import attendance records from a CSV file (date, employee_name, attendance)"""
+    if request.method == 'POST':
+        session_id = request.POST.get('session')
+        csv_file = request.FILES.get('csv_file')
+        redirect_date = request.POST.get('redirect_date', '')
+        redirect_session = session_id
+
+        if not csv_file:
+            messages.error(request, 'Please select a CSV file to import.')
+            return redirect('attendance_rally')
+
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Only CSV files are supported.')
+            return redirect('attendance_rally')
+
+        session = get_object_or_404(Session, pk=session_id)
+
+        try:
+            decoded = csv_file.read().decode('utf-8-sig')  # utf-8-sig handles BOM from Excel
+            reader = csv.DictReader(decoded.splitlines())
+            valid_statuses = {'present', 'absent', 'half-day', 'leave'}
+            imported = 0
+            error_list = []
+
+            from datetime import date as date_class
+            for i, row in enumerate(reader, start=2):
+                date_str = (row.get('date') or '').strip()
+                employee_name = (row.get('employee_name') or '').strip()
+                attendance_value = (row.get('attendance') or '').strip().lower()
+
+                if not date_str or not employee_name or not attendance_value:
+                    error_list.append(f'Row {i}: Missing value(s) — skipped.')
+                    continue
+
+                if attendance_value not in valid_statuses:
+                    error_list.append(f'Row {i}: Invalid attendance "{attendance_value}" — use present/absent/half-day/leave.')
+                    continue
+
+                try:
+                    date_obj = date_class.fromisoformat(date_str)
+                except ValueError:
+                    error_list.append(f'Row {i}: Invalid date "{date_str}" — use YYYY-MM-DD format.')
+                    continue
+
+                employee = Employee.objects.filter(name__iexact=employee_name).first()
+                if not employee:
+                    error_list.append(f'Row {i}: Employee "{employee_name}" not found — check spelling.')
+                    continue
+
+                EmployeeAttendance.objects.update_or_create(
+                    session=session,
+                    date=date_obj,
+                    employee=employee,
+                    defaults={'attendance': attendance_value}
+                )
+                imported += 1
+                if not redirect_date:
+                    redirect_date = date_obj.isoformat()
+
+            for err in error_list:
+                messages.warning(request, err)
+
+            messages.success(request, f'CSV import complete: {imported} record(s) saved.')
+
+        except Exception as e:
+            messages.error(request, f'Error reading CSV: {e}')
+
+        url = f'/employees/attendance-rally/?session={redirect_session}'
+        if redirect_date:
+            url += f'&date={redirect_date}'
+        return redirect(url)
+
+    return redirect('attendance_rally')
+
+
+def download_attendance_template(request):
+    """Return a sample CSV template for attendance import with real employee names"""
+    from datetime import date as date_class
+    today = date_class.today().isoformat()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="attendance_import_template.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['date', 'employee_name', 'attendance'])
+    employees = Employee.objects.filter(status='active').order_by('name')[:5]
+    sample_statuses = ['present', 'absent', 'half-day', 'leave', 'present']
+    if employees.exists():
+        for idx, emp in enumerate(employees):
+            writer.writerow([today, emp.name, sample_statuses[idx % len(sample_statuses)]])
+    else:
+        writer.writerow([today, 'Employee Name', 'present'])
+    return response
 
 
 def attendance_rally(request):
@@ -608,6 +617,205 @@ def delete_all_employees(request):
     })
 
 
+def employee_payroll_unified(request):
+    """Unified payroll page: derive Register Salary from attendance, save Payable Salary manually"""
+    from calendar import monthrange
+    from django.db.models import Sum as DjSum
+
+    sessions = Session.objects.all().order_by('-session')
+    employees_list = Employee.objects.filter(status='active').order_by('name')
+
+    # Resolve selected session
+    selected_session_id = request.GET.get('session', '')
+    selected_month = request.GET.get('month', '')
+    current_session = Session.objects.filter(status='current_session').first()
+    if not current_session and sessions.exists():
+        current_session = sessions.first()
+    if selected_session_id:
+        current_session = Session.objects.filter(pk=selected_session_id).first() or current_session
+
+    def _calc_old_dues(emp, session, before_month):
+        """Old Dues = (sum payable_salary + other_amount for this session, months < before_month)
+                     minus (sum of Expense payments for this employee in this session)"""
+        past = EmployeePayrollEntry.objects.filter(
+            session=session, employee=emp, month__lt=before_month
+        ).aggregate(
+            total_payable=DjSum('payable_salary'),
+            total_other=DjSum('other_amount')
+        )
+        total_owed = float(past['total_payable'] or 0) + float(past['total_other'] or 0)
+        paid = Expense.objects.filter(
+            employee=emp, session=session
+        ).aggregate(total=DjSum('amount'))['total'] or 0
+        return round(max(float(total_owed) - float(paid), 0), 2)
+
+    # ── POST: Generate Payroll ──────────────────────────────────────────────
+    if request.method == 'POST' and request.POST.get('action') == 'generate':
+        session_id = request.POST.get('session')
+        month = request.POST.get('month')
+        if not month:
+            messages.error(request, 'Please select a month before generating payroll.')
+            return redirect(f'/employees/payroll/?session={session_id}')
+
+        session = get_object_or_404(Session, pk=session_id)
+        try:
+            yr, mo = month.split('-')
+            _, days_in_month = monthrange(int(yr), int(mo))
+        except (ValueError, TypeError):
+            messages.error(request, 'Invalid month.')
+            return redirect(f'/employees/payroll/?session={session_id}&month={month}')
+
+        att_base = EmployeeAttendance.objects.filter(
+            session=session, date__year=int(yr), date__month=int(mo)
+        )
+        created = 0
+        updated = 0
+        for emp in employees_list:
+            present = att_base.filter(employee=emp, attendance='present').count()
+            halfday = att_base.filter(employee=emp, attendance='half-day').count()
+            leave   = att_base.filter(employee=emp, attendance='leave').count()
+            work_days = present + halfday * 0.5
+            # No records at all → treat entire month as leave
+            if present == 0 and halfday == 0 and leave == 0:
+                leave = days_in_month
+            monthly_salary = float(emp.base_salary_per_month or 0)
+            total_tracked = work_days + leave
+            register_salary = monthly_salary if (leave <= 2 and total_tracked >= days_in_month - 2) else min(round((monthly_salary / 30) * work_days, 2), monthly_salary)
+            old_dues = _calc_old_dues(emp, session, month)
+
+            obj, is_new = EmployeePayrollEntry.objects.get_or_create(
+                session=session, employee=emp, month=month
+            )
+            obj.payable_salary = register_salary
+            obj.old_dues = old_dues
+            obj.save()
+            if is_new:
+                created += 1
+            else:
+                updated += 1
+
+        messages.success(request, f'Payroll generated: {created} new, {updated} recalculated.')
+        return redirect(f'/employees/payroll/?session={session_id}&month={month}')
+
+    # ── POST: Save All ──────────────────────────────────────────────────────
+    if request.method == 'POST' and request.POST.get('action') == 'save':
+        session_id = request.POST.get('session')
+        month = request.POST.get('month')
+        session = get_object_or_404(Session, pk=session_id)
+        saved = 0
+        for emp in employees_list:
+            payable_str      = request.POST.get(f'payable_{emp.id}', '').strip()
+            old_dues_str     = request.POST.get(f'old_dues_{emp.id}', '').strip() or '0'
+            other_str        = request.POST.get(f'other_{emp.id}', '').strip() or '0'
+            note             = request.POST.get(f'note_{emp.id}', '').strip()
+            manual_work_str  = request.POST.get(f'manual_work_{emp.id}', '').strip()
+            manual_leave_str = request.POST.get(f'manual_leave_{emp.id}', '').strip()
+            if payable_str == '' and old_dues_str == '0' and other_str == '0' and not note and not manual_work_str and not manual_leave_str:
+                continue
+            obj, _ = EmployeePayrollEntry.objects.get_or_create(
+                session=session, employee=emp, month=month
+            )
+            try:
+                obj.payable_salary  = float(payable_str) if payable_str != '' else obj.payable_salary
+                obj.old_dues        = float(old_dues_str)
+                obj.other_amount    = float(other_str)
+                obj.note            = note
+                obj.manual_work_days  = float(manual_work_str)  if manual_work_str  != '' else None
+                obj.manual_leave_days = int(float(manual_leave_str)) if manual_leave_str != '' else None
+                obj.save()
+                saved += 1
+            except (ValueError, TypeError):
+                messages.warning(request, f'{emp.name}: invalid value — skipped.')
+        messages.success(request, f'{saved} payroll record(s) saved.')
+        return redirect(f'/employees/payroll/?session={session_id}&month={month}')
+
+    # ── GET: Build table rows ───────────────────────────────────────────────
+    rows = []
+    days_in_month = None
+    if current_session and selected_month:
+        try:
+            yr, mo = selected_month.split('-')
+            _, days_in_month = monthrange(int(yr), int(mo))
+            att_base = EmployeeAttendance.objects.filter(
+                session=current_session, date__year=int(yr), date__month=int(mo)
+            )
+            entries = {
+                e.employee_id: e
+                for e in EmployeePayrollEntry.objects.filter(
+                    session=current_session, month=selected_month
+                )
+            }
+            # Show active employees + anyone with an existing entry for this session/month
+            # (covers employees who have since left but had payroll in a previous year)
+            from django.db.models import Q
+            display_employees = Employee.objects.filter(
+                Q(status='active') | Q(id__in=entries.keys())
+            ).order_by('name')
+            for emp in display_employees:
+                emp_att  = att_base.filter(employee=emp)
+                present  = emp_att.filter(attendance='present').count()
+                halfday  = emp_att.filter(attendance='half-day').count()
+                leave    = emp_att.filter(attendance='leave').count()
+                entry = entries.get(emp.id)
+                att_source = 'register'
+                if present == 0 and halfday == 0 and leave == 0:
+                    # No attendance register — try manual override, else full month leave
+                    if entry and entry.manual_work_days is not None:
+                        work_days = float(entry.manual_work_days)
+                        leave     = int(entry.manual_leave_days or 0)
+                        att_source = 'manual'
+                    else:
+                        work_days = 0
+                        leave = days_in_month
+                        att_source = 'none'
+                else:
+                    work_days = present + halfday * 0.5
+                    att_source = 'register'
+                monthly_salary = float(emp.base_salary_per_month or 0)
+                total_tracked = work_days + leave
+                register_salary = monthly_salary if (leave <= 2 and total_tracked >= days_in_month - 2) else min(round((monthly_salary / 30) * work_days, 2), monthly_salary)
+                # If entry exists use its saved old_dues, otherwise calculate live
+                if entry:
+                    old_dues_val = entry.old_dues
+                else:
+                    old_dues_val = _calc_old_dues(emp, current_session, selected_month)
+                rows.append({
+                    'employee': emp,
+                    'work_days': work_days,
+                    'leave': leave,
+                    'leaves_entitled': emp.leaves_entitled,
+                    'register_salary': register_salary,
+                    'payable_salary': entry.payable_salary if entry else '',
+                    'old_dues': old_dues_val,
+                    'other_amount': entry.other_amount if entry else 0,
+                    'note': entry.note if entry else '',
+                    'manual_work_days': entry.manual_work_days if entry else '',
+                    'manual_leave_days': entry.manual_leave_days if entry else '',
+                    'att_source': att_source,
+                })
+        except (ValueError, TypeError):
+            pass
+
+    # totals
+    total_register   = sum(r['register_salary'] for r in rows)
+    total_payable    = sum(float(r['payable_salary']) for r in rows if r['payable_salary'] not in ('', None))
+    total_old_dues   = sum(float(r['old_dues'] or 0) for r in rows)
+    total_other      = sum(float(r['other_amount'] or 0) for r in rows)
+
+    context = {
+        'sessions': sessions,
+        'current_session': current_session,
+        'selected_month': selected_month,
+        'rows': rows,
+        'days_in_month': days_in_month,
+        'total_register': total_register,
+        'total_payable': total_payable,
+        'total_old_dues': total_old_dues,
+        'total_other': total_other,
+    }
+    return render(request, 'employees/employee_payroll_unified.html', context)
+
+
 def employees_salary_statement(request):
     """All-employees salary summary for a session — Old Due + Salary Amount + Paid + Net Due"""
     sessions = Session.objects.all().order_by('-session')
@@ -627,40 +835,39 @@ def employees_salary_statement(request):
         if selected_status:
             emp_qs = emp_qs.filter(status=selected_status)
 
-        # Preload all old dues for this session
+        # Preload old dues, payable salary and other amount from EmployeePayrollEntry for this session
         old_due_map = {}
-        for rec in ManualSalaryData.objects.filter(session=selected_session, amount_type='old_due').values('employee_id', 'amount'):
-            old_due_map.setdefault(rec['employee_id'], 0)
-            old_due_map[rec['employee_id']] += rec['amount']
-
-        # Preload all EmployeeRegister entries for this session to get payable salaries
         register_map = {}
-        for reg in EmployeeRegister.objects.filter(session=selected_session).values('employee_id', 'payable_salary'):
-            register_map.setdefault(reg['employee_id'], 0)
-            register_map[reg['employee_id']] += reg['payable_salary']
+        other_map = {}
+        for entry in EmployeePayrollEntry.objects.filter(session=selected_session).values('employee_id', 'old_dues', 'payable_salary', 'other_amount'):
+            eid = entry['employee_id']
+            old_due_map[eid] = old_due_map.get(eid, 0) + float(entry['old_dues'] or 0)
+            register_map[eid] = register_map.get(eid, 0) + float(entry['payable_salary'] or 0)
+            other_map[eid]    = other_map.get(eid, 0)    + float(entry['other_amount'] or 0)
 
         # Preload all expenses for this session
         paid_map = {}
         for exp in Expense.objects.filter(session=selected_session, employee__isnull=False).values('employee_id', 'amount'):
             paid_map.setdefault(exp['employee_id'], 0)
-            paid_map[exp['employee_id']] += exp['amount']
+            paid_map[exp['employee_id']] += float(exp['amount'])
 
         for emp in emp_qs:
-            old_due = old_due_map.get(emp.id, 0)
-            # Use EmployeeRegister total if available, otherwise base_salary * 12
-            salary_amount = register_map.get(emp.id) or (emp.base_salary_per_month * 12)
-            paid = paid_map.get(emp.id, 0)
-            net_due = (old_due + salary_amount) - paid
+            old_due       = old_due_map.get(emp.id, 0)
+            salary_amount = register_map.get(emp.id, 0)
+            other_amount  = other_map.get(emp.id, 0)
+            paid          = paid_map.get(emp.id, 0)
+            net_due = (old_due + salary_amount + other_amount) - paid
             rows.append({
                 'employee': emp,
                 'old_due': old_due,
                 'salary_amount': salary_amount,
+                'other_amount': other_amount,
                 'paid': paid,
                 'net_due': net_due,
             })
             total_old_due += old_due
-            total_salary += salary_amount
-            total_paid += paid
+            total_salary  += salary_amount
+            total_paid    += paid
 
     total_net_due = (total_old_due + total_salary) - total_paid
 
@@ -673,6 +880,7 @@ def employees_salary_statement(request):
         'rows': rows,
         'total_old_due': total_old_due,
         'total_salary': total_salary,
+        'total_other': sum(r['other_amount'] for r in rows),
         'total_paid': total_paid,
         'total_net_due': total_net_due,
     })
@@ -728,7 +936,7 @@ def employee_full_salary_statement(request):
 
         register_map = {
             r.month: r
-            for r in EmployeeRegister.objects.filter(
+            for r in EmployeePayrollEntry.objects.filter(
                 session=selected_session, employee=selected_employee
             )
         }
@@ -745,25 +953,31 @@ def employee_full_salary_statement(request):
         for (yr, mo) in fin_months:
             month_key = f"{yr}-{mo:02d}"
             register = register_map.get(month_key)
-            amount = register.payable_salary if register else base_salary
-            paid = sum(e.amount for e in expense_by_month.get(month_key, []))
+            payable  = float(register.payable_salary)  if (register and register.payable_salary  is not None) else 0
+            old_due  = float(register.old_dues)         if (register and register.old_dues         is not None) else 0
+            other    = float(register.other_amount)     if (register and register.other_amount     is not None) else 0
+            amount   = payable + old_due + other
+            paid     = sum(e.amount for e in expense_by_month.get(month_key, []))
+            notes_parts = []
+            if payable:  notes_parts.append(f'Salary: ₹{payable:,.2f}')
+            if old_due:  notes_parts.append(f'Old Dues: ₹{old_due:,.2f}')
+            if other:    notes_parts.append(f'Other: ₹{other:,.2f}')
             monthly_schedule.append({
                 'year': yr,
                 'month': cal_month_name[mo],
                 'payment_type': 'Salary',
-                'notes': '',
+                'notes': ' | '.join(notes_parts),
+                'payable': payable,
+                'old_due': old_due,
+                'other': other,
                 'amount': amount,
                 'paid': paid,
                 'net_due': amount - paid,
             })
 
-        old_due_qs = ManualSalaryData.objects.filter(
-            employee=selected_employee, session=selected_session, amount_type='old_due'
-        )
-        old_dues = sum(r.amount for r in old_due_qs)
-        monthly_total = sum(r['amount'] for r in monthly_schedule)
-        total_salary_due = monthly_total + old_dues
-        total_paid = sum(r['paid'] for r in monthly_schedule)
+        monthly_total = float(sum(r['amount'] for r in monthly_schedule))
+        total_salary_due = monthly_total
+        total_paid = float(sum(r['paid'] for r in monthly_schedule))
 
         payment_transactions = [
             {

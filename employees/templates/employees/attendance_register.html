@@ -1,0 +1,252 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% block title %}Attendance Register{% endblock %}
+
+{% block content %}
+{% include "website/_print_letterhead.html" %}
+
+<div class="no-print">
+<h2 style="margin-top:0;">Employee Attendance Register</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}"
+         style="padding:10px 16px; margin-bottom:12px; border-radius:8px;
+                background:{% if message.tags == 'error' %}#fee2e2{% elif message.tags == 'warning' %}#fef9c3{% else %}#dcfce7{% endif %};
+                color:{% if message.tags == 'error' %}#b91c1c{% elif message.tags == 'warning' %}#92400e{% else %}#15803d{% endif %};
+                font-weight:600;">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<!-- Filter bar -->
+<div class="card" style="margin-bottom:16px;">
+  <form method="get" style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end;">
+
+    <div class="field" style="flex:1; min-width:160px;">
+      <label>Session</label>
+      <select name="session">
+        {% for s in sessions %}
+          <option value="{{ s.id }}"
+            {% if current_session and current_session.id == s.id %}selected{% endif %}>
+            {{ s.session }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field" style="flex:1; min-width:140px;">
+      <label>Month</label>
+      <input type="month" name="month" value="{{ selected_month }}">
+    </div>
+
+    <div class="field" style="flex:1; min-width:180px;">
+      <label>Employee</label>
+      <select name="employee">
+        <option value="">— All Employees —</option>
+        {% for emp in employees_list %}
+          <option value="{{ emp.id }}"
+            {% if selected_employee == emp.id|stringformat:"s" %}selected{% endif %}>
+            {{ emp.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field" style="flex:1; min-width:140px;">
+      <label>Attendance</label>
+      <select name="attendance">
+        <option value="">— All —</option>
+        {% for val, label in attendance_choices %}
+          <option value="{{ val }}" {% if selected_status == val %}selected{% endif %}>
+            {{ label }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field" style="display:flex; gap:8px; align-items:flex-end;">
+      <button type="submit"
+              style="padding:9px 22px; background:var(--teal-700); color:#fff; border:none;
+                     border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+        Filter
+      </button>
+      <a href="{% url 'attendance_register' %}"
+         style="padding:9px 16px; background:#e5e7eb; color:#374151; border-radius:8px;
+                font-size:13px; font-weight:600; text-decoration:none;">
+        Reset
+      </a>
+      <button type="button" onclick="window.print()"
+              style="padding:9px 16px; background:#6366f1; color:#fff; border:none;
+                     border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-print"></i> Print
+      </button>
+    </div>
+
+  </form>
+
+  <!-- Delete filtered records -->
+  <form method="post" action="{% url 'delete_filtered_attendance' %}" style="margin-top:10px;"
+        onsubmit="return confirm('Delete ALL {{ total }} attendance record(s) matching the current filter? This cannot be undone.');">
+    {% csrf_token %}
+    <input type="hidden" name="session"    value="{{ current_session.id }}">
+    <input type="hidden" name="month"      value="{{ selected_month }}">
+    <input type="hidden" name="employee"   value="{{ selected_employee }}">
+    <input type="hidden" name="attendance" value="{{ selected_status }}">
+    <button type="submit"
+            style="padding:9px 18px; background:#dc2626; color:#fff; border:none;
+                   border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+      <i class="fa-solid fa-trash"></i> Delete Filtered ({{ total }})
+    </button>
+  </form>
+</div>
+
+<!-- Summary chips -->
+<div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+  <div style="background:#f0f9f8; border:1px solid #99d9d4; border-radius:8px; padding:7px 18px; font-size:13px;">
+    <strong>Total:</strong> {{ total }}
+  </div>
+  {% if count_present %}
+  <div style="background:#dcfce7; border:1px solid #86efac; border-radius:8px; padding:7px 18px; font-size:13px; color:#15803d;">
+    <strong>Present:</strong> {{ count_present }}
+  </div>
+  {% endif %}
+  {% if count_absent %}
+  <div style="background:#fff1f2; border:1px solid #fca5a5; border-radius:8px; padding:7px 18px; font-size:13px; color:#dc2626;">
+    <strong>Absent:</strong> {{ count_absent }}
+  </div>
+  {% endif %}
+  {% if count_halfday %}
+  <div style="background:#fef9c3; border:1px solid #fde047; border-radius:8px; padding:7px 18px; font-size:13px; color:#92400e;">
+    <strong>Half Day:</strong> {{ count_halfday }}
+  </div>
+  {% endif %}
+  {% if count_leave %}
+  <div style="background:#eff6ff; border:1px solid #93c5fd; border-radius:8px; padding:7px 18px; font-size:13px; color:#2563eb;">
+    <strong>Leave:</strong> {{ count_leave }}
+  </div>
+  {% endif %}
+</div>
+</div><!-- /no-print -->
+
+<!-- Print heading -->
+<div class="print-only" style="display:none; margin-bottom:12px; border-bottom:1px solid #ccc; padding-bottom:8px;">
+  <h3 style="margin:0; font-size:14px; color:#1b4f4a;">
+    Employee Attendance Register
+    {% if current_session %} &mdash; {{ current_session.session }}{% endif %}
+    {% if selected_month %} &mdash; {{ selected_month }}{% endif %}
+  </h3>
+</div>
+
+<!-- Table -->
+<div class="card" style="padding:0; overflow:hidden;">
+  {% if records %}
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="background:#f0f9f8;">
+        <th style="text-align:left; padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#374151; width:36px;">#</th>
+        <th style="text-align:left; padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#374151;">Date</th>
+        <th style="text-align:left; padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#374151;">Employee Name</th>
+        <th style="text-align:left; padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#374151;">Attendance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rec in records %}
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:9px 14px; color:#9ca3af;">{{ forloop.counter }}</td>
+        <td style="padding:9px 14px;">{{ rec.date|date:"d M Y" }}</td>
+        <td style="padding:9px 14px; font-weight:600;">{{ rec.employee.name }}</td>
+        <td style="padding:9px 14px;">
+          {% if rec.attendance == 'present' %}
+            <span style="display:inline-block; padding:3px 12px; border-radius:20px; background:#dcfce7; color:#15803d; font-size:12px; font-weight:600;">Present</span>
+          {% elif rec.attendance == 'absent' %}
+            <span style="display:inline-block; padding:3px 12px; border-radius:20px; background:#fff1f2; color:#dc2626; font-size:12px; font-weight:600;">Absent</span>
+          {% elif rec.attendance == 'half-day' %}
+            <span style="display:inline-block; padding:3px 12px; border-radius:20px; background:#fef9c3; color:#92400e; font-size:12px; font-weight:600;">Half Day</span>
+          {% elif rec.attendance == 'leave' %}
+            <span style="display:inline-block; padding:3px 12px; border-radius:20px; background:#eff6ff; color:#2563eb; font-size:12px; font-weight:600;">Leave</span>
+          {% else %}
+            {{ rec.get_attendance_display }}
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="padding:40px; text-align:center; color:#9ca3af; font-style:italic;">
+    No attendance records found for the selected filters.
+  </div>
+  {% endif %}
+</div>
+
+{% if salary_summary %}
+<!-- Register Salary Summary -->
+<div style="margin-top:24px;">
+  <h3 style="font-size:14px; color:#1b4f4a; margin-bottom:10px;">
+    Register Salary &mdash; {{ selected_month }}
+    {% if current_session %}&nbsp;&mdash;&nbsp;{{ current_session.session }}{% endif %}
+  </h3>
+  <div class="card" style="padding:0; overflow:hidden;">
+    <table style="width:100%; border-collapse:collapse; font-size:13px;">
+      <thead>
+        <tr style="background:#f0f9f8;">
+          <th style="text-align:left;  padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#374151; width:36px;">#</th>
+          <th style="text-align:left;  padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#374151;">Employee</th>
+          <th style="text-align:center; padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#15803d; background:#f0fdf4;">Present</th>
+          <th style="text-align:center; padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#92400e; background:#fefce8;">Half Day</th>
+          <th style="text-align:center; padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#2563eb; background:#eff6ff;">Leave</th>
+          <th style="text-align:center; padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#dc2626; background:#fff1f2;">Absent</th>
+          <th style="text-align:right;  padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#374151;">Monthly Salary</th>
+          <th style="text-align:right;  padding:10px 14px; border-bottom:1px solid #e5e7eb; color:#1b4f4a; background:#f0f9f8;">Register Salary</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in salary_summary %}
+        <tr style="border-bottom:1px solid #f3f4f6;">
+          <td style="padding:9px 14px; color:#9ca3af;">{{ forloop.counter }}</td>
+          <td style="padding:9px 14px; font-weight:600;">{{ row.employee.name }}</td>
+          <td style="text-align:center; padding:9px 14px; color:#15803d;">{{ row.present }}</td>
+          <td style="text-align:center; padding:9px 14px; color:#92400e;">{{ row.halfday }}</td>
+          <td style="text-align:center; padding:9px 14px; color:#2563eb;">
+            {{ row.leave }}
+            {% if row.leave > 2 %}
+              <span style="font-size:10px; color:#dc2626; font-weight:600;" title="More than 2 leaves — pro-rata applied">&nbsp;&#9660;</span>
+            {% endif %}
+          </td>
+          <td style="text-align:center; padding:9px 14px; color:#dc2626;">{{ row.absent }}</td>
+          <td style="text-align:right; padding:9px 14px; color:#374151;">&#8377; {{ row.monthly_salary|floatformat:2 }}</td>
+          <td style="text-align:right; padding:9px 14px; font-weight:700;
+                     color:{% if row.register_salary < row.monthly_salary %}#dc2626{% else %}#15803d{% endif %};">
+            &#8377; {{ row.register_salary|floatformat:2 }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr style="background:#f0f9f8; font-weight:700;">
+          <td colspan="6" style="padding:10px 14px; color:#374151;">Total</td>
+          <td style="text-align:right; padding:10px 14px;">&#8377; {{ total_monthly_salary|floatformat:2 }}</td>
+          <td style="text-align:right; padding:10px 14px; color:#1b4f4a;">&#8377; {{ total_register_salary|floatformat:2 }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <p style="font-size:11.5px; color:#9ca3af; margin-top:8px;">
+    Rule: Leave &le; 2 &rarr; full salary &nbsp;|&nbsp; Leave &gt; 2 &rarr; (Monthly Salary &divide; {{ days_in_month }} days) &times; Present days
+  </p>
+</div>
+{% endif %}
+
+<style>
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  @page { size: A4 portrait; margin: 8mm 10mm; }
+  body { font-size: 11px; }
+  table { font-size: 11px; }
+}
+</style>
+
+{% endblock %}

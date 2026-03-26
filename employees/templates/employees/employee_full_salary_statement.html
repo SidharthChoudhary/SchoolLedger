@@ -117,8 +117,9 @@
         <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Year</th>
         <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Month</th>
         <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Payment Type</th>
+        <th style="text-align:right; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Basic Pay</th>
         <th style="text-align:left; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151;">Notes</th>
-        <th style="text-align:right; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151; background:#e8f4fd;">Amount</th>
+        <th style="text-align:right; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151; background:#e8f4fd;">Payable Amount</th>
         <th style="text-align:right; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151; background:#e8f4fd;">Paid Amount</th>
         <th style="text-align:right; padding:10px 16px; border-bottom:1px solid #e5e7eb; color:#374151; background:#fefce8;">Net Due Amount</th>
       </tr>
@@ -129,24 +130,28 @@
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.year }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.month }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.payment_type }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right;">&#8377; {{ base_salary }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; color:#888;">{{ row.notes }}</td>
-        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;">{{ row.amount }}</td>
-        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;">{{ row.paid }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;"
+            title="Salary: ₹{{ row.payable|floatformat:2 }}{% if row.old_due %} | Old Dues: ₹{{ row.old_due|floatformat:2 }}{% endif %}{% if row.other %} | Other: ₹{{ row.other|floatformat:2 }}{% endif %}">
+          {{ row.amount|floatformat:2 }}
+        </td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;">{{ row.paid|floatformat:2 }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#fefce8;
           {% if row.net_due < 0 %}color:#dc2626;{% else %}color:#16a34a;{% endif %}">
-          {{ row.net_due }}
+          {{ row.net_due|floatformat:2 }}
         </td>
       </tr>
       {% endfor %}
     </tbody>
     <tfoot>
       <tr style="background:#f0f9f8; font-weight:700;">
-        <td colspan="4" style="padding:10px 16px; text-align:right; color:#374151; font-size:13px;">Total Salary to Pay</td>
-        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">{{ monthly_total }}</td>
-        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">{{ total_paid }}</td>
+        <td colspan="5" style="padding:10px 16px; text-align:right; color:#374151; font-size:13px;">Total Salary to Pay</td>
+        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">{{ monthly_total|floatformat:2 }}</td>
+        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">{{ total_paid|floatformat:2 }}</td>
         <td style="padding:10px 16px; text-align:right; background:#fef9c3;
           {% if net_due < 0 %}color:#dc2626;{% else %}color:#16a34a;{% endif %}">
-          {{ net_due }}
+          {{ net_due|floatformat:2 }}
         </td>
       </tr>
     </tfoot>
@@ -197,7 +202,7 @@
       <div style="font-size:12px; color:#6b7280; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Total Salary Due</div>
       <div class="summary-value" style="font-size:28px; font-weight:800; color:#1b4f4a; margin:6px 0 4px;">{{ total_salary_due }}</div>
       <div style="font-size:11px; color:#9ca3af;">
-        Old Dues: {{ old_dues }} &nbsp;&middot;&nbsp; Monthly: {{ base_salary }} &times; 12
+        Basic Pay: &#8377; {{ base_salary }} &times; 12 months
       </div>
     </div>
 

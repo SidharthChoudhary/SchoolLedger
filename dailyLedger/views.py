@@ -66,7 +66,10 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
 
         if form.is_valid():
             form.save()
-            return redirect(request.resolver_match.url_name)
+            from django.urls import reverse
+            base_url = reverse(request.resolver_match.url_name)
+            query_string = request.GET.urlencode()
+            return redirect(f"{base_url}?{query_string}" if query_string else base_url)
     else:
         if editing_entry:
             form = form_class(instance=editing_entry, ledger_type=ledger_type)
@@ -88,6 +91,8 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
     name_q = request.GET.get("name", "").strip()
     selected_session = request.GET.get("session", "").strip()
     selected_major_head = request.GET.get("major_head", "").strip()
+    selected_head = request.GET.get("head", "").strip()
+    selected_sub_head = request.GET.get("sub_head", "").strip()
 
     qs = model.objects.all()
     month_start = None
@@ -120,12 +125,10 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
         qs = qs.filter(major_head=selected_major_head)
     
     # Filter by head
-    selected_head = request.GET.get("head", "").strip()
     if selected_head:
         qs = qs.filter(head=selected_head)
-    
+
     # Filter by sub_head
-    selected_sub_head = request.GET.get("sub_head", "").strip()
     if selected_sub_head:
         qs = qs.filter(sub_head=selected_sub_head)
 
@@ -153,6 +156,8 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
             "filter_name": name_q,
             "selected_session": selected_session,
             "selected_major_head": selected_major_head,
+            "selected_head": selected_head,
+            "selected_sub_head": selected_sub_head,
             "session_choices": Session.objects.all().order_by("session"),
             "major_heads": Head.objects.filter(ledger_type=ledger_type).values_list("major_head", flat=True).distinct().order_by("major_head"),
             "head_data_json": _build_head_data(),

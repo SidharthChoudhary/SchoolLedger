@@ -65,8 +65,9 @@
         <th style="text-align:left; padding:10px 14px; border-bottom:2px solid #d1d5db; color:#374151;">Employee</th>
         <th style="text-align:left; padding:10px 14px; border-bottom:2px solid #d1d5db; color:#374151;">Post</th>
         <th style="text-align:center; padding:10px 14px; border-bottom:2px solid #d1d5db; color:#374151;">Status</th>
-        <th style="text-align:right; padding:10px 14px; border-bottom:2px solid #d1d5db; color:#374151; background:#fefce8;">Old Due Amount</th>
         <th style="text-align:right; padding:10px 14px; border-bottom:2px solid #d1d5db; color:#374151; background:#e8f4fd;">Salary Amount</th>
+        <th style="text-align:right; padding:10px 14px; border-bottom:2px solid #d1d5db; color:#374151; background:#fefce8;">Old Due Amount</th>
+        <th style="text-align:right; padding:10px 14px; border-bottom:2px solid #d1d5db; color:#374151; background:#f5f3ff;">Other Amount</th>
         <th style="text-align:right; padding:10px 14px; border-bottom:2px solid #d1d5db; color:#374151;">Paid Amount</th>
         <th style="text-align:right; padding:10px 14px; border-bottom:2px solid #d1d5db; color:#374151; background:#f0fdf4;">Net Due Amount</th>
       </tr>
@@ -84,11 +85,14 @@
             {{ row.employee.get_status_display }}
           </span>
         </td>
+        <td style="padding:9px 14px; text-align:right; background:#f0f7fc;">
+          ₹ {{ row.salary_amount }}
+        </td>
         <td style="padding:9px 14px; text-align:right; background:#fefce8;">
           ₹ {{ row.old_due }}
         </td>
-        <td style="padding:9px 14px; text-align:right; background:#f0f7fc;">
-          ₹ {{ row.salary_amount }}
+        <td style="padding:9px 14px; text-align:right; background:#f5f0ff;">
+          ₹ {{ row.other_amount }}
         </td>
         <td style="padding:9px 14px; text-align:right;">
           ₹ {{ row.paid }}
@@ -103,8 +107,9 @@
     <tfoot>
       <tr style="background:#f0f9f8; font-weight:700; border-top:2px solid #d1d5db;">
         <td colspan="3" style="padding:10px 14px; text-align:right; color:#374151;">Total</td>
-        <td style="padding:10px 14px; text-align:right; background:#fef9c3;">₹ {{ total_old_due }}</td>
         <td style="padding:10px 14px; text-align:right; background:#dbeafe;">₹ {{ total_salary }}</td>
+        <td style="padding:10px 14px; text-align:right; background:#fef9c3;">₹ {{ total_old_due }}</td>
+        <td style="padding:10px 14px; text-align:right; background:#ede9fe;">₹ {{ total_other }}</td>
         <td style="padding:10px 14px; text-align:right;">₹ {{ total_paid }}</td>
         <td style="padding:10px 14px; text-align:right; background:#dcfce7;
           {% if total_net_due < 0 %}color:#dc2626;{% else %}color:#15803d;{% endif %}">
