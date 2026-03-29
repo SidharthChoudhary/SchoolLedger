@@ -48,6 +48,31 @@ class EmployeeForm(forms.ModelForm):
             "role_detail": forms.TextInput(attrs={"placeholder": "e.g. Class Teacher – 5A"}),
         }
 
+class BulkImportPayrollForm(forms.Form):
+    DUPLICATE_CHOICES = [
+        ('error', 'Mark as error'),
+        ('skip', 'Skip duplicates'),
+        ('update', 'Update duplicates'),
+    ]
+
+    csv_file = forms.FileField(
+        label="CSV File",
+        help_text="Upload a CSV file with payroll data"
+    )
+    handle_duplicates = forms.ChoiceField(
+        choices=DUPLICATE_CHOICES,
+        initial='skip',
+        label="Handle Duplicates",
+        help_text="Decide how to handle duplicate records (same employee + month)"
+    )
+    dry_run = forms.BooleanField(
+        required=False,
+        initial=False,
+        label="Dry Run",
+        help_text="Preview changes without saving to database"
+    )
+
+
 class EmployeeAttendanceForm(forms.ModelForm):
     class Meta:
         model = EmployeeAttendance

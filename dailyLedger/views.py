@@ -190,8 +190,12 @@ def income_home(request):
     fees_form = None
     income_type = request.POST.get('income_type', 'other')
     incomes = Income.objects.all()
-    head_data_json = _build_head_data()  # Already returns JSON string, don't double-encode
+    head_data_json = _build_head_data()
     sessions = Session.objects.all()
+
+    # Edit mode
+    edit_id = request.GET.get('edit')
+    editing_entry = Income.objects.filter(pk=edit_id).first() if edit_id else None
     
     # Get filter values from GET request
     selected_session = request.GET.get('session', '')
@@ -224,7 +228,17 @@ def income_home(request):
     income_total = incomes.aggregate(total=Sum('amount'))['total'] or 0
     
     if request.method == "POST":
-        if income_type == 'fees':
+        entry_id = request.POST.get('entry_id')
+        if entry_id:
+            # Update existing income entry
+            entry = get_object_or_404(Income, pk=entry_id)
+            other_form = IncomeForm(request.POST, instance=entry, ledger_type='Income')
+            if other_form.is_valid():
+                other_form.save()
+                messages.success(request, "Income entry updated successfully!")
+                return redirect("income_home")
+            fees_form = IncomeFeesForm()
+        elif income_type == 'fees':
             fees_form = IncomeFeesForm(request.POST)
             if fees_form.is_valid():
                 fees_form.save()
@@ -239,7 +253,10 @@ def income_home(request):
                 return redirect("income_home")
             fees_form = IncomeFeesForm()
     else:
-        other_form = IncomeForm(ledger_type='Income')
+        if editing_entry:
+            other_form = IncomeForm(instance=editing_entry, ledger_type='Income')
+        else:
+            other_form = IncomeForm(ledger_type='Income')
         fees_form = IncomeFeesForm()
     
     return render(request, "dailyLedger/income_home.html", {
@@ -258,6 +275,7 @@ def income_home(request):
         "selected_sub_head": selected_sub_head,
         "selected_account": selected_account,
         "income_total": income_total,
+        "editing_entry": editing_entry,
     })
 
 

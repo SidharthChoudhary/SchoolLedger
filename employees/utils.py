@@ -49,6 +49,7 @@ def parse_csv_employees(csv_content, handle_duplicates='skip'):
                 row_normalized = {k.lower().strip(): v.strip() if v else '' for k, v in row.items()}
                 
                 # Extract fields
+                emp_no_str = row_normalized.get('emp_no', '').strip()
                 name = row_normalized.get('name', '').strip()
                 dob_str = row_normalized.get('dob', '').strip()
                 contact_number = row_normalized.get('contact_number', '').strip()
@@ -65,6 +66,15 @@ def parse_csv_employees(csv_content, handle_duplicates='skip'):
                 status = row_normalized.get('status', 'active').strip()
                 leaves_entitled_str = row_normalized.get('leaves_entitled', '0').strip()
                 
+                # Validate optional emp_no
+                emp_no = None
+                if emp_no_str:
+                    try:
+                        emp_no = int(emp_no_str)
+                    except ValueError:
+                        results['errors'].append((row_num, f"Invalid Emp_No: '{emp_no_str}' (must be an integer)"))
+                        continue
+
                 # Validate required fields
                 if not name:
                     results['errors'].append((row_num, "Name is required"))
@@ -146,6 +156,8 @@ def parse_csv_employees(csv_content, handle_duplicates='skip'):
                     'status': status or 'active',
                     'leaves_entitled': leaves_entitled,
                 }
+                if emp_no is not None:
+                    data['emp_no'] = emp_no
                 
                 if duplicate:
                     if handle_duplicates == 'error':

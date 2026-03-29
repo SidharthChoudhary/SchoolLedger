@@ -2,7 +2,7 @@ import csv
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from django.db.models import Sum
+from django.db.models import Sum, Case, When, Value, IntegerField
 from django.contrib import messages
 from accounts.decorators import role_required
 from django.views.decorators.cache import never_cache
@@ -143,19 +143,27 @@ def download_employees_template(request):
     writer = csv.writer(response)
     
     # Header row
-    writer.writerow(['Name', 'DOB', 'Contact_Number', 'Gender', 'Qualification', 'Address', 'Experience_Years', 'Previous_Institute', 'Post', 'Role', 'Role_Detail', 'Joining_Date', 'Base_Salary_Per_Month', 'Status', 'Leaves_Entitled'])
+    writer.writerow(['Emp_No', 'Name', 'DOB', 'Contact_Number', 'Gender', 'Qualification', 'Address', 'Experience_Years', 'Previous_Institute', 'Post', 'Role', 'Role_Detail', 'Joining_Date', 'Base_Salary_Per_Month', 'Status', 'Leaves_Entitled'])
     
-    # Sample rows
-    writer.writerow(['John Smith', '1990-05-20', '9876543210', 'M', 'B.Ed', '123 Main Street', '5', 'XYZ School', 'Teacher', 'Class Teacher', 'Class 5A', '2022-01-15', '50000', 'active', '30'])
-    writer.writerow(['Jane Doe', '1988-03-15', '9876543211', 'F', 'M.Sc', '456 Oak Avenue', '8.5', 'ABC Institute', 'Senior Teacher', 'Subject Head', 'Mathematics Department', '2020-06-01', '65000', 'active', '25'])
-    writer.writerow(['Robert Johnson', '1992-07-10', '9876543212', 'M', 'B.Com', '789 Pine Road', '3', 'MNO College', 'Accountant', 'Staff', 'Finance Department', '2023-04-20', '40000', 'active', '30'])
+    # Sample rows (Emp_No is optional — leave blank to auto-assign)
+    writer.writerow(['1001', 'John Smith', '1990-05-20', '9876543210', 'M', 'B.Ed', '123 Main Street', '5', 'XYZ School', 'Teacher', 'Class Teacher', 'Class 5A', '2022-01-15', '50000', 'active', '30'])
+    writer.writerow(['1002', 'Jane Doe', '1988-03-15', '9876543211', 'F', 'M.Sc', '456 Oak Avenue', '8.5', 'ABC Institute', 'Senior Teacher', 'Subject Head', 'Mathematics Department', '2020-06-01', '65000', 'active', '25'])
+    writer.writerow(['', 'Robert Johnson', '1992-07-10', '9876543212', 'M', 'B.Com', '789 Pine Road', '3', 'MNO College', 'Accountant', 'Staff', 'Finance Department', '2023-04-20', '40000', 'active', '30'])
     
     return response
 
 
 
 def employees_view(request):
-    employees = Employee.objects.all()
+    employees = Employee.objects.all().annotate(
+        status_order=Case(
+            When(status='active', then=Value(0)),
+            When(status='left', then=Value(1)),
+            When(status='inactive', then=Value(2)),
+            default=Value(3),
+            output_field=IntegerField(),
+        )
+    ).order_by('status_order', 'name')
 
     # --- filters ---
     selected_post = request.GET.get("post")
@@ -577,10 +585,11 @@ def export_employees_csv(request):
     
     writer = csv.writer(response)
     # Headers must match the bulk import format
-    writer.writerow(['Name', 'DOB', 'Contact_Number', 'Gender', 'Qualification', 'Address', 'Experience_Years', 'Previous_Institute', 'Post', 'Role', 'Role_Detail', 'Joining_Date', 'Base_Salary_Per_Month', 'Status', 'Leaves_Entitled'])
+    writer.writerow(['Emp_No', 'Name', 'DOB', 'Contact_Number', 'Gender', 'Qualification', 'Address', 'Experience_Years', 'Previous_Institute', 'Post', 'Role', 'Role_Detail', 'Joining_Date', 'Base_Salary_Per_Month', 'Status', 'Leaves_Entitled'])
     
     for employee in employees:
         writer.writerow([
+            employee.emp_no,
             employee.name,
             employee.dob.strftime('%Y-%m-%d') if employee.dob else '',
             employee.contact_number or '',
@@ -950,14 +959,24 @@ def employee_full_salary_statement(request):
             key = f"{exp.date.year}-{exp.date.month:02d}"
             expense_by_month.setdefault(key, []).append(exp)
 
+        joining_date = selected_employee.joining_date  # may be None
+
         for (yr, mo) in fin_months:
             month_key = f"{yr}-{mo:02d}"
+            # Basic pay is 0 for months before the employee joined
+            import datetime
+            month_start = datetime.date(yr, mo, 1)
+            if joining_date and month_start < datetime.date(joining_date.year, joining_date.month, 1):
+                month_basic_pay = 0
+            else:
+                month_basic_pay = float(base_salary)
+
             register = register_map.get(month_key)
             payable  = float(register.payable_salary)  if (register and register.payable_salary  is not None) else 0
             old_due  = float(register.old_dues)         if (register and register.old_dues         is not None) else 0
             other    = float(register.other_amount)     if (register and register.other_amount     is not None) else 0
             amount   = payable + old_due + other
-            paid     = sum(e.amount for e in expense_by_month.get(month_key, []))
+            paid     = float(sum(e.amount for e in expense_by_month.get(month_key, [])))
             notes_parts = []
             if payable:  notes_parts.append(f'Salary: ₹{payable:,.2f}')
             if old_due:  notes_parts.append(f'Old Dues: ₹{old_due:,.2f}')
@@ -967,6 +986,7 @@ def employee_full_salary_statement(request):
                 'month': cal_month_name[mo],
                 'payment_type': 'Salary',
                 'notes': ' | '.join(notes_parts),
+                'basic_pay': month_basic_pay,
                 'payable': payable,
                 'old_due': old_due,
                 'other': other,
@@ -1006,3 +1026,219 @@ def employee_full_salary_statement(request):
         'monthly_total': monthly_total,
         'base_salary': base_salary,
     })
+
+
+def _month_to_session_str(month_str):
+    """Derive session string (e.g. '2024-2025') from a YYYY-MM month string.
+    April–December belong to session {year}-{year+1}; Jan–March to {year-1}-{year}.
+    """
+    yr, mo = int(month_str[:4]), int(month_str[5:7])
+    if mo >= 4:
+        return f"{yr}-{yr + 1}"
+    else:
+        return f"{yr - 1}-{yr}"
+
+
+def bulk_import_payroll(request):
+    """Bulk import historical payroll (EmployeePayrollEntry) records from CSV."""
+    from .forms import BulkImportPayrollForm
+
+    import_result = None
+
+    if request.method == 'POST':
+        form = BulkImportPayrollForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = form.cleaned_data['csv_file']
+            handle_duplicates = form.cleaned_data['handle_duplicates']
+            dry_run = form.cleaned_data['dry_run']
+
+            try:
+                content = csv_file.read().decode('utf-8-sig')
+                reader = csv.DictReader(content.splitlines())
+
+                # Normalise headers
+                if reader.fieldnames is None:
+                    messages.error(request, 'CSV file is empty or has no header row.')
+                    return render(request, 'employees/bulk_import_manual_salary_data.html',
+                                  {'form': form, 'import_result': None})
+
+                required = {'Emp_ID', 'Month', 'Payable_Salary'}
+                headers = {h.strip() for h in reader.fieldnames}
+                missing = required - headers
+                if missing:
+                    messages.error(request, f"Missing required column(s): {', '.join(sorted(missing))}")
+                    return render(request, 'employees/bulk_import_manual_salary_data.html',
+                                  {'form': form, 'import_result': None})
+
+                # Pre-load lookups
+                emp_map = {str(e.emp_no): e for e in Employee.objects.all()}
+                session_map = {s.session: s for s in Session.objects.all()}
+
+                valid_rows = []       # (row_num, parsed_data, employee, session)
+                duplicate_rows = []   # same structure but entry already exists
+                row_errors = []       # (row_num, message)
+
+                for row_num, row in enumerate(reader, start=2):
+                    emp_id_raw = row.get('Emp_ID', '').strip()
+                    month_raw  = row.get('Month', '').strip()
+                    payable_raw = row.get('Payable_Salary', '').strip()
+                    old_dues_raw   = row.get('Old_Dues', '').strip() or '0'
+                    other_raw      = row.get('Other_Amount', '').strip() or '0'
+                    note_raw       = row.get('Note', '').strip()
+                    manual_work_raw  = row.get('Manual_Work_Days', '').strip()
+                    manual_leave_raw = row.get('Manual_Leave_Days', '').strip()
+
+                    # Validate Emp_ID
+                    emp = emp_map.get(emp_id_raw)
+                    if not emp:
+                        row_errors.append((row_num, f"Employee with Emp_ID '{emp_id_raw}' not found."))
+                        continue
+
+                    # Validate Month format
+                    import re
+                    if not re.match(r'^\d{4}-(0[1-9]|1[0-2])$', month_raw):
+                        row_errors.append((row_num, f"Invalid Month '{month_raw}'. Use YYYY-MM (e.g. 2024-04)."))
+                        continue
+
+                    # Resolve session
+                    session_str = _month_to_session_str(month_raw)
+                    session = session_map.get(session_str)
+                    if not session:
+                        row_errors.append((row_num, f"Session '{session_str}' not found in the database."))
+                        continue
+
+                    # Validate numeric fields
+                    try:
+                        payable = float(payable_raw)
+                        old_dues_val = float(old_dues_raw)
+                        other_val = float(other_raw)
+                        manual_work = float(manual_work_raw) if manual_work_raw else None
+                        manual_leave = int(float(manual_leave_raw)) if manual_leave_raw else None
+                    except ValueError:
+                        row_errors.append((row_num, f"Non-numeric value in amount or days column."))
+                        continue
+
+                    parsed = {
+                        'payable_salary': payable,
+                        'old_dues': old_dues_val,
+                        'other_amount': other_val,
+                        'note': note_raw,
+                        'manual_work_days': manual_work,
+                        'manual_leave_days': manual_leave,
+                        'month': month_raw,
+                        'session_label': session_str,
+                    }
+
+                    exists = EmployeePayrollEntry.objects.filter(
+                        session=session, employee=emp, month=month_raw
+                    ).exists()
+
+                    entry = (row_num, parsed, emp, session)
+                    if exists:
+                        duplicate_rows.append(entry)
+                    else:
+                        valid_rows.append(entry)
+
+                for row_num, msg in row_errors:
+                    messages.error(request, f"Row {row_num}: {msg}")
+
+                created = updated = skipped = 0
+
+                if not dry_run:
+                    for row_num, parsed, emp, session in valid_rows:
+                        try:
+                            EmployeePayrollEntry.objects.create(
+                                session=session, employee=emp,
+                                month=parsed['month'],
+                                payable_salary=parsed['payable_salary'],
+                                old_dues=parsed['old_dues'],
+                                other_amount=parsed['other_amount'],
+                                note=parsed['note'],
+                                manual_work_days=parsed['manual_work_days'],
+                                manual_leave_days=parsed['manual_leave_days'],
+                            )
+                            created += 1
+                        except Exception as e:
+                            messages.error(request, f"Row {row_num}: Could not save — {e}")
+
+                    for row_num, parsed, emp, session in duplicate_rows:
+                        if handle_duplicates == 'skip':
+                            skipped += 1
+                        elif handle_duplicates == 'update':
+                            try:
+                                EmployeePayrollEntry.objects.filter(
+                                    session=session, employee=emp, month=parsed['month']
+                                ).update(
+                                    payable_salary=parsed['payable_salary'],
+                                    old_dues=parsed['old_dues'],
+                                    other_amount=parsed['other_amount'],
+                                    note=parsed['note'],
+                                    manual_work_days=parsed['manual_work_days'],
+                                    manual_leave_days=parsed['manual_leave_days'],
+                                )
+                                updated += 1
+                            except Exception as e:
+                                messages.error(request, f"Row {row_num}: Could not update — {e}")
+                        else:  # error
+                            messages.error(request, f"Row {row_num}: Duplicate entry for {emp.name} / {parsed['month']}.")
+
+                    if created:
+                        messages.success(request, f"Created {created} new payroll record(s).")
+                    if updated:
+                        messages.success(request, f"Updated {updated} existing record(s).")
+                    if skipped:
+                        messages.info(request, f"Skipped {skipped} duplicate(s).")
+
+                    import_result = {
+                        'dry_run': False,
+                        'created': created,
+                        'updated': updated,
+                        'skipped': skipped,
+                    }
+                else:
+                    # Dry-run preview
+                    will_create = len(valid_rows)
+                    will_update = len(duplicate_rows) if handle_duplicates == 'update' else 0
+                    will_skip   = len(duplicate_rows) if handle_duplicates == 'skip'   else 0
+                    will_error  = len(duplicate_rows) if handle_duplicates == 'error'  else 0
+                    import_result = {
+                        'dry_run': True,
+                        'created': will_create,
+                        'updated': will_update,
+                        'skipped': will_skip,
+                        'errors':  will_error,
+                        'handle_duplicates': handle_duplicates,
+                        'valid_rows': [
+                            (rn, {**p, 'emp_name': emp.name, 'emp_id': emp.emp_no})
+                            for rn, p, emp, _ in valid_rows
+                        ],
+                        'duplicate_rows': [
+                            (rn, {**p, 'emp_name': emp.name, 'emp_id': emp.emp_no})
+                            for rn, p, emp, _ in duplicate_rows
+                        ],
+                    }
+                    messages.info(request, "Dry-run mode: No data was saved. Review the preview below.")
+
+            except Exception as e:
+                messages.error(request, f"Error processing file: {e}")
+    else:
+        form = BulkImportPayrollForm()
+
+    return render(request, 'employees/bulk_import_manual_salary_data.html',
+                  {'form': form, 'import_result': import_result})
+
+
+def download_payroll_template(request):
+    """Download a sample CSV template for payroll bulk import."""
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="payroll_import_template.csv"'
+    writer = csv.writer(response)
+    writer.writerow([
+        'Emp_ID', 'Month', 'Payable_Salary',
+        'Old_Dues', 'Other_Amount', 'Note',
+        'Manual_Work_Days', 'Manual_Leave_Days',
+    ])
+    writer.writerow([1000, '2024-04', 8000, 0, 0, '', '', ''])
+    writer.writerow([1002, '2024-05', 5000, 2500, 0, 'Advance adjusted', '', ''])
+    writer.writerow([1004, '2024-06', 10000, 0, 500, 'Bonus', 22, 2])
+    return response

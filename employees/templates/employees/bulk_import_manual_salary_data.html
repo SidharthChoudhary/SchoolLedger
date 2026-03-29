@@ -1,7 +1,7 @@
 {% extends "website/base.html" %}
 {% load static %}
 
-{% block title %}Bulk Import - Manual Salary Data{% endblock %}
+{% block title %}Bulk Import - Payroll Data{% endblock %}
 
 {% block content %}
 <style>
@@ -28,7 +28,7 @@
 </style>
 
 <div class="container mt-4">
-    <h2>Bulk Import Manual Salary Data</h2>
+    <h2>Bulk Import Payroll Data</h2>
     <hr>
 
     <!-- Instructions -->
@@ -38,23 +38,23 @@
         </div>
         <div class="card-body">
             <ul>
-                <li>Upload a CSV file with manual salary data</li>
+                <li>Upload a CSV file with historical payroll data to populate salary records.</li>
                 <li style="font-family: monospace; margin-top: 8px;">
-                    <strong>Required columns:</strong> Session, Employee_Name, Amount_Type, Amount, Month
+                    <strong>Required columns:</strong> Emp_ID, Month, Payable_Salary
                 </li>
                 <li style="font-family: monospace;">
-                    <strong>Optional column:</strong> Note
+                    <strong>Optional columns:</strong> Old_Dues, Other_Amount, Note, Manual_Work_Days, Manual_Leave_Days
                 </li>
-                <li><strong>Session:</strong> Must match an existing session (e.g., "2024")</li>
-                <li><strong>Employee_Name:</strong> Must match an existing employee's name</li>
-                <li><strong>Amount_Type:</strong> Must be 'salary' or 'old_due'</li>
-                <li><strong>Amount:</strong> Numeric value (e.g., 50000 or 5000.50)</li>
-                <li><strong>Month:</strong> Format as YYYY-MM (e.g., 2024-01)</li>
-                <li>Use the dry-run option to preview changes before importing</li>
-                <li>Choose how to handle duplicates: Skip, Update, or Error</li>
+                <li><strong>Emp_ID:</strong> Must match an existing employee number (e.g. 1000)</li>
+                <li><strong>Month:</strong> Format YYYY-MM (e.g. 2024-04). Session is auto-detected.</li>
+                <li><strong>Payable_Salary:</strong> Final salary amount paid (numeric, e.g. 8000)</li>
+                <li><strong>Old_Dues / Other_Amount:</strong> Additional due amounts (default 0)</li>
+                <li><strong>Manual_Work_Days / Manual_Leave_Days:</strong> Leave blank if attendance register is filled</li>
+                <li>Use the <strong>Dry Run</strong> option to preview changes before importing.</li>
+                <li>Choose how to handle duplicates: Skip existing records, Update them, or treat as Error.</li>
             </ul>
             <p class="mt-3">
-                <a href="{% url 'download_manual_salary_data_template' %}" class="btn btn-sm btn-secondary">
+                <a href="{% url 'download_payroll_template' %}" class="btn btn-sm btn-secondary">
                     📥 Download Sample CSV
                 </a>
             </p>
@@ -106,7 +106,7 @@
                     <button type="submit">
                         📤 Import
                     </button>
-                    <a href="{% url 'manual_salary_data' %}" class="btn-secondary">
+                    <a href="{% url 'employee_payroll_unified' %}" class="btn-secondary">
                         Cancel
                     </a>
                 </div>
@@ -157,22 +157,26 @@
                     <thead class="table-light">
                         <tr>
                             <th>Row</th>
-                            <th>Session</th>
+                            <th>Emp ID</th>
                             <th>Employee</th>
                             <th>Month</th>
-                            <th>Amount Type</th>
-                            <th>Amount</th>
+                            <th>Session</th>
+                            <th>Payable Salary</th>
+                            <th>Old Dues</th>
+                            <th>Other Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for row_num, data in import_result.valid_rows %}
                         <tr>
                             <td>{{ row_num }}</td>
-                            <td>Session {{ data.session_id }}</td>
-                            <td>Employee {{ data.employee_id }}</td>
+                            <td>{{ data.emp_id }}</td>
+                            <td>{{ data.emp_name }}</td>
                             <td>{{ data.month }}</td>
-                            <td>{{ data.amount_type }}</td>
-                            <td class="text-right">{{ data.amount }}</td>
+                            <td>{{ data.session_label }}</td>
+                            <td>₹{{ data.payable_salary }}</td>
+                            <td>{% if data.old_dues %}₹{{ data.old_dues }}{% else %}—{% endif %}</td>
+                            <td>{% if data.other_amount %}₹{{ data.other_amount }}{% else %}—{% endif %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -188,10 +192,10 @@
                     <thead class="table-light">
                         <tr>
                             <th>Row</th>
-                            <th>Session</th>
+                            <th>Emp ID</th>
                             <th>Employee</th>
                             <th>Month</th>
-                            <th>Amount</th>
+                            <th>Payable Salary</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -199,10 +203,10 @@
                         {% for row_num, data in import_result.duplicate_rows %}
                         <tr>
                             <td>{{ row_num }}</td>
-                            <td>Session {{ data.session_id }}</td>
-                            <td>Employee {{ data.employee_id }}</td>
+                            <td>{{ data.emp_id }}</td>
+                            <td>{{ data.emp_name }}</td>
                             <td>{{ data.month }}</td>
-                            <td class="text-right">{{ data.amount }}</td>
+                            <td>₹{{ data.payable_salary }}</td>
                             <td>
                                 {% if import_result.handle_duplicates == 'update' %}
                                     Will be updated
@@ -221,8 +225,8 @@
 
             {% if not import_result.dry_run %}
             <div class="mt-4">
-                <a href="{% url 'manual_salary_data' %}" class="btn btn-primary">
-                    Return to Manual Salary Data
+                <a href="{% url 'employee_payroll_unified' %}" class="btn btn-primary">
+                    Return to Monthly Payroll
                 </a>
             </div>
             {% endif %}

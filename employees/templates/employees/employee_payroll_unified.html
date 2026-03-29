@@ -61,6 +61,13 @@
     </form>
     {% endif %}
 
+    <a href="{% url 'bulk_import_payroll' %}"
+       style="padding:9px 22px; background:#0d9488; color:#fff; border:none;
+              border-radius:8px; font-size:13px; font-weight:600; text-decoration:none;
+              display:inline-flex; align-items:center; gap:6px; align-self:flex-end;">
+      <i class="fa-solid fa-file-arrow-up"></i> Bulk Import History
+    </a>
+
   </div>
   {% if selected_month %}
   <p style="margin:8px 0 0; font-size:11.5px; color:#9ca3af;">

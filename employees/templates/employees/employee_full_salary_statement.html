@@ -130,7 +130,7 @@
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.year }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.month }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.payment_type }}</td>
-        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right;">&#8377; {{ base_salary }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right;">&#8377; {{ row.basic_pay }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; color:#888;">{{ row.notes }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;"
             title="Salary: ₹{{ row.payable|floatformat:2 }}{% if row.old_due %} | Old Dues: ₹{{ row.old_due|floatformat:2 }}{% endif %}{% if row.other %} | Other: ₹{{ row.other|floatformat:2 }}{% endif %}">

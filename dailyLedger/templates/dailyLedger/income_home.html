@@ -17,11 +17,17 @@
 </div>
 
 <!-- PANEL 1: Add Income - Other -->
-<div class="card" style="margin-bottom:14px;">
-	<h3 class="form-section">Add Income - Other</h3>
+<div class="card" style="margin-bottom:14px;{% if editing_entry %} border: 2px solid #0284c7;{% endif %}">
+	<h3 class="form-section">{% if editing_entry %}Edit Income Entry #{{ editing_entry.voucher_number }}{% else %}Add Income - Other{% endif %}</h3>
+	{% if editing_entry %}
+	<p style="color:#0284c7; font-size:13px; margin:-8px 0 10px;">Editing entry — make changes below and click Save.</p>
+	{% endif %}
 	<form method="post" id="other-form">
 		{% csrf_token %}
 		<input type="hidden" name="income_type" value="other">
+		{% if editing_entry %}
+		<input type="hidden" name="entry_id" value="{{ editing_entry.id }}">
+		{% endif %}
 		<div class="entry-grid" style="background: #fbfbfc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px;">
 			<div class="field">
 				<label>Session</label>
@@ -244,6 +250,9 @@
 				<td>{{ income.details }}</td>
 				<td>{% if income.fees_account %}{{ income.fees_account.account_name }}{% else %}--{% endif %}</td>
 				<td class="actions">
+					<a class="btn-edit"
+					   href="?edit={{ income.id }}"
+					   style="background:#0284c7;">Edit</a>
 					<a class="btn-delete"
 					   onclick="return confirm('Delete this transaction?')"
 					   href="{% url 'delete_income' income.id %}">Delete</a>
@@ -257,6 +266,11 @@
 </div>
 
 <script>
+{% if editing_entry %}
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('other-form').scrollIntoView({behavior: 'smooth', block: 'start'});
+});
+{% endif %}
 document.addEventListener('DOMContentLoaded', function() {
 	const headDataJson = '{{ head_data_json|escapejs }}';
 	const headData = JSON.parse(headDataJson);
