@@ -895,6 +895,186 @@ def employees_salary_statement(request):
     })
 
 
+def employee_salary_payment_record(request):
+    """Salary Payment Record — one row per employee, summary (Total/Paid/Due) + monthly paid columns (Apr→Mar)."""
+    from calendar import month_abbr
+
+    sessions = Session.objects.all().order_by('-session')
+    default_session = Session.objects.filter(status='current_session').first() or sessions.first()
+    selected_session_id = request.GET.get('session', str(default_session.id) if default_session else '')
+    selected_status = request.GET.get('status', '')
+
+    selected_session = Session.objects.filter(pk=selected_session_id).first() if selected_session_id else None
+
+    # Build month columns Apr→Mar based on session year
+    month_cols = []
+    if selected_session:
+        try:
+            start_year = int(selected_session.session.split('-')[0])
+        except (ValueError, IndexError):
+            start_year = 2023
+        for m in range(4, 13):
+            month_cols.append((month_abbr[m], f'{start_year}-{m:02d}'))
+        for m in range(1, 4):
+            month_cols.append((month_abbr[m], f'{start_year + 1}-{m:02d}'))
+
+    rows = []
+    col_totals = {mc: 0 for _, mc in month_cols}
+    grand_total_salary = 0
+    grand_paid_salary = 0
+
+    if selected_session:
+        emp_qs = Employee.objects.all().order_by('name')
+        if selected_status:
+            emp_qs = emp_qs.filter(status=selected_status)
+
+        # Total salary per employee = sum(payable_salary) + sum(old_dues) from EmployeePayrollEntry
+        total_salary_map = {}  # emp_id -> total_salary
+        for entry in EmployeePayrollEntry.objects.filter(session=selected_session).values(
+                'employee_id', 'payable_salary', 'old_dues'):
+            eid = entry['employee_id']
+            total_salary_map[eid] = (
+                total_salary_map.get(eid, 0)
+                + float(entry['payable_salary'] or 0)
+                + float(entry['old_dues'] or 0)
+            )
+
+        # Monthly paid per employee: group Expense records by (employee_id, YYYY-MM)
+        paid_monthly_map = {}  # (emp_id, 'YYYY-MM') -> paid amount
+        for exp in Expense.objects.filter(
+                session=selected_session, employee__isnull=False
+        ).values('employee_id', 'date', 'amount'):
+            d = exp['date']
+            month_str = f'{d.year}-{d.month:02d}'
+            key = (exp['employee_id'], month_str)
+            paid_monthly_map[key] = paid_monthly_map.get(key, 0) + float(exp['amount'])
+
+        for emp in emp_qs:
+            total_salary = total_salary_map.get(emp.id, 0)
+            monthly = []
+            paid_salary = 0
+            for label, month_str in month_cols:
+                val = paid_monthly_map.get((emp.id, month_str), None)
+                # treat 0-valued entries as None (blank)
+                if val is not None and val > 0:
+                    monthly.append(val)
+                    paid_salary += val
+                    col_totals[month_str] += val
+                else:
+                    monthly.append(None)
+            due = total_salary - paid_salary
+            rows.append({
+                'employee': emp,
+                'total_salary': total_salary,
+                'paid_salary': paid_salary,
+                'due': due,
+                'monthly': monthly,
+            })
+            grand_total_salary += total_salary
+            grand_paid_salary += paid_salary
+
+    col_totals_list = [col_totals[mc] for _, mc in month_cols]
+    grand_due = grand_total_salary - grand_paid_salary
+
+    return render(request, 'employees/employee_salary_payment_record.html', {
+        'sessions': sessions,
+        'selected_session': selected_session,
+        'selected_session_id': selected_session_id,
+        'selected_status': selected_status,
+        'status_choices': Employee.STATUS_CHOICES,
+        'month_cols': month_cols,
+        'rows': rows,
+        'col_totals_list': col_totals_list,
+        'grand_total_salary': grand_total_salary,
+        'grand_paid_salary': grand_paid_salary,
+        'grand_due': grand_due,
+    })
+
+
+def employee_salary_yearly(request):
+    """Yearly salary grid — one row per employee, monthly columns (Apr→Mar) for a session."""
+    from calendar import month_abbr
+
+    sessions = Session.objects.all().order_by('-session')
+    default_session = Session.objects.filter(status='current_session').first() or sessions.first()
+    selected_session_id = request.GET.get('session', str(default_session.id) if default_session else '')
+    selected_status = request.GET.get('status', '')
+
+    selected_session = Session.objects.filter(pk=selected_session_id).first() if selected_session_id else None
+
+    # Determine financial year months Apr→Mar based on session string e.g. "2023-2024"
+    month_cols = []  # list of (label, YYYY-MM)
+    if selected_session:
+        try:
+            start_year = int(selected_session.session.split('-')[0])
+        except (ValueError, IndexError):
+            start_year = 2023
+        month_cols = []
+        for m in range(4, 13):   # Apr–Dec of start_year
+            month_cols.append((month_abbr[m], f'{start_year}-{m:02d}'))
+        for m in range(1, 4):    # Jan–Mar of end_year
+            month_cols.append((month_abbr[m], f'{start_year + 1}-{m:02d}'))
+
+    rows = []
+    col_totals = {mc: 0 for _, mc in month_cols}
+    grand_old_dues = 0
+    grand_total = 0
+
+    if selected_session:
+        emp_qs = Employee.objects.all().order_by('name')
+        if selected_status:
+            emp_qs = emp_qs.filter(status=selected_status)
+
+        # Build payroll lookup: {(employee_id, month): payable_salary}
+        payroll_qs = EmployeePayrollEntry.objects.filter(session=selected_session).values(
+            'employee_id', 'month', 'payable_salary', 'old_dues'
+        )
+        salary_map = {}   # (emp_id, month) -> payable_salary
+        old_due_map = {}  # emp_id -> old_dues (first month only)
+        for entry in payroll_qs:
+            eid = entry['employee_id']
+            key = (eid, entry['month'])
+            salary_map[key] = float(entry['payable_salary'] or 0)
+            # old_dues: take the value from the earliest month entry
+            existing = old_due_map.get(eid)
+            if existing is None:
+                old_due_map[eid] = float(entry['old_dues'] or 0)
+
+        for emp in emp_qs:
+            old_due = old_due_map.get(emp.id, 0)
+            monthly = []
+            row_total = 0
+            for label, month_str in month_cols:
+                val = salary_map.get((emp.id, month_str), None)
+                monthly.append(val)
+                if val:
+                    row_total += val
+                    col_totals[month_str] += val
+            rows.append({
+                'employee': emp,
+                'old_due': old_due,
+                'monthly': monthly,
+                'row_total': row_total,
+            })
+            grand_old_dues += old_due
+            grand_total += row_total
+
+    col_totals_list = [col_totals[mc] for _, mc in month_cols]
+
+    return render(request, 'employees/employee_salary_yearly.html', {
+        'sessions': sessions,
+        'selected_session': selected_session,
+        'selected_session_id': selected_session_id,
+        'selected_status': selected_status,
+        'status_choices': Employee.STATUS_CHOICES,
+        'month_cols': month_cols,
+        'rows': rows,
+        'col_totals_list': col_totals_list,
+        'grand_old_dues': grand_old_dues,
+        'grand_total': grand_total,
+    })
+
+
 def employee_full_salary_statement(request):
     """Employee Full Salary Statement - monthly schedule + payment transactions + summary"""
     from calendar import month_name as cal_month_name

@@ -1,0 +1,49 @@
+Emp_No,Name,DOB,Contact_Number,Gender,Qualification,Address,Experience_Years,Previous_Institute,Post,Role,Role_Detail,Joining_Date,Base_Salary_Per_Month,Status,Leaves_Entitled
+1001,Seema Chaudhary,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/04/2014,11000,active,2
+1002,Jawahar Lal Bhamu,,,M,MA LLB,Data Migration,5,Data Migration,Admin,Admin,Admin,01/05/2014,15000,active,2
+1003,Anita Harijan,,,F,BA,Data Migration,10,Data Migration,Cleaner,Cleaner,Cleaner,01/04/2015,6000,active,2
+1004,Ramswaroop Khokhar,,,M,MSc.,Data Migration,5,Data Migration,Principal,Principal,Principal,01/04/2016,40000,active,2
+1005,Prahlad Sepat,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/04/2018,12000,left,2
+1006,Suman Parikh,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/07/2018,11000,left,2
+1007,Sumer Singh Pawan,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,0,inactive,2
+1008,Sitaram Ghashal,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,9500,inactive,2
+1009,Renu Marwal(EVS),,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,11500,left,2
+1010,Rekha Meena,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,9000,inactive,2
+1011,Ram Avatar Sharma,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,10000,left,2
+1012,Rahul Kumawat,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,0,left,2
+1013,Poonam Gupta,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,7000,inactive,2
+1014,Munshi Khan,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,0,left,2
+1015,Mukesh K Nitharwal,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,20000,left,2
+1016,Mukesh Jodha,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,0,left,2
+1017,Lal Singh,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,0,left,2
+1018,Dolat Kansotia,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,12000,left,2
+1019,Chhoti Devi,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/01/2020,8500,left,2
+1020,Laxman Kumawat,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/03/2023,10500,left,2
+1021,Ramsukh Naga,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/04/2023,0,left,2
+1022,Hansraj Kumawat,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/04/2023,0,left,2
+1023,Ashok Kumawat(Maths),,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,12/06/2023,16000,left,2
+1024,Yashpal Kudi,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,21/06/2023,10000,left,2
+1025,Madhu Sharma,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,23/06/2023,14000,left,2
+1026,Suresh Dudiya,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,24/06/2023,10500,left,2
+1027,Meena Sharma,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/07/2023,9500,left,2
+1028,Nainita Soni,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,03/07/2023,7000,left,2
+1029,Gowardhan Gurjar,,,M,BA,Data Migration,5,Data Migration,Driver,Driver,Driver,03/07/2023,10000,active,2
+1030,Mukesh Gurjar,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,15/07/2023,8000,left,2
+1031,Charan Singh,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,14/08/2023,9500,left,2
+1032,Reena Gupta,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,05/09/2023,14000,left,2
+1033,Deepa Yadav,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/07/2024,10000,left,2
+1034,Sarwan Lal Kumawat,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,02/07/2024,17000,active,2
+1035,Ravinder Singh,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,02/07/2024,0,left,2
+1036,Dharmendra Ashiwal,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,04/07/2024,0,left,2
+1037,Bhinwa Ram Taker,,,M,BA,Data Migration,5,Data Migration,Driver,Driver,Driver,04/07/2024,10000,active,2
+1038,Bhagwan Sahay Yadav,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,09/07/2024,0,left,2
+1039,Komal Sharma,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,23/08/2024,8400,active,2
+1040,Manoj Choudhary,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,26/11/2024,8000,left,2
+1041,Shivraj Singh,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,09/12/2024,0,left,2
+1042,Rachna Yadav,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,22/04/2025,8500,active,2
+1043,Rahul Ghasal,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,25/06/2025,15000,left,2
+1044,Neetu Yadav,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,01/07/2025,9000,active,2
+1045,Mahaveer Singh,,,M,B.Ed,Data Migration,5,Data Migration,Driver,Driver,Driver,01/08/2025,9500,active,2
+1046,Sourabh Sharma,,,M,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,18/08/2025,18000,left,2
+1047,Anita Choudhary,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,03/10/2025,8000,active,2
+1048,Manisha Choudhary,,,F,B.Ed,Data Migration,5,Data Migration,Teacher,Class Teacher,Class Teacher,06/10/2025,8000,active,2

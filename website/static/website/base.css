@@ -355,6 +355,12 @@ input, select, textarea{
   font-weight: 400;
   font-size: 14px;
 }
+input[type="radio"], input[type="checkbox"]{
+  width: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+}
 input:focus, select:focus, textarea:focus{
   outline:none;
   border-color: rgba(20,96,96,0.7);

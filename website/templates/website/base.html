@@ -169,6 +169,14 @@
              href="/employees/employees-salary-statement/">
             <i class="fa-solid fa-users"></i> Staff Salary Summary
           </a>
+          <a class="nav-link nav-subitem {% if '/employees/salary-yearly/' in request.path %}active{% endif %}"
+             href="/employees/salary-yearly/">
+            <i class="fa-solid fa-table"></i> Salary Grid - Payable
+          </a>
+          <a class="nav-link nav-subitem {% if '/employees/salary-payment/' in request.path %}active{% endif %}"
+             href="/employees/salary-payment/">
+            <i class="fa-solid fa-money-bill-wave"></i> Salary Grid - Paid
+          </a>
         </div>
       </div>
 

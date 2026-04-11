@@ -53,12 +53,13 @@ pip install mysqlclient gunicorn
 ```
 
 ### **Step 4: Configure Database & Migrations**
-1. Still in Bash, edit settings:
+1. Still in Bash, create the server-only production file:
 ```bash
-nano schoolapp/settings.py
+cp production_settings_local.example.py production_settings_local.py
+nano production_settings_local.py
 ```
 
-2. Find DATABASES section (around line 80) and replace:
+2. Put your real database settings in it:
 ```python
 DATABASES = {
     'default': {
@@ -71,29 +72,16 @@ DATABASES = {
 }
 ```
 
-3. Add at the end of file:
-```python
-DEBUG = False
-ALLOWED_HOSTS = ['dpstibariyan.pythonanywhere.com']
-STATIC_ROOT = '/home/dpstibariyan/SchoolLedger/static'
-STATIC_URL = '/static/'
-MEDIA_ROOT = '/home/dpstibariyan/SchoolLedger/media'
-MEDIA_URL = '/media/'
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-```
+3. Save: `Ctrl+O` → Enter → `Ctrl+X`
 
-4. Save: `Ctrl+O` → Enter → `Ctrl+X`
-
-5. Run migrations:
+4. Run migrations:
 ```bash
 workon SchoolLedger
-python manage.py migrate
-python manage.py init_roles
-python manage.py createsuperuser
+python manage.py migrate --settings=production_settings
+python manage.py init_roles --settings=production_settings
+python manage.py createsuperuser --settings=production_settings
 # Create admin account with secure password
-python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput --settings=production_settings
 ```
 
 ### **Step 5: Configure Web App**
@@ -107,7 +95,7 @@ import sys
 path = '/home/dpstibariyan/SchoolLedger'
 if path not in sys.path:
     sys.path.append(path)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'schoolapp.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'production_settings'
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 ```
@@ -137,10 +125,11 @@ application = get_wsgi_application()
 ## 📁 Files Created for Deployment
 
 1. **requirements.txt** - Python dependencies
-2. **production_settings.py** - Reference for production config
-3. **DEPLOYMENT_STEPS.md** - Detailed step-by-step guide
-4. **deploy.sh** - Bash script to automate setup
-5. **This file** - Quick start guide
+2. **production_settings.py** - Stable production wrapper used by the web app
+3. **production_settings_local.example.py** - Copy this to production_settings_local.py on the server
+4. **DEPLOYMENT_STEPS.md** - Detailed step-by-step guide
+5. **deploy.sh** - Bash script to automate setup
+6. **This file** - Quick start guide
 
 ---
 

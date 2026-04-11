@@ -75,26 +75,17 @@ pip install gunicorn
 
 ## STEP 4: Update Settings for Production
 
-1. Still in Bash, update the production settings:
+1. Still in Bash, create the server-only production settings file:
 
 ```bash
 cd ~/SchoolLedger
 
-# Edit settings.py to use MySQL
-nano schoolapp/settings.py
+# Create the local override that survives git pulls
+cp production_settings_local.example.py production_settings_local.py
+nano production_settings_local.py
 ```
 
-2. Find this line:
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-```
-
-3. Replace with (from production_settings.py):
+2. Put your real MySQL settings in that local file:
 ```python
 DATABASES = {
     'default': {
@@ -103,28 +94,15 @@ DATABASES = {
         'USER': 'dpstibariyan',
         'PASSWORD': 'YOUR_DB_PASSWORD_HERE',  # Paste the password from Step 2
         'HOST': 'dpstibariyan.mysql.pythonanywhere-services.com',
+    'PORT': '3306',
+    'OPTIONS': {
+      'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+    }
     }
 }
 ```
 
-4. Also add at the end of settings.py:
-```python
-# Production Settings
-DEBUG = False
-ALLOWED_HOSTS = ['dpstibariyan.pythonanywhere.com', 'localhost']
-
-STATIC_ROOT = '/home/dpstibariyan/SchoolLedger/static'
-STATIC_URL = '/static/'
-
-MEDIA_ROOT = '/home/dpstibariyan/SchoolLedger/media'
-MEDIA_URL = '/media/'
-
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-```
-
-5. Save file:
+3. Save file:
    - Press: `Ctrl + O` → `Enter` → `Ctrl + X`
 
 ---
@@ -140,13 +118,13 @@ cd ~/SchoolLedger
 workon SchoolLedger
 
 # Run migrations
-python manage.py migrate
+python manage.py migrate --settings=production_settings
 
 # Initialize roles and permissions
-python manage.py init_roles
+python manage.py init_roles --settings=production_settings
 
 # Create superuser (admin account)
-python manage.py createsuperuser
+python manage.py createsuperuser --settings=production_settings
 # Enter:
 # Username: admin
 # Email: admin@school.local
@@ -154,7 +132,7 @@ python manage.py createsuperuser
 # Confirm Password: [same password]
 
 # Collect static files
-python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput --settings=production_settings
 ```
 
 ---
@@ -181,7 +159,7 @@ path = '/home/dpstibariyan/SchoolLedger'
 if path not in sys.path:
     sys.path.append(path)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'schoolapp.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'production_settings'
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

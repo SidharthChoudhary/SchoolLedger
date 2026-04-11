@@ -2,17 +2,15 @@
 
 ## Step 1: Prepare Your Application for Deployment
 
-### 1.1 Update settings.py for Production
+### 1.1 Create a Server-Only Production Override
 
-First, let me create the production settings:
+Do not edit tracked files like `schoolapp/settings.py` on PythonAnywhere. Those changes are overwritten on the next deploy.
+
+Keep committed defaults in `production_settings.py` and put real server values in `production_settings_local.py`.
+
+Start from this template:
 ```python
-# schoolapp/settings.py - Add at the end
-
-# Production Settings
-DEBUG = False
-ALLOWED_HOSTS = ['yourusername.pythonanywhere.com', 'your-domain.com']
-
-# Database - We'll configure this in PythonAnywhere
+# production_settings_local.py
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -24,23 +22,11 @@ DATABASES = {
     }
 }
 
-# Static Files
 STATIC_ROOT = '/home/yourusername/SchoolLedger/static/'
-STATIC_URL = '/static/'
-
-# Media Files
 MEDIA_ROOT = '/home/yourusername/SchoolLedger/media/'
-MEDIA_URL = '/media/'
 
-# Security
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+ALLOWED_HOSTS = ['yourusername.pythonanywhere.com', 'your-domain.com']
 
-# Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -165,7 +151,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 # Set Django settings module
-os.environ['DJANGO_SETTINGS_MODULE'] = 'schoolapp.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'production_settings'
 
 # Import Django
 from django.core.wsgi import get_wsgi_application
@@ -186,20 +172,15 @@ application = get_wsgi_application()
    - Username: `yourusername`
    - Password: (auto-generated)
 
-### Update settings.py with Database Credentials
+### Create the Server-Only Settings File
 
-Replace in `schoolapp/settings.py`:
-```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'yourusername$schoolledger',
-        'USER': 'yourusername',
-        'PASSWORD': 'your-db-password-from-databases-tab',
-        'HOST': 'yourusername.mysql.pythonanywhere-services.com',
-    }
-}
+In PythonAnywhere Bash:
+```bash
+cp production_settings_local.example.py production_settings_local.py
+nano production_settings_local.py
 ```
+
+Add the real database password there. That file is gitignored, so deploys will not overwrite it.
 
 ---
 
@@ -214,14 +195,14 @@ cd /home/yourusername/SchoolLedger
 
 3. Run migrations:
 ```bash
-python manage.py makemigrations
-python manage.py migrate
-python manage.py init_roles
+python manage.py makemigrations --settings=production_settings
+python manage.py migrate --settings=production_settings
+python manage.py init_roles --settings=production_settings
 ```
 
 4. Create superuser:
 ```bash
-python manage.py createsuperuser
+python manage.py createsuperuser --settings=production_settings
 # Enter:
 # Username: admin
 # Email: your-email@school.local
@@ -230,7 +211,7 @@ python manage.py createsuperuser
 
 5. Collect static files:
 ```bash
-python manage.py collectstatic --noinput
+python manage.py collectstatic --noinput --settings=production_settings
 ```
 
 ---

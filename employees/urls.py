@@ -6,7 +6,8 @@ from .views import (
     employee_full_salary_statement, employees_salary_statement,
     import_attendance_csv, download_attendance_template, attendance_register,
     employee_payroll_unified, delete_filtered_attendance,
-    bulk_import_payroll, download_payroll_template,
+    bulk_import_payroll, download_payroll_template, employee_salary_yearly,
+    employee_salary_payment_record,
 )
 from . import views
 
@@ -29,4 +30,6 @@ urlpatterns = [
     path("payroll/", employee_payroll_unified, name="employee_payroll_unified"),
     path("payroll/bulk-import/", bulk_import_payroll, name="bulk_import_payroll"),
     path("payroll/download-template/", download_payroll_template, name="download_payroll_template"),
+    path("salary-yearly/", employee_salary_yearly, name="employee_salary_yearly"),
+    path("salary-payment/", employee_salary_payment_record, name="employee_salary_payment_record"),
 ]

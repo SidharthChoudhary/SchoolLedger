@@ -23,6 +23,13 @@ MONTH_ORDER = [
     'October', 'November', 'December', 'January', 'February', 'March',
 ]
 
+# Normalise abbreviated month names (used in some older sheets) to full names
+MONTH_ABBREV = {
+    'Jun': 'June', 'Jul': 'July', 'Aug': 'August', 'Sep': 'September',
+    'Oct': 'October', 'Nov': 'November', 'Dec': 'December',
+    'Jan': 'January', 'Feb': 'February', 'Mar': 'March',
+}
+
 # Month name → month number
 MONTH_NUM = {
     'April': 4, 'May': 5, 'June': 6, 'July': 7,
@@ -73,7 +80,7 @@ def _best_name_match(target, emp_lookup):
     candidates = list(emp_lookup['exact'].keys())
     matches = difflib.get_close_matches(key, candidates, n=1, cutoff=0.70)
     if matches:
-        return emp_lookup['exact'][matches[0]], f'fuzzy≈"{matches[0]}"'
+        return emp_lookup['exact'][matches[0]], f'fuzzy~"{matches[0]}"'
 
     return None, 'not_found'
 
@@ -98,6 +105,14 @@ class Command(BaseCommand):
             help='Sheet name to read (default: SdS)',
         )
         parser.add_argument(
+            '--header-row', type=int, default=1,
+            help='1-based row number of the header row (default: 1). Use 4 for StaffStmtAll.',
+        )
+        parser.add_argument(
+            '--data-row', type=int, default=None,
+            help='1-based row number where data starts (default: header-row + 1). Use 6 for StaffStmtAll.',
+        )
+        parser.add_argument(
             '--session', default='2024-2025',
             help='Fallback session string when the row has no session column '
                  '(default: 2024-2025)',
@@ -115,9 +130,14 @@ class Command(BaseCommand):
         excel_path = options['excel']
         output_path = options['output']
         sheet_name = options['sheet']
+        header_row = options['header_row']       # 1-based
+        data_row   = options['data_row']          # 1-based, or None
         fallback_session = options['session']
         skip_zero = options['skip_zero']
         dry_run = options['dry_run']
+
+        if data_row is None:
+            data_row = header_row + 1
 
         # ── Validate inputs ────────────────────────────────────────────────
         if not os.path.exists(excel_path):
@@ -146,8 +166,15 @@ class Command(BaseCommand):
             raise CommandError('Sheet is empty.')
 
         # ── Parse header ───────────────────────────────────────────────────
-        header = raw_rows[0]
-        col = {str(h).strip(): i for i, h in enumerate(header) if h is not None}
+        header = raw_rows[header_row - 1]   # convert 1-based to 0-based index
+        # Normalise abbreviated month names in header
+        def _norm_month(h):
+            s = str(h).strip() if h is not None else ''
+            return MONTH_ABBREV.get(s, s)
+        col = {_norm_month(h): i for i, h in enumerate(header) if h is not None}
+        # Also accept 'Employ Name' as fallback for 'Name'
+        if 'Name' not in col and 'Employ Name' in col:
+            col['Name'] = col['Employ Name']
 
         required_cols = {'Name'}
         missing = required_cols - set(col.keys())
@@ -182,7 +209,7 @@ class Command(BaseCommand):
         unmatched = []
         skipped_formula = []
 
-        for row_num, row in enumerate(raw_rows[1:], start=2):
+        for row_num, row in enumerate(raw_rows[data_row - 1:], start=data_row):
             name = row[col['Name']] if col['Name'] < len(row) else None
 
             # Skip blank, formula or note rows
@@ -192,8 +219,13 @@ class Command(BaseCommand):
             if not name or name.startswith('=') or name[0].isdigit():
                 skipped_formula.append((row_num, name))
                 continue
-            # Skip totals / annotation rows
-            if any(kw in name.lower() for kw in ('total', 'sum', 'added for', '---')):
+            # Skip totals / annotation rows — use prefix/whole-word checks to avoid
+            # accidentally matching real names like "Suman Parikh" for keyword "sum"
+            name_lower = name.lower()
+            if (name_lower in ('total', 'sum', 'subtotal')
+                    or name_lower.startswith('total ')
+                    or 'added for' in name_lower
+                    or name_lower.startswith('---')):
                 skipped_formula.append((row_num, name))
                 continue
 
@@ -297,7 +329,7 @@ class Command(BaseCommand):
             writer.writerows(output_rows)
 
         self.stdout.write('')
-        self.stdout.write(self.style.SUCCESS(f'✓ CSV written to: {os.path.abspath(output_path)}'))
+        self.stdout.write(self.style.SUCCESS(f'OK CSV written to: {os.path.abspath(output_path)}'))
         self.stdout.write(
             '\nSTEP 2 — Upload this CSV at:\n'
             '  http://127.0.0.1:8000/employees/payroll/bulk-import/\n'

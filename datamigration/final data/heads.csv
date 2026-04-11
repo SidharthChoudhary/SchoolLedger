@@ -5,9 +5,9 @@ Income,BUF,Uniform,Belt,Active,School uniform belt
 Income,BUF,Uniform,ID-Card,Active,School identification card
 Income,BUF,Uniform,Uniform,Active,School uniform - shirt and pants
 Income,Bus Booking,Bus Booking,,Active,
-Income,Fees,Bus Fee,,Active,
-Income,Fees,TC Fee,,Active,Transfer certificate
-Income,Fees,Tuition Fee,,Active,
+Income,Fees,Bus Fees,,Active,
+Income,Fees,TC Fees,,Active,Transfer certificate
+Income,Fees,Tuition Fees,,Active,
 Income,Loan,Management,Ashok Sir,Active,
 Income,Loan,Management,Kishor Sir,Active,
 Income,Loan,Management,Other,Active,
@@ -44,6 +44,8 @@ Expense,Other,Stationary,Stationary,Active,
 Income,RTE,Fees,,Active,Right to education
 Expense,Salary,Non - Teaching Staff,Adminstrator,Active,
 Expense,Salary,Non - Teaching Staff,Driver,Active,
+Expense,Salary,Other,Other,Active,
+Expense,Salary,Salary,Salary,Active,
 Expense,Salary,Teaching Staff,Teacher,Active,
 Expense,Transport,Diesel Cash,Diesel Cash,Active,
 Expense,Transport,Diesel-Bill,Repayment,Active,

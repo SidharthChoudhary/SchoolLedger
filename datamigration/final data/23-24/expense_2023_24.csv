@@ -1,0 +1,592 @@
+Voucher_Number,Date,Amount,Major_Head,Head,Sub_Head,Payment_Type,Session,Details,Emp_No
+1,01/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1013
+2,04/04/2023,115,Other,Daily run,Snacks,Cash,2023-2024,Cup and ginger,
+3,05/04/2023,550,Other,Stationary,Stationary,Cash,2023-2024,Staff & Student Register,
+4,06/04/2023,9214,Salary,Salary,Salary,Cash,2023-2024,Cash & Phone pay,1016
+5,06/04/2023,550,Transport,Transport Maintenance,Bus - 1 - 4903,Cash,2023-2024,"350 Bus Puncture 4903, and steering oil 200",
+6,07/04/2023,1000,Salary,Salary,Salary,Cash,2023-2024,Cash,1001
+7,07/04/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Cash,1016
+8,08/04/2023,450,Transport,Transport Maintenance,Bus - 2,Cash,2023-2024,Break oil abd Steering oil,
+9,10/04/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1008
+10,11/04/2023,1000,Salary,Salary,Salary,Cash,2023-2024,Cash,1018
+11,11/04/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Cash,1001
+12,12/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+13,12/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1020
+14,13/04/2023,4000,Salary,Salary,Salary,Cash,2023-2024,Cash,1018
+15,14/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1001
+16,15/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1011
+17,19/04/2023,260,Other,Stationary,Stationary,Cash,2023-2024,Rim paper,
+18,19/04/2023,240,Other,Daily run,Snacks,Cash,2023-2024,"Tea, Sugar, Ginger",
+19,19/04/2023,200,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Steering oil,
+20,19/04/2023,330,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus repair,
+21,20/04/2023,15000,Salary,Salary,Salary,Cash,2023-2024,Cash,1005
+22,20/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1013
+23,20/04/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1015
+24,20/04/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1008
+25,20/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1003
+26,20/04/2023,15000,Salary,Salary,Salary,Cash,2023-2024,Cash,1010
+27,21/04/2023,1100,Other,Stationary,Stationary,Cash,2023-2024,Exam notebook,
+28,21/04/2023,150,Other,Stationary,Stationary,Cash,2023-2024,Exam File,
+29,21/04/2023,50,Other,Daily run,Other,Cash,2023-2024,Bile Petrol Hingonia,
+30,21/04/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Cash,1003
+31,21/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+32,24/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1009
+33,24/04/2023,6500,Salary,Salary,Salary,Cash,2023-2024,Cash,1011
+34,26/04/2023,250,Other,Stationary,Stationary,Cash,2023-2024,Printer ink,
+35,26/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1001
+36,27/04/2023,170,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Bus Puncture,
+37,27/04/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Ginger,
+38,27/04/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1006
+39,28/04/2023,500,Salary,Salary,Salary,Cash,2023-2024,Cash,1015
+40,28/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1013
+41,29/04/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1018
+43,30/04/2023,53000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+44,01/05/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1023
+45,02/05/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Cash,1011
+46,05/05/2023,1000,Salary,Salary,Salary,Cash,2023-2024,Cash,1015
+47,05/05/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+48,16/05/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1015
+49,17/05/2023,600,Other,Stationary,Stationary,Cash,2023-2024,"Staff & Student Register, dairy",
+50,22/05/2023,500,Salary,Salary,Salary,Cash,2023-2024,Cash,1015
+51,26/05/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1015
+52,27/05/2023,55,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+53,28/05/2023,100,Other,Building Maintenance,Building,Cash,2023-2024,Lime stone choona,
+54,31/05/2023,390,Other,Stationary,Stationary,Cash,2023-2024,Rim paper,
+56,02/06/2023,150,Other,Advertising,Other,Cash,2023-2024,Fool malaye,
+57,02/06/2023,450,Other,Other,Other,Cash,2023-2024,Laddu sweets,
+58,02/06/2023,150,Other,Other,Other,Cash,2023-2024,Pster Dressing kalwar,
+59,03/06/2023,500,Other,Stationary,Stationary,Cash,2023-2024,School flex repaint,
+60,03/06/2023,500,Other,Advertising,Other,Cash,2023-2024,Sweets - results celebration,
+61,03/06/2023,500,Other,Advertising,Other,Cash,2023-2024,Result celebration,
+62,03/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+63,04/06/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Cash,1003
+64,05/06/2023,6500,Other,Advertising,Pemphlets,Cash,2023-2024,Color Pumphlet Choudhary printer Kalwar,
+65,05/06/2023,100,Other,Advertising,Other,Cash,2023-2024,Cold drink,
+66,05/06/2023,900,Other,Advertising,Other,Cash,2023-2024,Bachho ka nasta,
+67,05/06/2023,1200,Other,Building Maintenance,Building,Cash,2023-2024,Ground clearance wage,
+68,05/06/2023,300,Other,Building Maintenance,Building,Cash,2023-2024,Diesel tractor and ground clearing,
+69,06/06/2023,500,Salary,Salary,Salary,Cash,2023-2024,Cash,1023
+70,06/06/2023,400,Other,Advertising,Other,Cash,2023-2024,DJ,
+71,06/06/2023,3500,Other,Advertising,Other,Cash,2023-2024,Open Car hire,
+72,06/06/2023,370,Other,Advertising,Other,Cash,2023-2024,Biscuit namkeen,
+73,06/06/2023,550,Other,Advertising,Other,Cash,2023-2024,Cold drink,
+74,06/06/2023,450,Other,Advertising,Other,Cash,2023-2024,Banana,
+75,13/06/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1018
+76,13/06/2023,100,Other,Stationary,Stationary,Cash,2023-2024,Chalk,
+77,13/06/2023,300,Other,Advertising,Other,Cash,2023-2024,Wire for flex and banner,
+78,14/06/2023,8000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1015
+79,14/06/2023,3000,Other,Advertising,Other,Cash,2023-2024,Flex pasting,
+80,15/06/2023,5000,Other,Advertising,Other,Cash,2023-2024,Car rent prahalad ji field visit,
+81,15/06/2023,280,Other,Building Maintenance,Building,Cash,2023-2024,Plant cutting,
+82,16/06/2023,900,Other,Advertising,Other,Cash,2023-2024,Banner,
+83,16/06/2023,4000,Other,Advertising,Other,Cash,2023-2024,Patti (100),
+84,16/06/2023,50,Other,Advertising,Other,Cash,2023-2024,Tea,
+85,17/06/2023,11000,Other,Advertising,Other,Cash,2023-2024,Flex boards,
+86,17/06/2023,1300,Other,Advertising,Other,Cash,2023-2024,School Salary Banner,
+87,17/06/2023,3700,Other,Advertising,Other,Cash,2023-2024,School Gate Banner,
+88,17/06/2023,2600,Other,Advertising,Other,Cash,2023-2024,School gate banner right side,
+89,17/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+90,18/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,T,
+91,19/06/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1023
+92,19/06/2023,42600,Salary,Salary,Salary,Cash,2023-2024,Cash payment,1008
+93,19/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+94,20/06/2023,200,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus puncture,
+95,20/06/2023,700,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus washing,
+96,20/06/2023,50,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Tea,
+97,20/06/2023,200,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Air Cleaning and bus puncture,
+98,21/06/2023,2500,Other,Advertising,Other,Cash,2023-2024,Car rent prahalad ji field visit,
+99,21/06/2023,50,Other,Advertising,Other,Cash,2023-2024,Tea,
+100,22/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+101,22/06/2023,200,Other,Bills,Electricity,Cash,2023-2024,Electrician,
+102,23/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+103,24/06/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1015
+104,24/06/2023,500,Other,Advertising,Other,Cash,2023-2024,Cash diesel,
+105,24/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+106,25/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+107,26/06/2023,1100,Other,Advertising,Other,Cash,2023-2024,hamara samachar for news,
+108,26/06/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Cash salary,1011
+109,26/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+110,27/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+111,28/06/2023,1000,Salary,Salary,Salary,Cash,2023-2024,Cash salary,1011
+112,29/06/2023,1000,Other,Advertising,Other,Cash,2023-2024,Diesel Scorpio field visit,
+113,29/06/2023,50,Other,Advertising,Other,Cash,2023-2024,Tea,
+114,29/06/2023,800,Other,Advertising,Pemphlets,Cash,2023-2024,Pumphlet distribution charge in newspaper,
+115,30/06/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1009
+116,30/06/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+117,30/06/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Cash,1018
+119,01/07/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+120,02/07/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1015
+121,03/07/2023,70,Other,Affiliation,Haldighati School visit,Cash,2023-2024,Patrol srk Jobner,
+122,03/07/2023,300,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Break repair,
+123,04/07/2023,400,Other,Building Maintenance,Electricity,Cash,2023-2024,Electrician,
+124,04/07/2023,400,Other,Building Maintenance,Furniture,Cash,2023-2024,Carpenter,
+125,04/07/2023,2800,Salary,Salary,Salary,Cash,2023-2024,Cash salary,1025
+126,04/07/2023,100,Other,Affiliation,SRK School visit,Cash,2023-2024,Petrol srk visit,
+127,04/07/2023,1000,Other,Advertising,Other,Cash,2023-2024,Cash Diesel Scorpio route visit,
+128,04/07/2023,140,Other,Stationary,Stationary,Cash,2023-2024,Chalk,
+129,05/07/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1020
+130,05/07/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1006
+131,06/07/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1001
+132,06/07/2023,2500,Salary,Salary,Salary,Cash,2023-2024,Cash,1003
+133,07/07/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1001
+134,07/07/2023,1860,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,bus patta brush,
+135,07/07/2023,480,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,khokhar tractor part steering oil,
+136,07/07/2023,200,Other,Daily run,Other,Cash,2023-2024,Groom,
+137,08/07/2023,300,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus puncture,
+138,08/07/2023,2150,Other,Other,Other,Cash,2023-2024,Books dress Yashwant kumawat,
+139,11/07/2023,3350,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,bus patta brush,
+140,11/07/2023,15000,Other,Advertising,Other,Cash,2023-2024,Cash Newspaper Advertising,
+141,12/07/2023,1500,Salary,Salary,Salary,Cash,2023-2024,Cash,1018
+142,12/07/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1011
+143,12/07/2023,4000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1015
+144,12/07/2023,4100,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1020
+145,13/07/2023,6750,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,bus repair pokhar ji,
+146,13/07/2023,1000,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,wages bus service,
+147,14/07/2023,3900,Salary,Salary,Salary,Cash,2023-2024,cash +,1018
+148,15/07/2023,500,Other,Daily run,Other,Cash,2023-2024,swamani bhoj,
+149,17/07/2023,10000,Salary,Salary,Salary,Cash,2023-2024,salary,1009
+150,17/07/2023,5000,Salary,Salary,Salary,Cash,2023-2024,cash,1003
+151,17/07/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1006
+152,17/07/2023,7000,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,bus servicec 7407,
+153,18/07/2023,500,Salary,Salary,Salary,Cash,2023-2024,cash,1026
+154,18/07/2023,300,Other,Affiliation,SRK School visit,Cash,2023-2024,cash diesel,
+155,21/07/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1015
+156,23/07/2023,6830,Salary,Salary,Salary,Cash,2023-2024,Cash  final payment no dues,1011
+157,24/07/2023,130,Other,Stationary,Stationary,Cash,2023-2024,chalk,
+158,24/07/2023,200,Other,Building Maintenance,Other,Cash,2023-2024,water tank cleaning,
+159,25/07/2023,200,Other,Stationary,Stationary,Cash,2023-2024,file + pen + stapler,
+160,25/07/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+161,31/07/2023,6000,Salary,Salary,Salary,Cash,2023-2024,cash ?,1018
+162,31/07/2023,1000,Salary,Salary,Salary,Cash,2023-2024,cash,1026
+163,01/08/2023,300,Salary,Salary,Salary,Cash,2023-2024,Cash,1029
+207,16/08/2023,14000,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Pokar ji,
+180,07/08/2023,7300,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,"bus service Jorpura , keel pin",
+166,02/08/2023,13000,Salary,Salary,Salary,Cash,2023-2024,Cash ?,1010
+187,08/08/2023,7000,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Tyre remote,
+216,18/08/2023,7000,Transport,Transport Maintenance,Bus3 - 0597,Cash,2023-2024,Tyre remote,
+205,15/08/2023,5000,Other,Event Celebration,Independence Day,Cash,2023-2024,DJ + Generator,
+203,15/08/2023,3100,Other,Event Celebration,Independence Day,Cash,2023-2024,Tent,
+183,07/08/2023,2300,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,CRB oil,
+172,03/08/2023,9000,Salary,Salary,Salary,Cash,2023-2024,Cash,1023
+221,21/08/2023,1600,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus repair stearing oil,
+211,16/08/2023,1520,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Bus cross,
+167,03/08/2023,1500,Other,Daily run,Snacks,Cash,2023-2024,Tea Staff July bill,
+199,14/08/2023,1500,Other,Event Celebration,Independence Day,Cash,2023-2024,Medals,
+177,05/08/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1025
+168,03/08/2023,1000,Other,Building Maintenance,Other,Cash,2023-2024,Grass spray,
+201,15/08/2023,1000,Other,Event Celebration,Independence Day,Cash,2023-2024,Sweets,
+228,23/08/2023,1000,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,cash car rent renwal tyre change,
+202,15/08/2023,595,Other,Event Celebration,Independence Day,Cash,2023-2024,Buiskits,
+184,07/08/2023,570,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,TVS Coolant,
+200,15/08/2023,500,Other,Event Celebration,Independence Day,Cash,2023-2024,Decoration Material,
+204,15/08/2023,500,Other,Event Celebration,Independence Day,Cash,2023-2024,Cash Diesel Generator,
+210,16/08/2023,500,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Cassh jeep route 7407,
+230,24/08/2023,500,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,jeep route charge old due to Charan Singh,
+196,12/08/2023,400,Other,Daily run,Snacks,Cash,2023-2024,snacks,
+188,09/08/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Salary,1026
+189,09/08/2023,500,Salary,Salary,Salary,Cash,2023-2024,salary,1023
+214,17/08/2023,400,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,cross labour,
+193,11/08/2023,350,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Tyre change,
+178,05/08/2023,300,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Tyre change,
+181,07/08/2023,300,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus Tyre,
+185,08/08/2023,300,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Tyre change,
+195,12/08/2023,10000,Salary,Salary,Salary,Cash,2023-2024,cash,1015
+215,17/08/2023,300,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Tools screw driver,
+217,18/08/2023,300,Transport,Transport Maintenance,Bus3 - 0597,Cash,2023-2024,Tyre change,
+165,02/08/2023,250,Other,Stationary,Stationary,Cash,2023-2024,Rim paper,
+169,03/08/2023,250,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Bus puncture,
+176,04/08/2023,200,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Break oil,
+232,28/08/2023,200,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,bus puncture,
+174,04/08/2023,160,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Stearing oil,
+164,02/08/2023,100,Other,Affiliation,SRK School visit,Cash,2023-2024,petrol srk Jobner,
+170,03/08/2023,100,Other,Affiliation,SRK School visit,Cash,2023-2024,petrol srk,
+175,04/08/2023,100,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Break oil,
+190,09/08/2023,100,Other,Affiliation,SRK School visit,Cash,2023-2024,srk visit,
+194,11/08/2023,100,Other,Affiliation,SRK School visit,Cash,2023-2024,petrol srk visit,
+208,16/08/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Cash,1001
+209,16/08/2023,1000,Salary,Salary,Salary,Cash,2023-2024,Cash,1026
+197,14/08/2023,100,Other,Daily run,Other,Cash,2023-2024,"Petrol Pachar Ramkui, kalwar",
+198,14/08/2023,100,Other,Event Celebration,Independence Day,Cash,2023-2024,White powder,
+213,16/08/2023,100,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Jobner cross lane,
+171,03/08/2023,50,Other,Daily run,Other,Cash,2023-2024,petrol hingonia bus route,
+173,04/08/2023,50,Other,Daily run,Other,Cash,2023-2024,petrol bus route,
+179,05/08/2023,50,Other,Daily run,Other,Cash,2023-2024,petrol bus route,
+182,07/08/2023,50,Other,Daily run,Other,Cash,2023-2024,Petrol Route 7407,
+186,08/08/2023,50,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Petrol bus route 7407,
+219,19/08/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1029
+220,19/08/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1023
+191,10/08/2023,50,Other,Daily run,Other,Cash,2023-2024,Petrol bus route 7407,
+222,21/08/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1013
+223,21/08/2023,7500,Salary,Salary,Salary,Cash,2023-2024,Cash,1025
+224,21/08/2023,1500,Salary,Salary,Salary,Cash,2023-2024,Cash,1026
+225,21/08/2023,1500,Salary,Salary,Salary,Cash,2023-2024,Cash,1001
+226,22/08/2023,13000,Salary,Salary,Salary,Cash,2023-2024,cheque,1015
+227,23/08/2023,9500,Salary,Salary,Salary,Cash,2023-2024,cash,1027
+192,11/08/2023,50,Other,Daily run,Other,Cash,2023-2024,Petrol bus route 7407,
+229,23/08/2023,800,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+206,15/08/2023,50,Other,Event Celebration,Independence Day,Cash,2023-2024,Ginger,
+231,28/08/2023,1000,Salary,Salary,Salary,Cash,2023-2024,cash,1001
+212,16/08/2023,50,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Kalwar cross,
+233,29/08/2023,2766,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1029
+234,29/08/2023,1500,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1025
+235,29/08/2023,2000,Salary,Salary,Salary,Cash,2023-2024,cash,1013
+236,29/08/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1026
+237,29/08/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1023
+238,29/08/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1028
+239,29/08/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1031
+240,29/08/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1001
+241,29/08/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1018
+242,29/08/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1006
+243,29/08/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1005
+244,29/08/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1030
+248,01/09/2023,250,Other,Stationary,Stationary,Cash,2023-2024,Paper rim,
+249,01/09/2023,7000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1024
+250,01/09/2023,11866,Other,Bills,Electricity,Cash,2023-2024,Electricity bill,
+251,01/09/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Tour Adjust,1003
+252,01/09/2023,4000,Salary,Salary,Salary,Cash,2023-2024,Tour Adjust,1001
+253,01/09/2023,15000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+254,04/09/2023,100,Transport,Transport Maintenance,Bus3 - 0597,Cash,2023-2024,Break Oil,
+255,04/09/2023,3450,Transport,Transport Maintenance,Bus3 - 0597,Cash,2023-2024,Pokhar Ji brk oil clutch cyilder,
+256,04/09/2023,100,Other,Stationary,Stationary,Cash,2023-2024,Chalk,
+257,05/09/2023,500,Salary,Salary,Salary,Cash,2023-2024,Salary cash,1031
+258,05/09/2023,1000,Salary,Salary,Salary,Cash,2023-2024,salary,1030
+259,05/09/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1028
+260,06/09/2023,9000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1018
+261,06/09/2023,50000,Salary,Salary,Salary,Cash,2023-2024,salary,1019
+262,06/09/2023,18000,Salary,Salary,Salary,Cash,2023-2024,salary,1006
+263,06/09/2023,5500,Salary,Salary,Salary,Cash,2023-2024,salary,1023
+264,06/09/2023,3000,Salary,Salary,Salary,Cash,2023-2024,salary,1015
+265,06/09/2023,1000,Salary,Salary,Salary,Cash,2023-2024,salary,1029
+266,30/04/2023,50,Other,other,other,Cash,2023-2024,adjust RSK statement diff,
+267,30/06/2023,3650,Other,other,Other,Cash,2023-2024,adjust RSK statement diff,
+268,30/08/2023,7380,Other,other,Other,Cash,2023-2024,Adjust RSK statement diff,
+269,07/09/2023,17000,Salary,Salary,Salary,Cash,2023-2024,Salary,1005
+270,08/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+271,09/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+272,11/09/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Salary,1026
+273,11/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+274,12/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+275,12/09/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Salary,1013
+276,13/09/2023,10000,Salary,Salary,Salary,Cash,2023-2024,salary,1006
+277,13/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+278,14/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+279,14/09/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1025
+280,15/09/2023,400,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Bus Repair,
+281,15/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+282,16/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+283,18/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+284,20/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+285,21/09/2023,200,Other,Stationary,Stationary,Cash,2023-2024,Chalk,
+286,21/09/2023,150,Other,Stationary,Stationary,Cash,2023-2024,Register,
+287,21/09/2023,50,Other,Daily run,other,Cash,2023-2024,Petrol Bike,
+288,21/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+289,22/09/2023,500,Salary,Salary,Salary,Cash,2023-2024,Salary,1015
+290,22/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+291,23/09/2023,14000,Salary,Salary,Salary,Cash,2023-2024,salary,1015
+292,23/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+293,23/09/2023,5000,Salary,Salary,Salary,Cash,2023-2024,salary,1025
+294,26/09/2023,4000,Salary,Salary,Salary,Cash,2023-2024,salary,1025
+295,26/09/2023,5177,Other,Bills,Electricity,Cash,2023-2024,Electricity bill,
+296,26/09/2023,3500,Salary,Salary,Salary,Cash,2023-2024,Salary,1030
+297,26/09/2023,10000,Salary,Salary,Salary,Cash,2023-2024,salary,1005
+298,26/09/2023,6000,Salary,Salary,Salary,Cash,2023-2024,Salary,1029
+299,27/09/2023,2000,Salary,Salary,Salary,Cash,2023-2024,salary,1001
+300,27/09/2023,1000,Salary,Salary,Salary,Cash,2023-2024,salary,1026
+301,27/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+302,27/09/2023,20000,Salary,Salary,Salary,Cash,2023-2024,salary,1006
+303,28/09/2023,1000,Salary,Salary,Salary,Cash,2023-2024,salary,1026
+304,28/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+305,28/09/2023,330,Other,Stationary,Stationary,Cash,2023-2024,Student Register,
+306,28/09/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Salary phone pay,1006
+307,29/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+308,30/09/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+309,02/10/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Salary phone pay,1026
+310,02/10/2023,7200,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1018
+311,02/10/2023,4000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1023
+312,02/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+313,03/10/2023,50,Other,Daily run,other,Cash,2023-2024,Petrol,
+314,03/10/2023,250,Other,Stationary,Stationary,Cash,2023-2024,Rim paper,
+315,03/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+316,03/10/2023,2500,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1023
+317,04/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+318,05/10/2023,8800,Salary,Salary,Salary,Cash,2023-2024,Salary final payment,1009
+319,05/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+320,05/10/2023,2000,Transport,Transport Maintenance,Bus3 - 0597,Cash,2023-2024,Bus Self Repair,
+321,05/10/2023,38,Salary,Salary,Salary,Cash,2023-2024,To make balace 0,1009
+322,06/10/2023,10300,Salary,Salary,Salary,Cash,2023-2024,Salary,1010
+323,06/10/2023,5200,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus Battery new,
+324,06/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+325,06/10/2023,3000,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus Break Kit,
+326,06/10/2023,500,Salary,Salary,Salary,Cash,2023-2024,Cash,1030
+327,06/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+328,09/10/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1023
+329,09/10/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1029
+330,09/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+331,10/10/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1026
+332,10/10/2023,150,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Bus puncture,
+333,10/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+334,11/10/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash payment,1003
+335,11/10/2023,250,Other,Stationary,Stationary,Cash,2023-2024,Ink Printer,
+336,11/10/2023,50,Other,Daily run,other,Cash,2023-2024,Petrol,
+337,11/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+338,11/10/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash payment,1031
+339,12/10/2023,740,Other,Bills,News paper,Cash,2023-2024,news paper bill,
+340,12/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+341,13/10/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Cash,1025
+342,13/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+343,14/10/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1005
+344,17/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+345,18/10/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1005
+346,18/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+347,19/10/2023,5000,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+348,19/10/2023,500,Other,Advertising,Parents visit,Cash,2023-2024,Car petrol Swamani Gardian,
+349,19/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+350,19/10/2023,100,Other,Stationary,Stationary,Cash,2023-2024,Chalk,
+351,20/10/2023,182000,Transport,Diesel Cash,Payment   - VPP,Cash,2023-2024,Vinayak Petrol Pump,
+352,21/10/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1025
+353,21/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+354,23/10/2023,1000,Salary,Salary,Salary,Cash,2023-2024,Cash,1018
+355,23/10/2023,500,Salary,Salary,Salary,Cash,2023-2024,Cash,1032
+356,23/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+357,26/10/2023,460,Other,Stationary,Stationary,Cash,2023-2024,Rim paper,
+358,26/10/2023,50,Other,Daily run,Other,Cash,2023-2024,Petrol,
+359,26/10/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Salary,1025
+360,26/10/2023,200,Salary,Salary,Salary,Cash,2023-2024,Cash,1023
+361,26/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+362,27/10/2023,7000,Transport,Transport Maintenance,Bus3 - 0597,Cash,2023-2024,Tyre remote one pair,
+363,27/10/2023,1500,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus Putta Items cost,
+364,27/10/2023,1500,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Bus Putta Items cost,
+365,27/10/2023,700,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus putta labour cost,
+366,27/10/2023,850,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Bus putta labour cost,
+367,27/10/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1032
+368,27/10/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1018
+369,27/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+370,27/10/2023,6000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1029
+371,28/10/2023,1320,Other,Bills,Electricity,Cash,2023-2024,Electricity bill,
+372,28/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+373,29/10/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1030
+374,30/10/2023,1500,Other,Daily run,Snacks,Cash,2023-2024,Sita Ram Bajya before October,
+375,30/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+376,30/10/2023,400,Transport,Transport Maintenance,Bus3 - 0597,Cash,2023-2024,Tyre change,
+377,30/10/2023,200,Other,Daily run,Other,Cash,2023-2024,Broom,
+378,31/10/2023,2000,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,"Bus repair, Srirma automobile, Fanbelt, brk oil",
+379,31/10/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+380,31/10/2023,100,Transport,Transport Maintenance,Bus3 - 0597,Cash,2023-2024,Bus puncture,
+381,01/11/2023,500,Other,Daily run,Other,Cash,2023-2024,Breakfast RTE team,
+382,01/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+383,02/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+384,03/11/2023,220,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus Puncture,
+385,03/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+386,04/11/2023,100,Other,Daily run,Other,Cash,2023-2024,Petrol,
+387,04/11/2023,100,Other,Daily run,Other,Cash,2023-2024,Speed post,
+388,04/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+389,06/11/2023,4800,Salary,Salary,Salary,Cash,2023-2024,Salary cash,1018
+390,06/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+391,06/11/2023,200,Salary,Salary,Salary,Cash,2023-2024,Cash,1030
+392,07/11/2023,100,Other,Daily run,Other,Cash,2023-2024,Petrol Jaipur RTE bill,
+393,07/11/2023,100,Other,Daily run,Other,Cash,2023-2024,Speed post RTE Resubmit,
+394,07/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+395,08/11/2023,7000,Salary,Salary,Salary,Cash,2023-2024,Cash salary,1031
+396,08/11/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Cash,1028
+397,08/11/2023,20000,Salary,Salary,Salary,Cash,2023-2024,Cash,1023
+398,08/11/2023,1920,Salary,Salary,Salary,Cash,2023-2024,Cash - Emergency driver,1014
+399,09/11/2023,2000,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+400,09/11/2023,8500,Salary,Salary,Salary,Cash,2023-2024,cash,1028
+401,09/11/2023,3000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1025
+402,09/11/2023,2500,Salary,Salary,Salary,Cash,2023-2024,Cash,1005
+403,09/11/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1003
+404,09/11/2023,5500,Other,Event Celebration,Other,Cash,2023-2024,Staff sweets on Diwali,
+405,09/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+406,10/11/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1026
+407,11/11/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1025
+408,11/11/2023,2000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1030
+409,17/11/2023,100,Other,Daily run,Other,Cash,2023-2024,Staff first aid,
+410,17/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+411,17/11/2023,18000,Salary,Salary,Salary,Cash,2023-2024,Cash,1013
+412,18/11/2023,600,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Bus puncture,
+413,18/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+414,18/11/2023,14000,Salary,Salary,Salary,Cash,2023-2024,Cash,1032
+415,20/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+416,20/11/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1005
+417,20/11/2023,14000,Salary,Salary,Salary,Cash,2023-2024,cash,1027
+418,21/11/2023,2100,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,bus repair Pokar ji cross change,
+419,21/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,tea,
+420,22/11/2023,400,Other,Stationary,Stationary,Cash,2023-2024,Printer repair,
+421,22/11/2023,80,Other,Stationary,Stationary,Cash,2023-2024,cellotape,
+422,22/11/2023,200,Other,Stationary,Stationary,Cash,2023-2024,Chalk,
+423,22/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+424,23/11/2023,10000,Salary,Salary,Salary,Cash,2023-2024,Salary,1003
+425,23/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+426,27/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+427,28/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+428,28/11/2023,600,Salary,Salary,Salary,Cash,2023-2024,Cash,1030
+429,29/11/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1025
+430,29/11/2023,250,Other,Stationary,Stationary,Cash,2023-2024,Cash Rim Paper,
+431,29/11/2023,150,Transport,Transport Maintenance,Other,Cash,2023-2024,Cash air cleaning buses,
+432,29/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+433,29/11/2023,50,Other,Daily run,Other,Cash,2023-2024,Petrol bike,
+434,30/11/2023,600,Salary,Salary,Salary,Cash,2023-2024,Cash,1023
+435,30/11/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+436,30/11/2023,15000,Salary,Salary,Salary,Cash,2023-2024,Cash,1001
+437,30/11/2023,5000,Salary,Salary,Salary,Cash,2023-2024,,1018
+438,30/11/2023,4000,Salary,Salary,Salary,Cash,2023-2024,,1025
+439,01/12/2023,310,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,"Radiator, pin etc",
+440,01/12/2023,100,Other,Daily run,Other,Cash,2023-2024,Petrol,
+441,01/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+442,02/12/2023,3500,Salary,Salary,Salary,Cash,2023-2024,Cash,1029
+443,02/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+444,04/12/2023,5000,Salary,Salary,Salary,Cash,2023-2024,,1005
+445,04/12/2023,1000,Salary,Salary,Salary,Cash,2023-2024,,1030
+446,04/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+447,05/12/2023,450,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,driver gate repair,
+448,05/12/2023,2000,Salary,Salary,Salary,Cash,2023-2024,,1029
+449,05/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+450,06/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+451,07/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+452,08/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+453,09/12/2023,9500,Salary,Salary,Salary,Cash,2023-2024,,1031
+454,11/12/2023,6000,Salary,Salary,Salary,Cash,2023-2024,Cash,1023
+455,11/12/2023,500,Salary,Salary,Salary,Cash,2023-2024,cash,1013
+456,11/12/2023,2100,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+457,11/12/2023,1200,Salary,Salary,Salary,Cash,2023-2024,cash,1030
+458,11/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+459,11/12/2023,300,Other,Stationary,Stationary,Cash,2023-2024,Rim paper,
+460,11/12/2023,1000,Salary,Salary,Salary,Cash,2023-2024,cash,1028
+461,12/12/2023,5000,Salary,Salary,Salary,Cash,2023-2024,cash,1006
+462,12/12/2023,3400,Salary,Salary,Salary,Cash,2023-2024,cash,1018
+463,12/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+464,12/12/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1026
+465,12/12/2023,3000,Salary,Salary,Salary,Cash,2023-2024,cash,1030
+466,13/12/2023,7000,Salary,Salary,Salary,Cash,2023-2024,cash/phone pay,1023
+467,13/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+468,13/12/2023,10000,Other,Daily run,Toilet cleaning,Cash,2023-2024,"Shyam Chemical, cleanings. Bill no 1251,382,2000",
+469,14/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+470,15/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+471,15/12/2023,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1001
+472,18/12/2023,10000,Salary,Salary,Salary,Cash,2023-2024,cash,1005
+473,18/12/2023,7000,Salary,Salary,Salary,Cash,2023-2024,,1023
+474,18/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+475,19/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+476,19/12/2023,200,Other,Daily run,Other,Cash,2023-2024,Broom,
+477,19/12/2023,500,Other,Stationary,Stationary,Cash,2023-2024,Rim paper,
+478,20/12/2023,500,Other,Stationary,Stationary,Cash,2023-2024,Printing papers,
+479,20/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+480,21/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+481,22/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+482,23/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+483,23/12/2023,450,Other,Daily run,Other,Cash,2023-2024,Printer repair,
+484,23/12/2023,390,Other,Event Celebration,Other,Cash,2023-2024,x-mass dress,
+485,24/12/2023,30000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+486,25/12/2023,5000,Salary,Salary,Salary,Cash,2023-2024,,1031
+487,25/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+488,26/12/2023,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+489,26/12/2023,145000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+490,05/01/2024,10000,Salary,Salary,Salary,Cash,2023-2024,,1025
+491,05/01/2024,5000,Salary,Salary,Salary,Cash,2023-2024,,1029
+492,10/01/2024,3600,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1018
+493,10/01/2024,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+494,11/01/2024,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+495,15/01/2024,2400,Salary,Salary,Salary,Cash,2023-2024,,1029
+496,15/01/2024,2000,Salary,Salary,Salary,Cash,2023-2024,,1030
+497,15/01/2024,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+498,16/01/2024,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+499,16/01/2024,750,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,Bus Repair,
+500,16/01/2024,1000,Salary,Salary,Salary,Cash,2023-2024,,1032
+501,16/01/2024,3000,Salary,Salary,Salary,Cash,2023-2024,,1030
+502,16/01/2024,10000,Salary,Salary,Salary,Cash,2023-2024,,1005
+503,17/01/2024,600,Other,Stationary,Stationary,Cash,2023-2024,Rim paper,
+504,17/01/2024,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+505,18/01/2024,5000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1028
+506,18/01/2024,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+507,19/01/2024,3000,Salary,Salary,Salary,Cash,2023-2024,cash,1030
+508,19/01/2024,50,Other,Daily run,Snacks,Cash,2023-2024,Tea,
+509,19/01/2024,4000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1025
+510,19/01/2024,4000,Salary,Salary,Salary,Cash,2023-2024,cash,1006
+511,20/01/2024,70,Other,Daily run,Other,Cash,2023-2024,Petrol Bike,
+512,20/01/2024,150,Other,Bills,Phone,Cash,2023-2024,Sim Riplacement,
+513,23/01/2024,8098,Other,Bills,Electricity,Cash,2023-2024,Electricity bill,
+514,23/01/2024,2800,Salary,Salary,Salary,Cash,2023-2024,Cash,1018
+515,25/01/2024,500,Salary,Salary,Salary,Cash,2023-2024,cash,1030
+516,27/01/2024,5000,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+517,28/01/2024,5000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1031
+518,31/01/2024,5000,Salary,Salary,Salary,Cash,2023-2024,cash,1003
+519,31/01/2024,500,Other,Daily run,Snacks,Cash,2023-2024,Tea 1o days,
+520,29/01/2024,800,Other,Event Celebration,Republic Day,Cash,2023-2024,Sweets 26th january,
+521,01/02/2024,10000,Salary,Salary,Salary,Cash,2023-2024,Ashok Kumawat phone pay,1023
+522,01/02/2024,3000,Salary,Salary,Salary,Cash,2023-2024,cash,1031
+523,01/02/2024,1500,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+524,02/02/2024,5000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay,1023
+525,03/02/2024,3000,Salary,Salary,Salary,Cash,2023-2024,cash,1030
+526,03/02/2024,500,Salary,Salary,Salary,Cash,2023-2024,cash,1023
+527,05/02/2024,400,Other,Daily run,Stationary,Cash,2023-2024,Rim paper,
+528,08/02/2024,1720,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,bus putta,
+529,08/02/2024,70,Other,Daily run,Snacks,Cash,2023-2024,adarak diposable cups,
+530,09/02/2024,14000,Salary,Salary,Salary,Cash,2023-2024,Phone Pay and cash,1025
+531,09/02/2024,10000,Salary,Salary,Salary,Cash,2023-2024,phone pay,1023
+532,09/02/2024,5000,Salary,Salary,Salary,Cash,2023-2024,phone pay,1006
+533,09/02/2024,2400,Transport,Transport Maintenance,Bus1 - 4903,Cash,2023-2024,Bus Self Repair,
+534,09/02/2024,850,Other,Daily run,Snacks,Cash,2023-2024,tea 17 days 20 jan to 9 feb,
+535,09/02/2024,100,Other,Daily run,Snacks,Cash,2023-2024,Milk packate,
+536,10/02/2024,20000,Salary,Salary,Salary,Cash,2023-2024,cash,1005
+537,10/02/2024,2500,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+538,10/02/2024,500,Salary,Salary,Salary,Cash,2023-2024,cash,1030
+539,10/02/2024,5000,Salary,Salary,Salary,Cash,2023-2024,phone pay,1028
+540,12/02/2024,100,Transport,Transport Maintenance,Bus2 - 7407,Cash,2023-2024,break oil,
+541,13/02/2024,6000,Salary,Salary,Salary,Cash,2023-2024,cash,1003
+542,14/02/2024,350,Transport,Transport Maintenance,Bus3 - 0597,Cash,2023-2024,Air Cleaning and bus puncture,
+543,14/02/2024,500,Other,Daily run,Stationary,Cash,2023-2024,Rim paper,
+544,14/02/2024,250,Other,Daily run,Stationary,Cash,2023-2024,,
+545,15/02/2024,100,Other,Daily run,Other,Cash,2023-2024,Petrol Bike,
+546,16/02/2024,5000,Salary,Salary,Salary,Cash,2023-2024,Cash,1029
+547,19/02/2024,300,Salary,Salary,Salary,Cash,2023-2024,Cash,1018
+548,20/02/2024,2000,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+549,21/02/2024,10000,Salary,Salary,Salary,Cash,2023-2024,Phone pay,1023
+550,22/02/2024,5000,Salary,Salary,Salary,Cash,2023-2024,cash,1031
+551,23/02/2024,25000,Salary,Salary,Salary,Cash,2023-2024,cash ?,1019
+552,27/02/2024,1000,Salary,Salary,Salary,Cash,2023-2024,cash,1030
+553,27/02/2024,20000,Salary,Salary,Salary,Cash,2023-2024,cash,1013
+554,01/03/2024,4900,Salary,Salary,Salary,Cash,2023-2024,phone pay,1018
+555,04/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1032
+556,04/03/2024,4000,Salary,Salary,Salary,Cash,2023-2024,phone pay,1006
+557,04/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,Ashok Kumawat phone pay,1023
+558,04/03/2024,1500,Other,Daily run,Snacks,Cash,2023-2024,Tea 10th Feb to 05 March,
+559,04/03/2024,5000,Other,Daily run,Other,Cash,2023-2024,Paathsala app,
+560,04/03/2024,6500,Other,Daily run,Other,Cash,2023-2024,School Bell,
+561,05/03/2024,1000,Other,Stationary,Stationary,Cash,2023-2024,Annual Exam Notebooks and stationary,
+562,05/03/2024,50,Other,Daily run,Other,Cash,2023-2024,Petrol bike Hinginia,
+563,05/03/2024,7000,Salary,Salary,Salary,Cash,2023-2024,Cash,1032
+564,05/03/2024,500,Salary,Salary,Salary,Cash,2023-2024,Cash,1030
+565,06/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,cash,1013
+566,06/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,Cash,1031
+567,09/03/2024,50,Other,Daily run,Other,Cash,2023-2024,petrol,
+568,09/03/2024,2230,Other,Daily run,Toilet cleaning,Cash,2023-2024,Toilet cleaning,
+569,10/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,cash,1005
+570,10/03/2024,2500,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+571,11/03/2024,14000,Salary,Salary,Salary,Cash,2023-2024,phone pay,1025
+572,12/03/2024,250,Other,Stationary,Stationary,Cash,2023-2024,Rim paper,
+573,12/03/2024,250,Other,Stationary,Stationary,Cash,2023-2024,Mark List,
+574,12/03/2024,100,Other,Daily run,Other,Cash,2023-2024,Petrol,
+575,13/03/2024,7000,Salary,Salary,Salary,Cash,2023-2024,Cash,1013
+576,14/03/2024,800,Other,Stationary,Stationary,Cash,2023-2024,"Ink, stationary",
+577,14/03/2024,50,Other,Daily run,Other,Cash,2023-2024,Petrol,
+578,14/03/2024,500,Other,Stationary,Stationary,Cash,2023-2024,Exam mark list,
+579,15/03/2024,2588,Other,Bills,Electricity,Cash,2023-2024,Electricity bill,
+580,15/03/2024,500,Other,Daily run,Snacks,Cash,2023-2024,Staff tea and refreshment,
+581,16/03/2024,7000,Salary,Salary,Salary,Cash,2023-2024,cash,1013
+582,16/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,cash,1029
+583,16/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,cash,1001
+584,16/03/2024,40000,Salary,Salary,Salary,Cash,2023-2024,Cash,1004
+585,16/03/2024,25000,Salary,Salary,Salary,Cash,2023-2024,cash,1019
+586,17/03/2024,200,Other,Daily run,Other,Cash,2023-2024,Kanya daan,
+587,17/03/2024,200,Other,Daily run,Toilet cleaning,Cash,2023-2024,broom,
+588,18/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,phone pay,1005
+589,18/03/2024,500,Other,Daily run,Other,Cash,2023-2024,New session toffies and prize for kids,
+590,21/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,phone pay,1030
+591,27/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,phone pay,1006
+593,01/09/2023,-10,Other,Daily run,Other,Cash,2023-2024,Monthly Statement correction on 16Feb25,
+594,01/10/2023,12,Other,Daily run,Other,Cash,2023-2024,Monthly Statement correction on 16Feb25,
+595,01/11/2023,80,Other,Daily run,Other,Cash,2023-2024,Monthly Statement correction on 16Feb25,
+596,01/01/2024,100,Other,Daily run,Other,Cash,2023-2024,Monthly Statement correction on 16Feb25,
+597,01/02/2024,1614,Other,Daily run,Other,Cash,2023-2024,Monthly Statement correction on 16Feb25,
+598,28/03/2024,10000,Salary,Salary,Salary,Cash,2023-2024,,1032
+599,30/03/2024,300,Other,Transport Maintenance,Other,Cash,2023-2024,Air poluation,

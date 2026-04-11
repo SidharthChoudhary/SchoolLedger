@@ -1,0 +1,586 @@
+﻿Emp_No,Voucher_Number,Date,Amount,Major_Head,Head,Sub_Head,Payment_Type,Session,Details
+,1,01/04/2025,750,Other,Event Celebration,Other,Cash,2025-2026,PTM decoration
+1017,2,01/04/2025,500,Salary,Salary,Lal Singh,Cash,2025-2026,Cash
+,3,02/04/2025,2300,Other,Daily run,Other,Cash,2025-2026,Shyam Chemicals old due bill 1387
+1017,4,04/04/2025,200,Salary,Salary,Lal Singh,Cash,2025-2026,Cash
+1034,5,05/04/2025,7000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash
+1017,6,05/04/2025,500,Salary,Salary,Lal Singh,Cash,2025-2026,Cash
+,7,07/04/2025,300,Transport,Transport Maintenance,Bus3 - 0597,Cash,2025-2026,Bus Puncture
+1017,8,08/04/2025,300,Salary,Salary,Lal Singh,Cash,2025-2026,Cahs
+1028,9,09/04/2025,1000,Salary,Salary,Nainita Soni,Cash,2025-2026,Cash salary
+,10,11/04/2025,150,Other,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Air Cleaning
+,11,12/04/2025,2100,Other,Daily run,Other,Cash,2025-2026,Toilet Cleaning shyam cleaning bill 1686
+1017,12,12/04/2025,1000,Salary,Salary,Lal Singh,Bank Transfer,2025-2026,Phone Pay
+1029,13,15/04/2025,3500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash salary
+,14,15/04/2025,700,Other,Daily run,Other,Cash,2025-2026,Wages ground cleaning
+,15,15/04/2025,5000,Salary,Salary,Anita Bai,Cash,2025-2026,Cash
+1029,16,16/04/2025,2000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+1036,17,16/04/2025,10000,Salary,Salary,Dharmendra Ashiwal,Cash,2025-2026,Cash
+1001,18,16/04/2025,1000,Salary,Salary,Seema Chaudhary,Cash,2025-2026,Cash
+1017,19,17/04/2025,5000,Salary,Salary,Lal Singh,Cash,2025-2026,Cash
+,20,18/04/2025,320,Other,Daily run,Snacks,Cash,2025-2026,Staff Lunch
+,21,18/04/2025,50,Other,Daily run,Other,Cash,2025-2026,Petrol Bike
+,22,18/04/2025,400,Other,Stationary,Stationary,Cash,2025-2026,Chalk
+,23,19/04/2025,2000,Salary,Salary,Anita Bai,Cash,2025-2026,Cash salary
+1036,24,21/04/2025,10000,Salary,Salary,Dharmendra Ashiwal,Bank Transfer,2025-2026,Phone Pay
+1004,25,22/04/2025,25000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+1029,26,23/04/2025,2000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+1029,27,23/04/2025,1150,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,Phone Pay
+,28,23/04/2025,200,Other,Daily run,Other,Cash,2025-2026,Jhadu
+1031,29,24/04/2025,9000,Salary,Salary,Charan Singh,Cash,2025-2026,Cash
+1017,30,25/04/2025,500,Salary,Salary,Lal Singh,Cash,2025-2026,Cash salary
+,31,25/04/2025,200,Other,Daily run,Other,Cash,2025-2026,Kanya Daan Babulal Ji Tibariyan
+,32,26/04/2025,5000,Salary,Salary,Anita Bai,Cash,2025-2026,Cash
+,33,28/04/2025,550,Other,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Gear oil and Break oil
+,34,28/04/2025,500,Other,Daily run,Other,Cash,2025-2026,Water pipe
+1041,35,29/04/2025,5075,Salary,Salary,Shivraj Singh,Cash,2025-2026,Cash salary
+1029,36,30/04/2025,1000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash salary
+1037,37,30/04/2025,3000,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,Phone Pay
+1034,38,30/04/2025,5000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash salary
+1033,39,30/04/2025,1000,Salary,Salary,Deepa Yadav,Cash,2025-2026,Cash salary
+,40,30/04/2025,2000,Other,Building Maintenance,Other,Cash,2025-2026,Cash Ground Cleaning wages
+,41,30/04/2025,500,Other,Advertising,Other,Cash,2025-2026,Route Expense April
+1037,42,09/04/2025,500,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash salary
+,43,24/05/2025,190000,Transport,Diesel,Other,Bank Transfer,2025-2026,Vinayak PP
+,44,22/05/2025,100,Other,Advertising,Other,Cash,2025-2026,Route Expense
+1004,45,23/05/2025,25000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,cash
+1037,46,20/05/2025,4000,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,Phone Pay
+,47,21/05/2025,100,Other,Daily run,Other,Cash,2025-2026,RTE bill post
+,48,17/05/2025,200,Other,Stationary,Stationary,Cash,2025-2026,Register & pen
+,49,17/05/2025,350,Other,Building Maintenance,Other,Cash,2025-2026,cement bag
+,50,17/05/2025,100,Other,Advertising,Other,Cash,2025-2026,Route Expense
+,51,19/05/2025,100,Other,Advertising,Other,Cash,2025-2026,Route Expense
+1037,52,19/05/2025,1000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,cash
+,53,15/05/2025,100,Other,Advertising,Other,Cash,2025-2026,Route Expense
+,54,16/05/2025,100,Other,Advertising,Other,Cash,2025-2026,Route Expense
+1037,55,13/05/2025,2500,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,cash
+,56,14/05/2025,100,Other,Advertising,Other,Cash,2025-2026,Route Expense
+,57,10/05/2025,450,Other,Daily run,Snacks,Cash,2025-2026,Staff party last day
+,58,10/05/2025,3250,Other,Daily run,Snacks,Cash,2025-2026,Tea bill 1st March to 10th May
+1033,59,12/05/2025,10000,Salary,Salary,Deepa Yadav,Cash,2025-2026,Cash
+1025,60,12/05/2025,10000,Salary,Salary,Madhu Sharma,Cash,2025-2026,cash
+1006,61,12/05/2025,10000,Salary,Salary,Suman Parikh,Cash,2025-2026,cash
+1028,62,12/05/2025,10000,Salary,Salary,Nainita Soni,Cash,2025-2026,cash
+1034,63,12/05/2025,15000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,cash
+,64,08/05/2025,280,Other,Daily run,Snacks,Cash,2025-2026,Staff Lunch
+1036,65,09/05/2025,300,Salary,Salary,Dharmendra Ashiwal,Cash,2025-2026,cash
+,66,06/05/2025,500,Other,Stationary,Other,Cash,2025-2026,Ink printer
+,67,07/05/2025,3800,Other,Advertising,Other,Cash,2025-2026,cash diesel swift Jji sir car
+1037,68,03/05/2025,18000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Salary against fees
+1037,69,03/05/2025,11955,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,Salary against diesel pp
+,70,02/05/2025,500,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,bus repair hose pipe
+,71,02/05/2025,400,Other,Building Maintenance,Other,Cash,2025-2026,Wages ground cleaning old due
+,72,01/05/2025,550,Other,Advertising,Parents visit,Cash,2025-2026,tyre tube swift car
+,73,18/06/2025,8500,Other,Advertising,Pemphlets,Cash,2025-2026,pumphlet printing
+,74,18/06/2025,1500,Other,Advertising,Pemphlets,Cash,2025-2026,pumphlet distribution paper
+,75,01/06/2005,0,Other,Daily run,Other,Cash,2025-2026,No Transaction for the day 01 Jun to 17 Jun
+,76,18/06/2025,1400,Other,Daily run,Building,Cash,2025-2026,Wages ground cleaning
+,77,19/06/2025,0,Other,Daily run,Other,Cash,2025-2026,No Transaction for the day
+,78,20/06/2025,100,Other,Daily run,Snacks,Cash,2025-2026,Cold Drinks
+,79,21/06/2025,270,Other,Building Maintenance,Other,Cash,2025-2026,Urea for grass
+,80,21/06/2025,100,Other,Daily run,Snacks,Cash,2025-2026,Cold Drinks
+,81,23/06/2025,400,Other,Daily run,Other,Cash,2025-2026,Cash to guest Driver in absense of main driver
+,82,24/06/2025,80,Other,Advertising,Other,Cash,2025-2026,Car puncture
+,83,24/06/2025,410,Other,Event Celebration,Other,Cash,2025-2026,Balaji Pooja
+,84,25/06/2025,100,Other,Daily run,Snacks,Cash,2025-2026,Cold Drinks
+,85,26/06/2025,2000,Other,Building Maintenance,Other,Cash,2025-2026,Electricity repair
+,86,27/06/2025,100,Other,Daily run,Other,Cash,2025-2026,Petrol Bike
+,87,27/06/2025,700,Other,Event Celebration,Snacks,Cash,2025-2026,Lunch for rocket workshop team
+1029,88,28/06/2025,500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+,89,28/06/2025,600,Other,Event Celebration,Other,Cash,2025-2026,Lunch for rocket workshop team
+,90,28/06/2025,300,Other,Event Celebration,Other,Cash,2025-2026,Phool mala garlends
+,91,29/06/2025,0,Other,Daily run,Other,Cash,2025-2026,None
+1029,92,30/06/2025,6000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+1017,93,30/06/2025,5000,Salary,Salary,Lal Singh,Cash,2025-2026,Cash
+,94,30/06/2025,4000,Other,Transport Maintenance,Bus1 - 4903,Bank Transfer,2025-2026,Phone pay bus suspension system repair bus putta
+,95,30/06/2025,600,Other,Daily run,Snacks,Cash,2025-2026,Tea bill until June 25.
+,96,30/06/2025,4546,Other,Bills,Electricity,Cash,2025-2026,Bill
+1004,97,30/06/2025,4000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+,98,18/07/2025,15000,Other,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Cash Pokhar Ji Bus Repair
+,99,18/07/2025,2630,Other,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Bus kit cylinder spring
+,100,17/07/2025,200,Other,Daily run,Other,Cash,2025-2026,Diesel car srk school Jobner
+,101,17/07/2025,150,Other,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Fan conditioner
+1037,102,17/07/2025,4000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash
+,103,21/07/2025,1400,Transport,Transport Maintenance,Bus2 - 7407,Cash,2025-2026,Bolt bus patta repair
+1029,104,21/07/2025,1000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,cash
+,105,22/07/2025,1200,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,bus center bolt repair
+1034,106,23/07/2025,1000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,cash
+,107,24/07/2025,200,Other,Transport Maintenance,Other,Cash,2025-2026,Bus air cleaning all buses
+,108,29/07/2025,15000,Other,Daily run,Other,Cash,2025-2026,Office chairs 2
+1029,109,30/07/2025,2000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,cash
+1004,110,30/07/2025,20000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,cash
+1037,111,16/07/2025,600,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash
+,112,16/07/2025,50,Other,Transport Maintenance,Other,Cash,2025-2026,bolt
+1037,113,01/07/2025,3000,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,phone pay
+,114,01/07/2025,3000,Other,Event Celebration,Other,Cash,2025-2026,Drone camara Rocket workshop
+1033,115,02/07/2025,2000,Salary,Salary,Deepa Yadav,Cash,2025-2026,cash
+,116,03/07/2025,500,Salary,Salary,Anita Bai,Cash,2025-2026,cash
+,117,04/07/2025,2100,Other,Transport Maintenance,Other,Cash,2025-2026,Bus cleaning all buses
+1017,118,07/07/2025,5500,Salary,Salary,Lal Singh,Cash,2025-2026,Cash
+,119,07/07/2025,1500,Other,Daily run,Other,Cash,2025-2026,Guest leaner (in place of Anita )
+1034,120,07/07/2025,1000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,cash
+1034,121,08/07/2025,5000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,phone pau
+,122,08/07/2025,70,Other,Daily run,Other,Cash,2025-2026,Car puncture
+,123,08/07/2025,500,Other,Daily run,Other,Cash,2025-2026,Plants plnatation
+1025,124,09/07/2025,5000,Salary,Salary,Madhu Sharma,Cash,2025-2026,cash
+1029,125,09/07/2025,3500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,cahs
+1033,126,09/07/2025,10000,Salary,Salary,Deepa Yadav,Cash,2025-2026,cash
+,127,09/07/2025,5000,Transport,Transport Maintenance,Other,Cash,2025-2026,Cash Pokhar Ji Bus Repair
+1001,128,10/07/2025,1000,Salary,Salary,Seema Chaudhary,Cash,2025-2026,Cash
+,129,10/07/2025,160,Other,Daily run,Snacks,Cash,2025-2026,Prashad and tea
+,130,10/07/2025,200,Other,Daily run,Other,Cash,2025-2026,Aggarbatti
+1037,131,11/07/2025,1000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,cash
+,132,12/07/2025,16000,Other,Daily run,Other,Cash,2025-2026,cash old session 22/23 affiliation dues
+1037,133,14/07/2025,1400,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,cash
+1034,134,14/07/2025,1000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,cash
+,135,30/06/2025,478000,Transport,Diesel,Diesel Cash,Cash,2025-2026,Patrol pump due
+1034,136,02/08/2025,9000,Salary,Salary,Sarwan Lal Kumawat,Bank Transfer,2025-2026,phone pay
+1037,137,05/08/2025,1000,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,pp
+,138,06/08/2025,1500,Salary,Salary,Salary,Cash,2025-2026,"black board, lock repair + jhadu"
+,139,08/08/2025,5000,Other,Building Maintenance,Other,Cash,2025-2026,cash
+,140,08/08/2025,3000,Salary,Salary,Anita Bai,Cash,2025-2026,cash
+1029,141,08/08/2025,5000,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,pp
+1042,142,08/08/2025,5950,Salary,Salary,Rachna Yadav,Bank Transfer,2025-2026,pp
+1039,143,08/08/2025,4200,Salary,Salary,Komal Sharma,Bank Transfer,2025-2026,pp
+1025,144,09/08/2025,5000,Salary,Salary,Madhu Sharma,Bank Transfer,2025-2026,pp
+1034,145,09/08/2025,5000,Salary,Salary,Sarwan Lal Kumawat,Bank Transfer,2025-2026,pp
+1001,146,11/08/2025,2000,Salary,Salary,Seema Chaudhary,Cash,2025-2026,cash
+1033,147,11/08/2025,5000,Salary,Salary,Deepa Yadav,Cash,2025-2026,cash
+1005,148,11/08/2025,10000,Salary,Salary,Prahlad Sepat,Cash,2025-2026,cash
+,149,12/08/2025,525,Salary,Salary,Salary,Cash,2025-2026,cash for prizes
+,150,12/08/2025,1500,Other,Daily run,Other,Cash,2025-2026,cash
+,151,12/08/2025,200,Salary,Salary,Salary,Cash,2025-2026,fan capacitor
+1001,152,12/08/2025,3000,Salary,Salary,Seema Chaudhary,Cash,2025-2026,cash
+1005,153,12/08/2025,4100,Salary,Salary,Prahlad Sepat,Cash,2025-2026,cash
+,154,13/08/2025,250,Other,Daily run,Other,Cash,2025-2026,chalk
+,155,14/08/2025,500,Other,Daily run,Other,Cash,2025-2026,Petrol SRK
+1029,156,15/08/2025,1000,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,pp
+1044,157,15/08/2025,2000,Salary,Salary,Neetu Yadav,Bank Transfer,2025-2026,pp
+,158,15/08/2025,600,Other,Event Celebration,Independence Day,Cash,2025-2026,15 aug sweets
+,159,19/08/2025,350,Other,Daily run,Stationary,Cash,2025-2026,printer ink stationary
+,160,20/08/2025,1500,Salary,Salary,Anita Bai,Cash,2025-2026,cash
+,161,21/08/2025,200,Other,Daily run,Other,Cash,2025-2026,Diesel car cash
+,162,22/08/2025,250,Other,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Tyre change bus
+1029,163,22/08/2025,4000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,cash
+,164,22/08/2025,500,Other,Daily run,Other,Cash,2025-2026,Petrol SRK
+1043,165,22/08/2025,10000,Salary,Salary,Rahul Ghasal,Bank Transfer,2025-2026,pp
+,166,23/08/2025,500,Other,Stationary,Other,Cash,2025-2026,Ink refil
+,167,23/08/2025,40,Other,Daily run,Other,Cash,2025-2026,Patrol bike
+,168,23/08/2025,230,Other,Stationary,Stationary,Cash,2025-2026,rim paper
+,169,25/08/2025,500,Other,Stationary,Stationary,Cash,2025-2026,attendence register
+1043,170,29/08/2025,5000,Salary,Salary,Rahul Ghasal,Cash,2025-2026,cash
+,171,30/08/2025,19200,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,bus typre mrf
+,172,30/08/2025,4675,Other,Advertising,Other,Cash,2025-2026,paper advert teachers
+1004,173,30/08/2025,15000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,cash
+,174,30/08/2025,13000,Other,Affiliation,Other,Cash,2025-2026,"old due affiliation 26 student 9,10. 23-24."
+1037,175,26/08/2025,1400,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,cash
+1004,176,01/09/2025,20000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+1033,177,01/09/2025,5000,Salary,Salary,Deepa Yadav,Cash,2025-2026,cash
+1036,178,01/09/2025,15000,Salary,Salary,Dharmendra Ashiwal,Cash,2025-2026,cash
+1034,179,04/09/2025,10000,Salary,Salary,Sarwan Lal Kumawat,Bank Transfer,2025-2026,PhonePay
+1037,180,04/09/2025,2500,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,PhonePay
+,181,04/09/2025,2000,Other,Daily run,Snacks,Cash,2025-2026,Tea bill July Aug
+,182,04/09/2025,750,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Bus repair
+,183,05/09/2025,5000,Salary,Salary,Jawahar Sir,Bank Transfer,2025-2026,PhonePay
+,184,06/09/2025,500,Other,Daily run,Other,Cash,2025-2026,Tejaji Bhandara
+,185,06/09/2025,200,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Bus puncture
+1043,186,06/09/2025,3000,Salary,Salary,Rahul Ghasal,Bank Transfer,2025-2026,PhonePay
+,187,06/09/2025,2841,Other,Bills,Electricity,Cash,2025-2026,Electricity bill
+,188,08/09/2025,1700,Other,Daily run,Other,Cash,2025-2026,Guest Driver Lala Ji Kudi
+,189,08/09/2025,300,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Bus Puncture
+1025,190,08/09/2025,10000,Salary,Salary,Madhu Sharma,Bank Transfer,2025-2026,PhonePay
+,191,08/09/2025,200,Other,Daily run,Snacks,Cash,2025-2026,Tea 1 - 7 th sep
+,192,09/09/2025,400,Other,Daily run,Other,Cash,2025-2026,Project Cable
+,193,09/09/2025,11000,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Pokhar Ji Bur service
+1006,194,09/09/2025,10000,Salary,Salary,Suman Parikh,Bank Transfer,2025-2026,PhonePay
+,195,10/09/2025,320,Other,Stationary,Stationary,Cash,2025-2026,rim paper
+,196,11/09/2025,3000,Salary,Salary,Anita Bai,Cash,2025-2026,Cash
+,197,11/09/2025,250,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Bus maintenance - bolt tight
+,198,12/09/2025,200,Other,Daily run,Snacks,Cash,2025-2026,Tea 9-12 sep
+,199,13/09/2025,200,Other,Daily run,Other,Cash,2025-2026,Jhadu
+,200,13/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1029,201,13/09/2025,500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,cash
+,202,15/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,203,15/09/2025,2300,Other,Daily run,Toilet cleaning,Cash,2025-2026,Shyam chemicals cleaning
+,204,16/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,T
+1046,205,17/09/2025,7200,Salary,Salary,Sourabh Sharma,Bank Transfer,2025-2026,PhonePay
+1033,206,17/09/2025,5000,Salary,Salary,Deepa Yadav,Bank Transfer,2025-2026,PhonePay
+,207,17/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,T
+,208,18/09/2025,7000,Transport,Transport Maintenance,Bus3 - 0597,Cash,2025-2026,Tyre remount one pair
+,209,18/09/2025,300,Transport,Transport Maintenance,Bus3 - 0597,Cash,2025-2026,Tyre change bus
+,210,18/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,t
+1029,211,19/09/2025,2000,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,PhonePay
+1037,212,19/09/2025,1000,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,PhonePay
+,213,20/09/2025,100,Other,Daily run,Snacks,Cash,2025-2026,tea
+1004,214,24/09/2025,10000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,cash
+,215,25/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1004,216,25/09/2025,10000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,
+,217,25/09/2025,7000,Transport,Transport Maintenance,Bus3 - 0597,Cash,2025-2026,tyre remote
+,218,26/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,219,27/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,220,29/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,221,29/09/2025,40,Transport,Transport Maintenance,Bus3 - 0597,Cash,2025-2026,Screws
+1029,222,29/09/2025,2000,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,PhonePay
+,223,30/09/2025,120,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Bolt
+,224,30/09/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1034,225,30/09/2025,10000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,cash
+,226,05/09/2025,1500,Other,Daily run,Other,Cash,2025-2026,Taru naga ground cuttinb
+1042,227,01/10/2025,10000,Salary,Salary,Rachna Yadav,Bank Transfer,2025-2026,PhonePay
+1029,228,01/10/2025,5000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+1043,229,01/10/2025,5000,Salary,Salary,Rahul Ghasal,Cash,2025-2026,Cash
+,230,07/10/2025,2220,Other,Daily run,Other,Cash,2025-2026,Jio Filber
+,231,04/10/2025,270,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Bus Pollution
+,232,04/10/2025,800,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,"Bus grease , tyre change,filter cleaning"
+,233,04/10/2025,40,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1029,234,06/10/2025,500,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,PhonePay
+1037,235,06/10/2025,500,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,PhonePay
+1039,236,06/10/2025,5000,Salary,Salary,Komal Sharma,Bank Transfer,2025-2026,PhonePay
+1043,237,06/10/2025,10000,Salary,Salary,Rahul Ghasal,Bank Transfer,2025-2026,PhonePay
+,238,06/10/2025,40,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,239,03/10/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,240,03/10/2025,1000,Salary,Salary,Jawahar Sir,Cash,2025-2026,Cash
+,241,03/10/2025,354,Other,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Repair electric belt
+1045,242,08/10/2025,500,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash
+,243,08/10/2025,40,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,244,09/10/2025,40,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,245,10/10/2025,30,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,246,10/10/2025,700,Other,Daily run,Other,Cash,2025-2026,Grond cleaning
+,247,10/10/2025,1800,Transport,Transport Maintenance,Bus3 - 0597,Cash,2025-2026,bus washing
+1025,248,10/10/2025,13000,Salary,Salary,Madhu Sharma,Cash,2025-2026,cash
+,249,10/10/2025,3000,Salary,Salary,Anita Bai,Cash,2025-2026,cash
+,250,10/10/2025,1250,Salary,Salary,Munsi Driver,Cash,2025-2026,Cash(august)
+,251,11/10/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,252,11/10/2025,200,Other,Daily run,Snacks,Cash,2025-2026,Staff cachori
+,253,14/10/2025,3500,Salary,Salary,Anita Bai,Cash,2025-2026,cash
+,254,14/10/2025,325,Other,Stationary,Stationary,Cash,2025-2026,Rim paper can ash book
+1037,255,14/10/2025,10000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash
+1005,256,14/10/2025,5000,Salary,Salary,Prahlad Sepat,Cash,2025-2026,Cash
+,257,14/10/2025,500,Salary,Salary,Jawahar Sir,Cash,2025-2026,cash
+1034,258,13/10/2025,2000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,cash
+,259,15/10/2025,5100,Other,Event Celebration,Other,Cash,2025-2026,Cash
+,260,20/10/2025,1500,Salary,Salary,Jawahar Sir,Cash,2025-2026,Cash
+1034,261,18/10/2025,5000,Salary,Salary,Sarwan Lal Kumawat,Bank Transfer,2025-2026,PhonePay
+1046,262,18/10/2025,8000,Salary,Salary,Sourabh Sharma,Bank Transfer,2025-2026,PhonePay
+1029,263,17/10/2025,5000,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,PhonePay
+1046,264,17/10/2025,10000,Salary,Salary,Sourabh Sharma,Bank Transfer,2025-2026,PhonePay
+1037,265,21/10/2025,4000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash salary against tour payment pooja
+,266,25/10/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1001,267,29/10/2025,1000,Salary,Salary,Seema Chaudhary,Cash,2025-2026,Cash recharge
+,268,29/10/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,269,29/10/2025,80,Other,Daily run,Other,Cash,2025-2026,Electric cell
+1033,270,29/10/2025,5000,Salary,Salary,Deepa Yadav,Bank Transfer,2025-2026,PhonePay
+,271,28/10/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,272,27/10/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,273,31/10/2025,2500,Salary,Salary,Munsi Driver,Cash,2025-2026,Salary guest faculty
+,274,31/10/2025,200,Other,Daily run,Other,Cash,2025-2026,broom
+,275,31/10/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,276,31/10/2025,5000,Other,Event Celebration,Other,Cash,2025-2026,Tour expense
+1004,277,31/10/2025,40000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+,278,01/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1028,279,01/11/2025,10000,Salary,Salary,Nainita Soni,Cash,2025-2026,Cash ?
+1036,280,03/11/2025,6700,Salary,Salary,Dharmendra Ashiwal,Cash,2025-2026,Cash ?
+,281,03/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,282,03/11/2025,200,Other,Daily run,On Credit,Credit,2025-2026,Kanya daan BR Taker
+,283,03/11/2025,1700,Transport,Transport Maintenance,Other,Cash,2025-2026,Bus cleanup Pokhar Ji
+1037,284,04/11/2025,5000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash
+1034,285,04/11/2025,5000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash
+,286,04/11/2025,200,Other,Stationary,Stationary,Cash,2025-2026,Chalk
+,287,04/11/2025,400,Other,Daily run,Other,Cash,2025-2026,Lunch RTE team
+,288,04/11/2025,70,Other,Building Maintenance,Other,Cash,2025-2026,electric socket
+,289,04/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,290,05/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,291,06/11/2025,500,Other,Daily run,On Credit,Credit,2025-2026,car petrol rte work
+,292,06/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,293,07/11/2025,500,Other,Daily run,On Credit,Credit,2025-2026,car petrol rte work
+,294,07/11/2025,7000,Other,Daily run,On Credit,Credit,2025-2026,donation to govt school Bhojpura
+,295,07/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,296,10/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+1028,297,11/11/2025,10000,Salary,Salary,Nainita Soni,Cash,2025-2026,cash
+,298,11/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,299,12/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,300,13/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,t
+,301,14/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,302,15/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,303,15/11/2025,6000,Other,Daily run,Snacks,Cash,2025-2026,cash
+1046,304,17/11/2025,8000,Salary,Salary,Sourabh Sharma,Cash,2025-2026,cash
+,305,17/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+,306,18/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1037,307,19/11/2025,200,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,cash
+,308,19/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+1029,309,20/11/2025,800,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,cash
+,310,20/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,
+,311,21/11/2025,1000,Transport,Transport Maintenance,Other,Cash,2025-2026,Bus wiring repair wages
+,312,21/11/2025,450,Transport,Transport Maintenance,Other,Cash,2025-2026,wiring for buses
+1045,313,21/11/2025,11000,Salary,Salary,Mahaveer Singh,Cash,2025-2026,cash
+1029,314,21/11/2025,3000,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,PhonePay
+,315,21/11/2025,50,Other,Daily run,Other,Cash,2025-2026,tea
+1045,316,22/11/2025,3700,Salary,Salary,Mahaveer Singh,Cash,2025-2026,cash
+,317,22/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+1034,318,22/11/2025,9200,Salary,Salary,Sarwan Lal Kumawat,Bank Transfer,2025-2026,PhonePay
+1046,319,24/11/2025,5000,Salary,Salary,Sourabh Sharma,Cash,2025-2026,cash
+1033,320,24/11/2025,5000,Salary,Salary,Deepa Yadav,Bank Transfer,2025-2026,PhonePay
+,321,24/11/2025,50,Other,Daily run,Other,Cash,2025-2026,Tea
+1037,322,25/11/2025,300,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,recharge
+1029,323,25/11/2025,2000,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,PhonePay
+1004,324,25/11/2025,25000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,cash
+,325,25/11/2025,50,Other,Daily run,Other,Cash,2025-2026,tea
+1036,326,26/11/2025,10000,Salary,Salary,Dharmendra Ashiwal,Cash,2025-2026,cash
+,327,26/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,t
+,328,27/11/2025,50,Other,Daily run,Snacks,Cash,2025-2026,t
+,329,27/11/2025,2000,Salary,Salary,Anita Bai,Cash,2025-2026,cash
+1048,330,27/11/2025,2000,Salary,Salary,Manisha Choudhary,Cash,2025-2026,cash
+,331,29/11/2025,500,Other,Stationary,Other,Cash,2025-2026,Rim paper
+,332,28/11/2025,9400,Other,Daily run,Toilet cleaning,Cash,2025-2026,Shyam chemicals cleaning
+1046,333,29/11/2025,5000,Salary,Salary,Sourabh Sharma,Bank Transfer,2025-2026,PhonePay
+1006,334,29/11/2025,5000,Salary,Salary,Suman Parikh,Bank Transfer,2025-2026,PhonePay
+1006,335,29/11/2025,10000,Salary,Salary,Suman Parikh,Cash,2025-2026,paid on 22 oct
+,336,29/11/2025,250,Other,Stationary,Other,Cash,2025-2026,ink printer
+,337,29/11/2025,650,Other,Stationary,Other,Cash,2025-2026,Rim paper can ash book
+,338,29/11/2025,200,Other,Stationary,Other,Cash,2025-2026,chalk
+1029,339,29/11/2025,2200,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,cash
+1036,340,12/05/2025,10000,Salary,Salary,Dharmendra Ashiwal,Cash,2025-2026,Cash
+,341,01/10/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1025,342,15/10/2025,2000,Salary,Salary,Madhu Sharma,Cash,2025-2026,Cash
+,343,15/10/2025,150,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,344,30/10/2025,500,Salary,Salary,Jawahar Sir,Cash,2025-2026,Cash
+1045,345,30/10/2025,500,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash
+1029,346,30/10/2025,5500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+,347,30/10/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,348,01/12/2025,200,Other,Daily run,Other,Cash,2025-2026,Kanya daan Bhanwar Ji Khandeliya
+1029,349,02/12/2025,2000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,cash
+,350,02/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+1029,351,03/12/2025,500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,cash
+,352,03/12/2025,1200,Transport,Transport Maintenance,On Credit,Credit,2025-2026,Bus Repair Pokhar Ji all buses
+,353,03/12/2025,1800,Other,Daily run,Other,Cash,2025-2026,Grass spray cleaning
+,354,03/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,355,04/12/2025,650,Other,Stationary,Stationary,Cash,2025-2026,Rim + Stationary
+,356,04/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1006,357,05/12/2025,5000,Salary,Salary,Suman Parikh,Bank Transfer,2025-2026,PhonePay
+,358,05/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,359,06/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1034,360,08/12/2025,5000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash
+,361,08/12/2025,50,Other,Salary,Salary,Cash,2025-2026,Tea
+1039,362,09/12/2025,12000,Salary,Salary,Komal Sharma,Cash,2025-2026,Salary
+,363,09/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1043,364,10/12/2025,10000,Salary,Salary,Rahul Ghasal,Cash,2025-2026,Cash
+,365,10/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+1043,366,11/12/2025,5000,Salary,Salary,Rahul Ghasal,Cash,2025-2026,Cash
+,367,11/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,368,11/12/2025,11500,Other,Affiliation,Other,Cash,2025-2026,"9,10th attachement charges, 24-25. 500 per student, 23 students"
+,369,12/12/2025,300,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,tyre change
+,370,12/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,tea
+1004,371,12/12/2025,15000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,cash
+,372,13/12/2025,500,Other,Stationary,Other,Cash,2025-2026,Printer Ink
+,373,13/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,374,15/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,375,16/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,376,17/12/2025,5000,Other,Daily run,Other,Cash,2025-2026,Car service Swift
+1033,377,17/12/2025,5000,Salary,Salary,Deepa Yadav,Bank Transfer,2025-2026,PhonePay
+,378,17/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1037,379,18/12/2025,1000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,cash
+,380,18/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,381,18/12/2025,7300,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Tyre remote one pair
+1045,382,19/12/2025,800,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash
+,383,19/12/2025,50,Other,Daily run,Other,Cash,2025-2026,Tea
+1034,384,20/12/2025,10000,Salary,Salary,Sarwan Lal Kumawat,Bank Transfer,2025-2026,PhonePay
+,385,20/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,386,22/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,387,23/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,388,24/12/2025,500,Other,Stationary,Other,Cash,2025-2026,Cartridge Repair
+,389,24/12/2025,250,Other,Stationary,Other,Cash,2025-2026,Cartridge refill
+,390,24/12/2025,500,Other,Event Celebration,Other,Cash,2025-2026,X-max celebration
+,391,24/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,392,25/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1047,393,29/12/2025,2000,Salary,Salary,Anita Choudhary,Cash,2025-2026,Cash
+,394,29/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1029,395,30/12/2025,10500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+,396,30/12/2025,7300,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Tyre remote one pair
+,397,30/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1046,398,31/12/2025,18000,Salary,Salary,Sourabh Sharma,Bank Transfer,2025-2026,PhonePay
+,399,31/12/2025,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,400,31/01/2026,2500,Other,Building Maintenance,Other,Cash,2025-2026,wages painter
+1047,401,31/01/2026,1000,Salary,Salary,Anita Choudhary,Cash,2025-2026,Cash
+,402,31/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,403,30/01/2026,200,Other,Daily run,Other,Cash,2025-2026,Car patrol route supervison
+,404,30/01/2026,2000,Other,Building Maintenance,Other,Cash,2025-2026,wages painter
+,405,30/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,406,29/01/2026,2250,Transport,Building Maintenance,Bus1 - 4903,Cash,2025-2026,Bus repair Pokhar ji
+1045,407,29/01/2026,500,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash
+,408,29/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1004,409,29/01/2026,10000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+1042,410,29/01/2026,5000,Salary,Salary,Rachna Yadav,Cash,2025-2026,Cash
+1029,411,27/01/2026,500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+1043,412,27/01/2026,4500,Salary,Salary,Rahul Ghasal,Cash,2025-2026,Cash
+1034,413,27/01/2026,1000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash
+,414,27/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,415,24/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1043,416,21/01/2026,10000,Salary,Salary,Rahul Ghasal,Bank Transfer,2025-2026,PhonePay
+1034,417,21/01/2026,2000,Salary,Salary,Sarwan Lal Kumawat,Bank Transfer,2025-2026,PhonePay
+1037,418,21/01/2026,450,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash
+,419,21/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,420,20/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,421,28/01/2026,6000,Salary,Salary,Anita Bai,Cash,2025-2026,Cash
+1001,422,28/01/2026,900,Salary,Salary,Seema Chaudhary,Cash,2025-2026,Cash
+1034,423,28/01/2026,8000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash
+,424,28/01/2026,460,Other,Stationary,Other,Cash,2025-2026,Rim
+,425,28/01/2026,500,Other,Daily run,Other,Cash,2025-2026,Clearing in placeof Anita Bai
+,426,28/01/2026,200,Other,Daily run,Other,Cash,2025-2026,Broom
+,427,28/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,428,26/01/2026,700,Other,Event Celebration,Republic Day,Cash,2025-2026,Sweeets 26th Jan
+1048,429,26/01/2026,5000,Salary,Salary,Manisha Choudhary,Cash,2025-2026,Cash
+,430,26/01/2026,50,Other,Daily run,Other,Cash,2025-2026,Tea
+,431,22/01/2026,2000,Other,Building Maintenance,Other,Cash,2025-2026,Cash Painter
+,432,22/01/2026,500,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Bus repair Pokhar ji
+,433,22/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,434,19/01/2026,1000,Other,Building Maintenance,Other,Cash,2025-2026,Painter
+,435,17/01/2026,350,Other,Transport Maintenance,Other,Cash,2025-2026,Grease to all buses
+,436,17/01/2026,300,Other,Building Maintenance,Other,Cash,2025-2026,Car patrol to Kalwar 2 rounds for paint
+,437,17/01/2026,500,Other,Building Maintenance,Other,Cash,2025-2026,Painter
+,438,17/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,439,16/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1045,440,15/01/2026,1000,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash
+,441,15/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1004,442,15/01/2026,5000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+1033,443,13/01/2026,3000,Salary,Salary,Deepa Yadav,Bank Transfer,2025-2026,PhonePay
+1047,444,13/01/2026,3000,Salary,Salary,Anita Choudhary,Bank Transfer,2025-2026,PhonePay
+,445,13/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1039,446,12/01/2026,4000,Salary,Salary,Komal Sharma,Cash,2025-2026,Cash
+,447,12/01/2026,50,Other,Daily run,Salary,Cash,2025-2026,Tea
+,448,10/01/2026,430,Other,Stationary,Other,Cash,2025-2026,Rim paper
+,449,10/01/2026,300,Transport,Transport Maintenance,Other,Cash,2025-2026,Wages Bus wiring
+,450,10/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1048,451,09/01/2026,1000,Salary,Salary,Manisha Choudhary,Cash,2025-2026,Cash
+,452,09/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1004,453,09/01/2026,10000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+1025,454,08/01/2026,500,Salary,Salary,Madhu Sharma,Cash,2025-2026,Cash
+,455,08/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,456,07/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,457,06/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,458,06/01/2026,500,Other,Stationary,Other,Cash,2025-2026,Exam Notebooks
+,459,05/01/2026,500,Other,Stationary,Other,Cash,2025-2026,Chalk
+,460,05/01/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1042,461,05/01/2026,10000,Salary,Salary,Rachna Yadav,Cash,2025-2026,Cash
+1047,462,02/02/2026,1000,Salary,Salary,Anita Choudhary,Cash,2025-2026,Cash Salary Anita Chaudhary
+1029,463,02/02/2026,2000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash Salary Govendram Gurjar
+,464,02/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1029,465,03/02/2026,1500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash Salary Govendram Gurjar
+,466,03/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1042,467,04/02/2026,4180,Salary,Salary,Rachna Yadav,Bank Transfer,2025-2026,Phone Pay Salary Rachna Yadav
+,468,04/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1046,469,05/02/2026,5000,Salary,Salary,Sourabh Sharma,Bank Transfer,2025-2026,Phone Pay Salary
+,470,05/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1046,471,06/02/2026,10600,Salary,Salary,Sourabh Sharma,Cash,2025-2026,Cash Salary Sourab Sharma
+,472,06/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,473,07/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1029,474,09/02/2026,1500,Salary,Salary,Gowardhan Gurjar,Bank Transfer,2025-2026,Cash/Phone Pay Salary Govendram Gurjar
+,475,09/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1034,476,10/02/2026,5000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash Salary Shrawan Kumar
+1037,477,10/02/2026,500,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash Salary
+,478,10/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1045,479,11/02/2026,5000,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash Salary Mahaveer Singh Devasi
+,480,11/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1045,481,12/02/2026,2000,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash Salary Mahaveer Singh Devasi
+,482,12/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,483,13/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,484,14/02/2026,400,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Race Wire (Bus 4903)
+,485,14/02/2026,300,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Wages Mitri (Bus 4903)
+,486,14/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1029,487,16/02/2026,2900,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash Salary Govendram Gurjar
+,488,16/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1045,489,17/02/2026,500,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash Salary Mahaveer Singh Devasi
+,490,17/02/2026,100,Other,Stationary,Stationary,Cash,2025-2026,Chalk
+,491,17/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,492,18/02/2026,960,Other,Bills,News Paper,Cash,2025-2026,Newspaper
+,493,18/02/2026,500,Other,Stationary,Stationary,Cash,2025-2026,Rim Paper
+,494,18/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1029,495,19/02/2026,2600,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash Salary Govendram Gurjar
+,496,19/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1037,497,20/02/2026,4000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash Salary Bhim Ram
+1034,498,20/02/2026,3000,Salary,Salary,Sarwan Lal Kumawat,Bank Transfer,2025-2026,Phone Pay Salary Shrawan Kumar
+,499,20/02/2026,5000,Salary,Salary,Anita Bai,Cash,2025-2026,Cash Salary AniaHarijan
+1005,500,20/02/2026,2000,Salary,Salary,Prahlad Sepat,Cash,2025-2026,Cash Salary Prakash Sepat
+,501,20/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1037,502,21/02/2026,5000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash Salary
+,503,21/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1045,504,23/02/2026,4000,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash Salary Mahaveer Singh Devasi
+,505,23/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,506,24/02/2026,500,Other,Building Maintenance,Other,Cash,2025-2026,Wages (School Work)
+1001,507,24/02/2026,1000,Salary,Salary,Seema Chaudhary,Cash,2025-2026,Cash Salary Seema Chaudhary
+1029,508,24/02/2026,500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash Salary Govendram Gurjar
+,509,24/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1048,510,27/02/2026,5000,Salary,Salary,Manisha Choudhary,Bank Transfer,2025-2026,Phone Pay Salary
+1004,511,27/02/2026,20000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Salary R.S.K.
+,512,27/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1029,513,28/02/2026,3000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash Salary Govendram Gurjar
+1045,514,28/02/2026,1000,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash Salary Mahaveer Singh Devasi
+1004,515,28/02/2026,10000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Salary R.S.K.
+,516,28/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,517,25/02/2026,200,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Tyre chanege
+,518,25/02/2026,200,Transport,Transport Maintenance,Bus1 - 4903,Cash,2025-2026,Break oil
+,519,25/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,520,26/02/2026,100,Transport,Other,Other,Cash,2025-2026,Bus route
+1047,521,26/02/2026,4000,Salary,Salary,Anita Choudhary,Bank Transfer,2025-2026,PhonePay
+,522,26/02/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1039,523,26/02/2026,5000,Salary,Salary,Komal Sharma,Cash,2025-2026,Cash
+1025,524,02/03/2026,10000,Salary,Salary,Madhu Sharma,Bank Transfer,2025-2026,Phone pay
+,525,02/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,526,02/03/2026,5000,Salary,Salary,Anita Bai,Cash,2025-2026,Cash
+1034,527,03/03/2026,10000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash
+1039,528,03/03/2026,5000,Salary,Salary,Komal Sharma,Bank Transfer,2025-2026,phone pay
+1045,529,03/03/2026,2000,Salary,Salary,Mahaveer Singh,Bank Transfer,2025-2026,PhonePay
+,530,03/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1029,531,04/03/2026,2500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+,532,04/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1045,533,05/03/2026,5000,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash
+1029,534,05/03/2026,4000,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+,535,05/03/2026,500,Salary,Salary,Jawahar Sir,Cash,2025-2026,Cash
+,536,05/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,537,07/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1037,538,07/03/2026,20000,Salary,Salary,Bhinwa Ram Taker,Cash,2025-2026,Cash
+1047,539,07/03/2026,2000,Salary,Salary,Anita Choudhary,Cash,2025-2026,Cash
+,540,09/03/2026,450,Other,Stationary,Stationary,Cash,2025-2026,Rim Paper
+,541,09/03/2026,40,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1045,542,09/03/2026,500,Salary,Salary,Mahaveer Singh,Bank Transfer,2025-2026,PhonePay
+,543,10/03/2026,1000,Other,Stationary,Stationary,Cash,2025-2026,Exam Notebooks
+,544,10/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,545,10/03/2026,1000,Salary,Salary,Jawahar Sir,Cash,2025-2026,Cash
+,546,11/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,547,12/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,548,12/03/2026,250,Other,Stationary,Stationary,Cash,2025-2026,Rim Paper
+,549,13/03/2026,3386,Other,Bills,Electricity,Cash,2025-2026,bill
+,550,13/03/2026,1000,Salary,Salary,Jawahar Sir,Cash,2025-2026,Cash
+1034,551,13/03/2026,10000,Salary,Salary,Sarwan Lal Kumawat,Bank Transfer,2025-2026,PhonePay
+1043,552,13/03/2026,9000,Salary,Salary,Rahul Ghasal,Cash,2025-2026,Cash
+,553,13/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,554,14/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,555,16/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,556,17/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,557,18/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,558,19/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,559,19/03/2026,1000,Other,Advertising,Social media,Cash,2025-2026,Social Media advertising
+,560,19/03/2026,980,Other,Stationary,Stationary,Cash,2025-2026,School stationary
+,561,20/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1034,562,20/03/2026,5000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash
+,563,21/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1045,564,21/03/2026,4000,Salary,Salary,Mahaveer Singh,Cash,2025-2026,Cash
+1037,565,23/03/2026,2000,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,PhonePay
+,566,23/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1004,567,23/03/2026,20000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+1037,568,24/03/2026,1000,Salary,Salary,Bhinwa Ram Taker,Bank Transfer,2025-2026,PhonePay
+,569,24/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,570,25/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,571,25/03/2026,900,Other,Stationary,Stationary,Cash,2025-2026,Rim Paper
+,572,25/03/2026,200,Other,Event Celebration,Other,Cash,2025-2026,PTM cold drink and snacks
+1004,573,26/03/2026,10000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+,574,26/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+,575,27/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1004,576,27/03/2026,10000,Salary,Salary,Ramswaroop Khokhar,Cash,2025-2026,Cash
+,577,28/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1048,578,28/03/2026,2000,Salary,Salary,Manisha Choudhary,Cash,2025-2026,Cash
+1029,579,28/03/2026,500,Salary,Salary,Gowardhan Gurjar,Cash,2025-2026,Cash
+,580,30/03/2026,10000,Salary,Salary,Jawahar Sir,Cash,2025-2026,Cash
+1048,581,30/03/2026,5000,Salary,Salary,Manisha Choudhary,Cash,2025-2026,Cash
+1047,582,30/03/2026,5000,Salary,Salary,Anita Choudhary,Cash,2025-2026,Cash
+,583,30/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea
+1034,584,31/03/2026,10000,Salary,Salary,Sarwan Lal Kumawat,Cash,2025-2026,Cash
+,585,31/03/2026,50,Other,Daily run,Snacks,Cash,2025-2026,Tea

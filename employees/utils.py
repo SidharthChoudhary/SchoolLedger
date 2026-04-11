@@ -91,10 +91,14 @@ def parse_csv_employees(csv_content, handle_duplicates='skip'):
                 
                 joining_date = None
                 if joining_date_str:
-                    try:
-                        joining_date = datetime.strptime(joining_date_str, '%Y-%m-%d').date()
-                    except ValueError:
-                        results['errors'].append((row_num, f"Invalid Joining_Date format: '{joining_date_str}' (use YYYY-MM-DD)"))
+                    for _fmt in ('%Y-%m-%d', '%d/%m/%Y', '%d-%m-%Y', '%m/%d/%Y'):
+                        try:
+                            joining_date = datetime.strptime(joining_date_str, _fmt).date()
+                            break
+                        except ValueError:
+                            continue
+                    if joining_date is None:
+                        results['errors'].append((row_num, f"Invalid Joining_Date format: '{joining_date_str}' (use YYYY-MM-DD or DD/MM/YYYY)"))
                         continue
                 
                 # Validate and parse numeric fields

@@ -18,6 +18,7 @@
       <label style="font-weight: 700;">Session</label>
       <select name="session" style="height:40px; width:100%;">
         <option value="">-- Select Session --</option>
+        <option value="all" {% if selected_session_id == 'all' %}selected{% endif %}>All Sessions</option>
         {% for session in sessions %}
           <option value="{{ session.id }}" {% if session.id|stringformat:"s" == selected_session_id %}selected{% endif %}>
             {{ session.session }}
@@ -30,9 +31,11 @@
 </div>
 
 <!-- Report Display -->
-{% if selected_session %}
+{% if selected_session or all_sessions_mode %}
 <div class="card">
-  <h3 class="report-heading" style="text-align:center; font-size:20px; font-weight:700; margin:16px 0;">Session {{ selected_session.session }} Income Expense Statement</h3>
+  <h3 class="report-heading" style="text-align:center; font-size:20px; font-weight:700; margin:16px 0;">
+    {% if all_sessions_mode %}All Sessions Income Expense Statement{% else %}Session {{ selected_session.session }} Income Expense Statement{% endif %}
+  </h3>
   <div class="no-print" style="text-align:right; margin-bottom:16px;">
     <button onclick="window.print()" style="padding:10px 20px; background:#0284c7; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:14px;">
       🖨️ Print Report
@@ -76,7 +79,7 @@
           {% for row in report_data %}
             <tr style="border-bottom:1px solid #e5e7eb;">
               <td style="padding:10px; border:1px solid #e5e7eb; font-weight:600;">
-                {{ row.month_display }} {{ row.month.year }}
+                {{ row.month_display }}
               </td>
               
               <!-- Income amounts -->

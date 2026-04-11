@@ -19,6 +19,7 @@ Domain: dpstibariyan.pythonanywhere.com
 - [ ] Push to GitHub: `git push -u origin main`
 - [ ] Verify requirements.txt exists
 - [ ] Verify production_settings.py exists
+- [ ] Verify production_settings_local.example.py exists
 
 ---
 
@@ -61,19 +62,13 @@ Domain: dpstibariyan.pythonanywhere.com
 
 ## ☐ PHASE 4: CONFIGURATION
 
-### Update settings.py
-- [ ] Run: `nano schoolapp/settings.py`
-- [ ] Find DATABASES section (around line 80)
-- [ ] Replace entire DATABASES dict with MySQL config
+### Create local production settings
+- [ ] Run: `cp production_settings_local.example.py production_settings_local.py`
+- [ ] Run: `nano production_settings_local.py`
 - [ ] Paste database password where needed
-- [ ] Add production settings at end:
-  - [ ] DEBUG = False
-  - [ ] ALLOWED_HOSTS = ['dpstibariyan.pythonanywhere.com']
-  - [ ] STATIC_ROOT path
-  - [ ] MEDIA_ROOT path
-  - [ ] SSL/Security settings
+- [ ] Verify ALLOWED_HOSTS and static/media paths are correct
 - [ ] Save file: `Ctrl+O` → `Enter` → `Ctrl+X`
-- [ ] Verify: `cat schoolapp/settings.py | grep DATABASES`
+- [ ] Verify: `cat production_settings_local.py | grep PASSWORD`
 
 ---
 
@@ -81,14 +76,14 @@ Domain: dpstibariyan.pythonanywhere.com
 
 ### Run Migrations
 - [ ] Run: `workon SchoolLedger`
-- [ ] Run: `python manage.py migrate`
+- [ ] Run: `python manage.py migrate --settings=production_settings`
   - [ ] Verify: "Operations to perform:" appears
   - [ ] Verify: All tables created
-- [ ] Run: `python manage.py init_roles`
+- [ ] Run: `python manage.py init_roles --settings=production_settings`
   - [ ] Verify: 6 roles created with permissions
 
 ### Create Admin User
-- [ ] Run: `python manage.py createsuperuser`
+- [ ] Run: `python manage.py createsuperuser --settings=production_settings`
 - [ ] Enter username: `admin`
 - [ ] Enter email: `admin@school.local`
 - [ ] Enter password: [choose secure one]
@@ -96,7 +91,7 @@ Domain: dpstibariyan.pythonanywhere.com
 - [ ] Verify: "Superuser created successfully"
 
 ### Collect Static Files
-- [ ] Run: `python manage.py collectstatic --noinput`
+- [ ] Run: `python manage.py collectstatic --noinput --settings=production_settings`
 - [ ] Verify: "files copied to" message
 
 ---

@@ -1,0 +1,188 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% block title %}Salary Grid - Paid{% endblock %}
+
+{% block content %}
+
+<!-- Top bar: title + print button -->
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;" class="no-print">
+  <h2 style="margin:0; font-size:22px; font-weight:700; color:#111827;">Salary Grid - Paid</h2>
+  {% if selected_session and rows %}
+  <button onclick="window.print()" style="display:inline-flex; align-items:center; gap:8px; padding:9px 20px; border-radius:10px; background:var(--teal-700); color:#fff; font-size:13px; font-weight:600; border:none; cursor:pointer;">
+    🖨️ Print
+  </button>
+  {% endif %}
+</div>
+
+<!-- Reusable print letterhead -->
+{% include "website/_print_letterhead.html" %}
+
+<!-- Filters -->
+<div class="card no-print" style="margin-bottom:16px;">
+  <p style="font-size:13px; color:#1b4f4a; font-weight:600; margin:0 0 12px;">Select Session</p>
+  <form method="get" style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end;">
+    <div class="field" style="flex:2; min-width:260px;">
+      <label>Session</label>
+      <select name="session">
+        {% for s in sessions %}
+          <option value="{{ s.id }}" {% if selected_session_id == s.id|stringformat:"s" %}selected{% endif %}>
+            {{ s.session }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field" style="flex:1; min-width:200px;">
+      <label>Status</label>
+      <select name="status">
+        <option value="">All</option>
+        {% for code, label in status_choices %}
+          <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <button type="submit" style="padding:9px 22px; background:var(--teal-700); color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+        Generate
+      </button>
+    </div>
+  </form>
+</div>
+
+{% if selected_session and rows %}
+
+<h3 style="font-size:15px; color:#1b4f4a; margin:0 0 10px;">
+  Salary Grid - Paid — {{ selected_session.session }}
+  {% if selected_status %} &nbsp;·&nbsp; {{ selected_status|capfirst }}{% endif %}
+</h3>
+
+<div class="card" style="padding:0; overflow-x:auto;">
+  <table id="payment-grid" style="width:100%; border-collapse:collapse; font-size:12px; white-space:nowrap;">
+    <thead>
+      <!-- Grand Due shown in header totals row -->
+      <tr style="background:#dbeafe; font-weight:700; border-bottom:2px solid #93c5fd;">
+        <td colspan="2" style="padding:8px 12px; color:#1e3a5f; font-size:13px; position:sticky; left:0; background:#dbeafe; z-index:2;">Total</td>
+        <td style="padding:8px 12px; text-align:right; color:#1e3a5f;">₹ {{ grand_total_salary|floatformat:0 }}</td>
+        <td style="padding:8px 12px; text-align:right; color:#166534; background:#dcfce7;">₹ {{ grand_paid_salary|floatformat:0 }}</td>
+        <td style="padding:8px 12px; text-align:right;
+          {% if grand_due > 0 %}color:#b91c1c; background:#fee2e2;{% else %}color:#166534; background:#dcfce7;{% endif %}">
+          ₹ {{ grand_due|floatformat:0 }}
+        </td>
+        <td style="padding:8px 12px;"></td>
+        {% for ct in col_totals_list %}
+        <td style="padding:8px 12px; text-align:right; color:#1b4f4a;">
+          {% if ct %}₹ {{ ct|floatformat:0 }}{% else %}—{% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+      <!-- Column headers -->
+      <tr style="background:#e6f4f1;">
+        <th style="text-align:left; padding:9px 12px; border-bottom:2px solid #c7d7d5; color:#374151; position:sticky; left:0; background:#e6f4f1; z-index:2; min-width:160px;">#&nbsp; Name</th>
+        <th style="text-align:left; padding:9px 12px; border-bottom:2px solid #c7d7d5; color:#374151; min-width:60px;">Status</th>
+        <th style="text-align:right; padding:9px 12px; border-bottom:2px solid #c7d7d5; color:#374151; min-width:100px;">Total Salary</th>
+        <th style="text-align:right; padding:9px 12px; border-bottom:2px solid #c7d7d5; color:#374151; background:#f0fdf4; min-width:100px;">Paid Salary</th>
+        <th style="text-align:right; padding:9px 12px; border-bottom:2px solid #c7d7d5; color:#374151; background:#fef2f2; min-width:90px;">Due</th>
+        <th style="padding:9px 12px; border-bottom:2px solid #c7d7d5; color:#9ca3af; min-width:30px;"></th>
+        {% for label, _ in month_cols %}
+        <th style="text-align:right; padding:9px 12px; border-bottom:2px solid #c7d7d5; color:#374151; min-width:75px;">{{ label }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      {% if row.employee.status == 'left' %}
+      <tr style="border-bottom:1px solid #f3f4f6; color:#b91c1c; background:#fff5f5;">
+      {% else %}
+      <tr style="border-bottom:1px solid #f3f4f6;">
+      {% endif %}
+        <!-- Sticky name column -->
+        <td style="padding:8px 12px; font-weight:500; position:sticky; left:0; z-index:1;
+          {% if row.employee.status == 'left' %}background:#fff5f5;{% else %}background:#fff;{% endif %}">
+          {{ forloop.counter }}.&nbsp;{{ row.employee.name }}
+        </td>
+        <!-- Status badge -->
+        <td style="padding:8px 12px; text-align:center;">
+          <span style="display:inline-block; padding:2px 8px; border-radius:20px; font-size:10px; font-weight:600;
+            {% if row.employee.status == 'active' %}background:#dcfce7; color:#15803d;
+            {% elif row.employee.status == 'left' %}background:#fee2e2; color:#b91c1c;
+            {% else %}background:#fef9c3; color:#92400e;{% endif %}">
+            {{ row.employee.get_status_display }}
+          </span>
+        </td>
+        <!-- Summary columns -->
+        <td style="padding:8px 12px; text-align:right; color:{% if row.employee.status == 'left' %}#b91c1c{% else %}#374151{% endif %};">
+          {% if row.total_salary %}₹ {{ row.total_salary|floatformat:0 }}{% else %}—{% endif %}
+        </td>
+        <td style="padding:8px 12px; text-align:right; background:{% if row.employee.status == 'left' %}#fff5f5{% else %}#f0fdf4{% endif %}; color:#166534; font-weight:600;">
+          {% if row.paid_salary %}₹ {{ row.paid_salary|floatformat:0 }}{% else %}—{% endif %}
+        </td>
+        <td style="padding:8px 12px; text-align:right;
+          {% if row.due > 0 %}background:#fef2f2; color:#b91c1c; font-weight:600;
+          {% elif row.due < 0 %}background:#f0fdf4; color:#166534; font-weight:600;
+          {% else %}color:#9ca3af;{% endif %}">
+          {% if row.due %}₹ {{ row.due|floatformat:0 }}{% else %}—{% endif %}
+        </td>
+        <!-- Spacer between summary and monthly -->
+        <td style="padding:8px 12px; border-left:2px solid #e5e7eb;"></td>
+        <!-- Monthly paid amounts -->
+        {% for val in row.monthly %}
+        <td style="padding:8px 12px; text-align:right; color:{% if row.employee.status == 'left' %}#b91c1c{% else %}#374151{% endif %};">
+          {% if val %}<span style="font-weight:500;">₹ {{ val|floatformat:0 }}</span>{% else %}<span style="color:#d1d5db;">—</span>{% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr style="background:#e6f4f1; font-weight:700; border-top:2px solid #9ca3af;">
+        <td colspan="2" style="padding:9px 12px; color:#374151; position:sticky; left:0; background:#e6f4f1; z-index:2;">Total</td>
+        <td style="padding:9px 12px; text-align:right; color:#374151;">₹ {{ grand_total_salary|floatformat:0 }}</td>
+        <td style="padding:9px 12px; text-align:right; background:#dcfce7; color:#166534;">₹ {{ grand_paid_salary|floatformat:0 }}</td>
+        <td style="padding:9px 12px; text-align:right;
+          {% if grand_due > 0 %}background:#fee2e2; color:#b91c1c;{% else %}background:#dcfce7; color:#166534;{% endif %}">
+          ₹ {{ grand_due|floatformat:0 }}
+        </td>
+        <td style="padding:9px 12px; border-left:2px solid #e5e7eb;"></td>
+        {% for ct in col_totals_list %}
+        <td style="padding:9px 12px; text-align:right; color:#1b4f4a;">
+          {% if ct %}₹ {{ ct|floatformat:0 }}{% else %}—{% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+{% elif selected_session %}
+<div class="card" style="text-align:center; color:#9ca3af; font-style:italic; padding:30px;">
+  No payroll or payment data found for the selected filters.
+</div>
+{% endif %}
+
+<style>
+@media print {
+  @page { size: A4 landscape; margin: 8mm 10mm; }
+
+  .no-print,
+  .topbar, .sidebar, aside, nav, header, footer,
+  .nav-group, #sidebar { display: none !important; }
+
+  body { background: #fff !important; margin: 0 !important; padding: 0 !important; font-size: 10px !important; }
+  .page-content, .content-wrapper, main,
+  [class*="content"], [class*="main"] {
+    margin: 0 !important; padding: 0 !important;
+    width: 100% !important; max-width: 100% !important;
+  }
+
+  #print-letterhead { display: block !important; }
+
+  .card { box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+
+  #payment-grid th, #payment-grid td { padding: 5px 6px !important; font-size: 10px !important; }
+  #payment-grid td:first-child, #payment-grid th:first-child { position: static !important; }
+
+  a { text-decoration: none !important; color: inherit !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+
+{% endblock %}

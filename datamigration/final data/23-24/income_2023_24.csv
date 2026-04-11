@@ -1,0 +1,325 @@
+Voucher_Number,Date,Amount,Major_Head,Head,Sub_Head,Payment_Type,Session,Details
+230001,01/04/2023,2900,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230002,01/04/2023,1500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230003,01/04/2023,1000,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230004,01/04/2023,1000,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230005,04/04/2023,400,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230006,05/04/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230007,06/04/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230008,07/04/2023,6000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230009,10/04/2023,9500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230010,11/04/2023,6000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230011,12/04/2023,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230012,12/04/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230013,12/04/2023,6000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230014,13/04/2023,8000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230015,13/04/2023,5000,Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230016,19/04/2023,1100,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230017,20/04/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230018,20/04/2023,15000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230019,20/04/2023,25000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230020,20/04/2023,20000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230021,21/04/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230022,24/04/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230023,26/04/2023,7000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230024,27/04/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230025,27/04/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230026,28/04/2023,4500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230027,28/04/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230028,28/04/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230029,01/05/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230030,01/05/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230031,05/05/2023,3100,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230032,16/05/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230033,16/05/2023,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230034,17/05/2023,3800,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230035,17/05/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230036,01/06/2023,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230037,04/06/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230038,05/06/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230039,07/06/2023,7000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230040,11/06/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230041,13/06/2023,6000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230042,13/06/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230043,15/06/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230044,19/06/2023,8000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230045,19/06/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230046,19/06/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230047,19/06/2023,30000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230048,20/06/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230049,20/06/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230050,21/06/2023,11500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230051,24/06/2023,7000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230052,26/06/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230053,30/06/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230054,01/07/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230055,04/07/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230056,04/07/2023,22000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230057,04/07/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230058,06/07/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230059,07/07/2023,16000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230060,12/07/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230061,12/07/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230062,12/07/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230063,14/07/2023,200,TC Fees,TC Fees,Student,Cash,2023-2024,Data  Migration
+230064,14/07/2023,200,TC Fees,TC Fees,Student,Cash,2023-2024,Data  Migration
+230065,13/07/2023,7000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230066,11/07/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230067,11/07/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230068,11/07/2023,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230069,11/07/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230070,17/07/2023,3200,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230071,17/07/2023,31000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230072,18/07/2023,1500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230073,20/07/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230074,23/07/2023,1000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230075,23/07/2023,200,TC Fees,TC Fees,Student,Cash,2023-2024,Data  Migration
+230076,23/07/2023,200,TC Fees,TC Fees,Student,Cash,2023-2024,Data  Migration
+230077,24/07/2023,1500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230078,25/07/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230079,02/08/2023,4000,Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230080,02/08/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230081,03/08/2023,15000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230082,05/08/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230083,07/08/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230084,08/08/2023,6000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230085,08/08/2023,4500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230086,08/08/2023,13000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230087,08/08/2023,200,TC Fees,TC Fees,Student,Cash,2023-2024,Data  Migration
+230088,08/08/2023,200,TC Fees,TC Fees,Student,Cash,2023-2024,Data  Migration
+230089,09/08/2023,200,TC Fees,TC Fees,Student,Cash,2023-2024,Data  Migration
+230090,09/08/2023,200,TC Fees,TC Fees,Student,Cash,2023-2024,Data  Migration
+230091,09/08/2023,200,TC Fees,TC Fees,Student,Cash,2023-2024,Data  Migration
+230092,12/08/2023,15000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230093,12/08/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230094,16/08/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230095,16/08/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230096,17/08/2023,2000,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230097,17/08/2023,400,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230098,18/08/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230099,19/08/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230100,21/08/2023,20000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230101,22/08/2023,10500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230102,23/08/2023,8500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230103,23/08/2023,15000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230104,24/08/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230105,29/08/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230106,29/08/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230107,30/08/2023,2500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230108,30/08/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230109,30/08/2023,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230110,01/09/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230111,01/09/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230112,02/09/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230113,04/09/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230114,04/09/2023,3000,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230115,04/09/2023,3500,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230116,06/09/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230117,06/09/2023,15000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230118,06/09/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230119,06/09/2023,7000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230120,06/09/2023,7000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230121,06/09/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230122,06/09/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230123,06/09/2023,7700,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230124,06/09/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230125,06/09/2023,400,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230126,06/09/2023,8000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230127,30/07/2023,9000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230128,30/08/2023,200,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230129,07/09/2023,18500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230130,11/09/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230131,12/09/2023,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230132,12/09/2023,5000,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230133,13/09/2023,8000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230134,14/09/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230135,15/09/2023,400,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230136,16/09/2023,7000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230137,18/09/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230138,21/09/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230139,23/09/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230140,26/09/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230141,27/09/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230142,28/09/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230143,30/09/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230144,02/10/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230145,02/10/2023,6000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230146,03/10/2023,13000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230147,05/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230148,05/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230149,05/10/2023,1000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230150,06/10/2023,23000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230151,06/10/2023,17000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230152,11/10/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230153,11/10/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230154,11/10/2023,400,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230155,11/10/2023,1700,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230156,12/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230157,12/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230158,13/10/2023,3000,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230159,13/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230160,14/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230161,19/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230162,19/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230163,19/10/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230164,20/10/2023,3800,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230165,21/10/2023,8000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230166,23/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230167,23/10/2023,20000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230168,25/10/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230169,26/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230170,27/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230171,27/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230172,28/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230173,30/10/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230174,04/11/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230175,04/11/2023,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230176,06/11/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230177,06/11/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230178,07/11/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230179,07/11/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230180,07/11/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230181,07/11/2023,400,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230182,08/11/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230183,08/11/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230184,09/11/2023,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230185,10/11/2023,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230186,10/11/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230187,10/11/2023,7000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230188,10/11/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230189,10/11/2023,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230190,11/11/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230191,11/11/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230192,11/11/2023,6800,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230193,17/11/2023,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230194,17/11/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230195,18/11/2023,15000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230196,20/11/2023,13000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230197,21/11/2023,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230198,22/11/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230199,22/11/2024,1000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230200,23/11/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230201,27/11/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230202,27/11/2024,4500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230203,30/11/2024,19500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230204,30/11/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230205,30/11/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230206,30/11/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230207,02/12/2024,15000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230208,04/12/2024,9000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230209,07/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230210,07/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230211,07/12/2024,400,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230212,11/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230213,11/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230214,11/12/2024,4700,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230215,11/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230216,11/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230217,11/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230218,11/12/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230219,12/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230220,12/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230221,12/12/2024,8500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230222,13/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230223,13/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230224,13/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230225,13/12/2024,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230226,14/12/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230227,15/12/2024,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230228,15/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230229,16/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230230,18/12/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230231,19/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230232,19/12/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230233,22/12/2024,4500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230234,23/12/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230235,24/12/2024,20000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230236,24/12/2024,12000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230237,25/12/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230238,25/12/2024,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230239,10/01/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230240,10/01/2024,1000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230241,16/01/2024,20000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230242,16/01/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230243,16/01/2024,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230244,17/01/2024,400,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230245,19/01/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230246,19/01/2024,2000,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230247,19/01/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230248,19/01/2024,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230249,20/01/2024,2500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230250,20/01/2024,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230251,23/01/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230252,25/01/2024,2500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230253,29/01/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230254,29/01/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230255,01/02/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230256,01/02/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230257,02/02/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230258,03/02/2024,1000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230259,03/02/2024,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230260,03/02/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230261,05/02/2024,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230262,08/02/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230263,09/02/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230264,09/02/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230265,09/02/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230266,09/02/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230267,10/02/2024,25000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230268,10/02/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230269,12/02/2024,400,Bus Fees,Bus Fee,Student,Cash,2023-2024,Data  Migration
+230270,13/02/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230271,14/02/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230272,16/02/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230273,17/02/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230274,21/02/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230275,22/02/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230276,23/02/2024,7000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230277,27/02/2024,17000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230278,27/02/2024,4000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230279,04/03/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230280,04/03/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230281,04/03/2024,2500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230282,04/03/2024,3400,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230283,04/03/2024,6000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230284,04/03/2024,3000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230285,04/03/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230286,05/03/2024,15000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230287,06/03/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230288,06/03/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230289,06/03/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230290,06/03/2024,1500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230291,09/03/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230292,09/03/2024,3500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230293,13/03/2024,1000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230294,13/03/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230295,16/03/2024,8000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230296,16/03/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230297,16/03/2024,8000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230298,16/03/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230299,16/03/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230300,16/03/2024,15000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230301,16/03/2024,35000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230302,16/03/2024,40000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230303,19/03/2024,9500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230304,20/03/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230305,21/03/2024,2000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230306,21/03/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230307,22/03/2024,5000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230308,28/03/2024,10000,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230309,28/03/2024,3500,Fees,Fees,Student,Cash,2023-2024,Data  Migration
+230310,24/04/2023,6500,Bus Booking,Bus Booking,Bus Booking,Cash,2023-2024,Data  Migration
+230311,02/05/2023,2000,Bus Booking,Bus Booking,Bus Booking,Cash,2023-2024,Data  Migration
+230312,22/06/2023,4100,Bus Booking,Bus Booking,Bus Booking,Cash,2023-2024,Data  Migration
+230313,07/08/2023,600,Loan,Loan,Loan,Cash,2023-2024,Data  Migration
+230314,16/08/2023,14000,Loan,Loan,Loan,Cash,2023-2024,Data  Migration
+230315,07/08/2023,2500,Loan,Loan,Loan,Cash,2023-2024,Data  Migration
+230316,01/09/2023,50000,Other,Other,Other,Cash,2023-2024,Data  Migration
+230317,01/06/2023,20000,Loan,Loan,Loan,Cash,2023-2024,Data  Migration
+230318,01/06/2023,10000,Loan,Loan,Loan,Cash,2023-2024,Data  Migration
+230319,27/09/2023,21500,Loan,Loan,Loan,Cash,2023-2024,Data  Migration
+230320,20/10/2023,182000,RTE,RTE,RTE,Cash,2023-2024,Data  Migration
+230321,05/12/2024,2600,Bus Booking,Bus Booking,Bus Booking,Cash,2023-2024,Data  Migration
+230322,19/02/2024,5500,Bus Booking,Bus Booking,Bus Booking,Cash,2023-2024,Data  Migration
+230323,20/02/2024,2500,Bus Booking,Bus Booking,Bus Booking,Cash,2023-2024,Data  Migration
+230324,12/03/2024,1800,Bus Booking,Bus Booking,Bus Booking,Cash,2023-2024,Data  Migration

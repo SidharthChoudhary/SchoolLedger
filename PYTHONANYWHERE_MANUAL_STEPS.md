@@ -121,16 +121,13 @@ Website: https://www.pythonanywhere.com
 **What this does:** Tells Django how to connect to your MySQL database
 
 **Steps:**
-1. Still in Bash console, open settings file:
+1. Still in Bash console, create the server-only settings file:
    ```bash
-   nano schoolapp/settings.py
+   cp production_settings_local.example.py production_settings_local.py
+   nano production_settings_local.py
    ```
 
-2. Find the DATABASES section (around line 80-90)
-   - Look for: `'ENGINE': 'django.backends.sqlite3',`
-   - This is the SQLite config we're replacing
-
-3. **Replace the entire DATABASES dictionary** with this:
+2. **Replace the example values** with this:
    ```python
    DATABASES = {
        'default': {
@@ -146,38 +143,20 @@ Website: https://www.pythonanywhere.com
        }
    }
    ```
-   
-4. **Replace 'YOUR_MYSQL_PASSWORD_HERE'** with the password you saved in STEP 2
+   The rest of the production behavior already lives in `production_settings.py`.
 
-5. Scroll to the **END of the file** and add these lines:
-   ```python
-   # Production Settings
-   DEBUG = False
-   ALLOWED_HOSTS = ['dpstibariyan.pythonanywhere.com', 'www.dpstibariyan.pythonanywhere.com']
-   STATIC_ROOT = '/home/dpstibariyan/SchoolLedger/static'
-   MEDIA_ROOT = '/home/dpstibariyan/SchoolLedger/media'
-   
-   # Security
-   SECURE_SSL_REDIRECT = True
-   SESSION_COOKIE_SECURE = True
-   CSRF_COOKIE_SECURE = True
-   SECURE_HSTS_SECONDS = 31536000
-   SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-   SECURE_HSTS_PRELOAD = True
-   USE_X_FORWARDED_HOST = True
-   SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-   ```
+3. **Replace 'YOUR_MYSQL_PASSWORD_HERE'** with the password you saved in STEP 2
 
-6. Save the file:
+4. Save the file:
    - Press: `Ctrl + O`
    - Press: `Enter`
    - Press: `Ctrl + X`
 
-7. Verify it saved correctly:
+5. Verify it saved correctly:
    ```bash
-   grep "DATABASES" schoolapp/settings.py
+   grep "PASSWORD" production_settings_local.py
    ```
-   You should see your MySQL config
+   You should see your local production config
 
 **✅ Result:** Django now knows how to connect to your MySQL database
 
@@ -195,19 +174,19 @@ Website: https://www.pythonanywhere.com
 
 2. Create database tables:
    ```bash
-   python manage.py migrate
+   python manage.py migrate --settings=production_settings
    ```
    Wait for completion. You should see messages like "Running migrations" and "OK"
 
 3. Initialize the RBAC system (creates 6 roles):
    ```bash
-   python manage.py init_roles
+   python manage.py init_roles --settings=production_settings
    ```
    You should see: "6 roles created with permissions"
 
 4. Create admin user:
    ```bash
-   python manage.py createsuperuser
+   python manage.py createsuperuser --settings=production_settings
    ```
    - Username: `admin`
    - Email: `admin@school.local`
@@ -216,7 +195,7 @@ Website: https://www.pythonanywhere.com
 
 5. Collect static files (CSS, JavaScript, images):
    ```bash
-   python manage.py collectstatic --noinput
+   python manage.py collectstatic --noinput --settings=production_settings
    ```
    Wait for completion.
 
@@ -248,7 +227,7 @@ Website: https://www.pythonanywhere.com
    if path not in sys.path:
        sys.path.append(path)
    
-   os.environ['DJANGO_SETTINGS_MODULE'] = 'schoolapp.settings'
+   os.environ['DJANGO_SETTINGS_MODULE'] = 'production_settings'
    
    import django
    django.setup()

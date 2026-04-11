@@ -84,7 +84,7 @@
 	<span style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:8px 16px; font-size:14px; font-weight:600; color:#15803d;">
 		Total: &#8377; {{ month_total|floatformat:0 }}
 	</span>
-	{% if filter_month or selected_session or selected_major_head or selected_head or selected_sub_head %}
+	{% if filter_month or selected_session or selected_major_head or selected_head or selected_sub_head or filter_name %}
 	<span style="font-size:12px; color:#6b7280;">
 		Filtered by:
 		{% if selected_session %}Session{% endif %}
@@ -92,6 +92,7 @@
 		{% if selected_major_head %}&nbsp;· {{ selected_major_head }}{% endif %}
 		{% if selected_head %}&nbsp;· {{ selected_head }}{% endif %}
 		{% if selected_sub_head %}&nbsp;· {{ selected_sub_head }}{% endif %}
+		{% if filter_name %}&nbsp;· Employee: {{ filter_name }}{% endif %}
 	</span>
 	{% else %}
 	<span style="font-size:12px; color:#9ca3af;">All transactions</span>
@@ -141,6 +142,14 @@
 		<select name="sub_head" style="height:40px;">
 			<option value="">All</option>
 		</select>
+	</div>
+
+	<div>
+		<label style="font-size:12px; font-weight:700;">Employee Name</label>
+		<br>
+		<input type="text" name="name" value="{{ filter_name|default:'' }}"
+			placeholder="Search employee…"
+			style="height:40px; border:1px solid #d1d5db; border-radius:6px; padding:0 10px; font-size:13px; min-width:160px;">
 	</div>
 
 	<div>
@@ -196,6 +205,7 @@
 				<script>
 			document.addEventListener('DOMContentLoaded', function() {
 				const headData = {{ head_data_json|safe }};
+				const filterHeadData = {{ filter_head_data_json|safe }};
 				
 				function setOptions(selectEl, data, emptyVal) {
 					selectEl.innerHTML = '<option value="">' + emptyVal + '</option>';
@@ -229,8 +239,8 @@
 							const major = this.value;
 							filterHead.value = '';
 							filterSub.innerHTML = '<option value="">All</option>';
-							if (major && headData.Expense && headData.Expense[major]) {
-								setOptions(filterHead, headData.Expense[major], 'All');
+							if (major && filterHeadData.Expense && filterHeadData.Expense[major]) {
+								setOptions(filterHead, filterHeadData.Expense[major], 'All');
 							} else {
 								filterHead.innerHTML = '<option value="">All</option>';
 							}
@@ -240,8 +250,8 @@
 							const major = filterMajor.value;
 							const head = this.value;
 							filterSub.value = '';
-							if (major && head && headData.Expense && headData.Expense[major] && headData.Expense[major][head]) {
-								setOptions(filterSub, headData.Expense[major][head], 'All');
+							if (major && head && filterHeadData.Expense && filterHeadData.Expense[major] && filterHeadData.Expense[major][head]) {
+								setOptions(filterSub, filterHeadData.Expense[major][head], 'All');
 							} else {
 								filterSub.innerHTML = '<option value="">All</option>';
 							}
@@ -308,12 +318,12 @@
 				const initialMajor = "{{ selected_major_head|escapejs }}";
 				const initialHead  = "{{ selected_head|escapejs }}";
 				const initialSub   = "{{ selected_sub_head|escapejs }}";
-				if (filterMajor && filterHead && filterSub && initialMajor && headData.Expense && headData.Expense[initialMajor]) {
-					setOptions(filterHead, headData.Expense[initialMajor], 'All');
+				if (filterMajor && filterHead && filterSub && initialMajor && filterHeadData.Expense && filterHeadData.Expense[initialMajor]) {
+					setOptions(filterHead, filterHeadData.Expense[initialMajor], 'All');
 					if (initialHead) {
 						filterHead.value = initialHead;
-						if (headData.Expense[initialMajor][initialHead]) {
-							setOptions(filterSub, headData.Expense[initialMajor][initialHead], 'All');
+						if (filterHeadData.Expense[initialMajor][initialHead]) {
+							setOptions(filterSub, filterHeadData.Expense[initialMajor][initialHead], 'All');
 							if (initialSub) filterSub.value = initialSub;
 						}
 					}

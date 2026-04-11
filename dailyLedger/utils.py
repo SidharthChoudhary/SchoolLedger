@@ -207,6 +207,9 @@ def parse_csv_ledger_entries(csv_content, handle_duplicates='skip', ledger_type=
     }
     
     try:
+        # Strip UTF-8 BOM if present
+        if csv_content.startswith('\ufeff'):
+            csv_content = csv_content[1:]
         f = StringIO(csv_content)
         reader = csv.DictReader(f)
         
@@ -238,6 +241,7 @@ def parse_csv_ledger_entries(csv_content, handle_duplicates='skip', ledger_type=
                 payment_type = row_normalized.get('payment_type', '').strip()
                 session_name = row_normalized.get('session', '').strip()
                 details = row_normalized.get('details', '').strip()
+                emp_no_str = row_normalized.get('emp_no', '').strip()
                 
                 # Validate required fields
                 if not date_str:
@@ -247,14 +251,20 @@ def parse_csv_ledger_entries(csv_content, handle_duplicates='skip', ledger_type=
                     results['errors'].append((row_num, "Amount is required"))
                     continue
                 if not sub_head:
-                    results['errors'].append((row_num, "Sub_Head (account/employee name) is required"))
+                    sub_head_label = "student/income source name" if ledger_type == 'Income' else "account/employee name"
+                    results['errors'].append((row_num, f"Sub_Head ({sub_head_label}) is required"))
                     continue
                 
-                # Validate date format
-                try:
-                    entry_date = datetime.strptime(date_str, '%Y-%m-%d').date()
-                except ValueError:
-                    results['errors'].append((row_num, f"Invalid date format: '{date_str}' (use YYYY-MM-DD)"))
+                # Validate date format (accept YYYY-MM-DD or DD/MM/YYYY)
+                entry_date = None
+                for fmt in ('%Y-%m-%d', '%d/%m/%Y'):
+                    try:
+                        entry_date = datetime.strptime(date_str, fmt).date()
+                        break
+                    except ValueError:
+                        pass
+                if entry_date is None:
+                    results['errors'].append((row_num, f"Invalid date format: '{date_str}' (use YYYY-MM-DD or DD/MM/YYYY)"))
                     continue
                 
                 # Validate amount
@@ -277,6 +287,15 @@ def parse_csv_ledger_entries(csv_content, handle_duplicates='skip', ledger_type=
                         session_id = session.id
                     except Session.DoesNotExist:
                         results['warnings'].append((row_num, f"Session '{session_name}' not found, will be skipped"))
+
+                # Resolve optional Emp_No → employee FK (Expense only)
+                employee_id = None
+                if ledger_type == 'Expense' and emp_no_str:
+                    from employees.models import Employee
+                    try:
+                        employee_id = Employee.objects.get(emp_no=int(emp_no_str)).pk
+                    except (Employee.DoesNotExist, ValueError):
+                        results['warnings'].append((row_num, f"Emp_No '{emp_no_str}' not found, employee link skipped"))
                 
                 # Check for duplicates (by voucher_number, date, major_head, head, sub_head)
                 duplicate = model.objects.filter(
@@ -298,6 +317,7 @@ def parse_csv_ledger_entries(csv_content, handle_duplicates='skip', ledger_type=
                     'payment_type': payment_type or 'Cash',
                     'session_id': session_id,
                     'details': details,
+                    'employee_id': employee_id,
                 }
                 
                 if duplicate:
@@ -358,6 +378,7 @@ def import_ledger_entries(valid_rows, duplicate_rows, handle_duplicates='skip', 
                 sub_head=data['sub_head'],
                 payment_type=data['payment_type'],
                 session_id=data['session_id'],
+                **({'employee_id': data['employee_id']} if ledger_type == 'Expense' and data.get('employee_id') else {}),
                 details=data['details'],
             )
             result['created'] += 1

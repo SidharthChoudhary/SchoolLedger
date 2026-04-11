@@ -1,0 +1,5 @@
+Voucher_Number,Date,Amount,Major_Head,Head,Sub_Head,Payment_Type,Session,Details
+I001,31/03/2023,2252750,Fees,Tuition Fee,Fees,Cash,2022-2023,Data  Migration
+I002,31/03/2023,23830,Bus Booking,Bus Booking,Fees,Cash,2022-2023,Data  Migration
+I003,31/03/2023,159000,RTE,Fees,RTE,Cash,2022-2023,Data  Migration
+I004,31/03/2023,59155,Other,Other,Fees,Cash,2022-2023,Data  Migration

@@ -46,6 +46,29 @@ def _build_head_data():
     return json.dumps(result)
 
 
+def _build_filter_head_data():
+    """Build head data for the FILTER form from actual DB records (not Head model).
+    This ensures the filter dropdowns reflect what is really stored."""
+    result = {"Expense": {}, "Income": {}}
+
+    for major, head, sub in Expense.objects.exclude(
+            major_head='').values_list('major_head', 'head', 'sub_head').distinct().order_by(
+            'major_head', 'head', 'sub_head'):
+        result["Expense"].setdefault(major, {}).setdefault(head, [])
+        if sub and sub not in result["Expense"][major][head]:
+            result["Expense"][major][head].append(sub)
+
+    for major, head, sub in Income.objects.exclude(
+            major_head='').values_list('major_head', 'head', 'sub_head').distinct().order_by(
+            'major_head', 'head', 'sub_head'):
+        result["Income"].setdefault(major, {}).setdefault(head, [])
+        if sub and sub not in result["Income"][major][head]:
+            result["Income"][major][head].append(sub)
+
+    return json.dumps(result)
+
+
+
 from django.views.decorators.cache import never_cache
 
 @never_cache
@@ -112,7 +135,7 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
     if name_q:
         from django.db.models import Q
         qs = qs.filter(
-            Q(sub_head__icontains=name_q)
+            Q(sub_head__icontains=name_q) | Q(employee__name__icontains=name_q)
         )
 
     if selected_session:
@@ -161,6 +184,7 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
             "session_choices": Session.objects.all().order_by("session"),
             "major_heads": Head.objects.filter(ledger_type=ledger_type).values_list("major_head", flat=True).distinct().order_by("major_head"),
             "head_data_json": _build_head_data(),
+            "filter_head_data_json": _build_filter_head_data(),
             "month_start": month_start,
             "today": month_end,
             "month_total": total_amount,
@@ -596,6 +620,7 @@ def bulk_import_ledger(request):
             "form": form,
             "import_result": import_result,
             "page_title": page_title,
+            "ledger_type": ledger_type,
         }
     )
 
@@ -603,20 +628,29 @@ def bulk_import_ledger(request):
 @never_cache
 def download_ledger_template(request):
     """Download sample CSV template for ledger entries bulk import"""
+    ledger_type = 'Income' if 'ledger-income' in request.path else 'Expense'
     # Create CSV response
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="ledger_entries_template.csv"'
+    filename = 'income_ledger_template.csv' if ledger_type == 'Income' else 'expense_ledger_template.csv'
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
     writer = csv.writer(response)
     
     # Header row
     writer.writerow(['Voucher_Number', 'Date', 'Amount', 'Major_Head', 'Head', 'Sub_Head', 'Payment_Type', 'Session', 'Details'])
     
-    # Sample rows - Expenses with simplified structure
-    writer.writerow(['V001', '2024-01-15', '50000', 'Salary', 'Teacher', 'Poonam Gupta', 'Cash', '2023-2024', 'Employee salary'])
-    writer.writerow(['V002', '2024-01-20', '5000', 'Operations', 'Books', 'ABC Book Publishers', 'Credit', '2023-2024', 'Books purchase'])
-    writer.writerow(['V003', '2024-01-25', '2000', 'Transport', 'Fuel', 'Van Fuel', 'Cash', '2023-2024', 'Transport fuel'])
-    writer.writerow(['V004', '2024-01-28', '1500', 'Operations', 'Maintenance', 'Office Maintenance', 'Cash', '2023-2024', 'General maintenance'])
+    if ledger_type == 'Income':
+        # Sample rows - Income entries
+        writer.writerow(['I001', '2024-01-15', '15000', 'Fee', 'Tuition Fee', 'Rahul Sharma', 'Cash', '2023-2024', 'Monthly tuition fee'])
+        writer.writerow(['I002', '2024-01-20', '5000', 'Fee', 'Transport Fee', 'Priya Singh', 'Bank Transfer', '2023-2024', 'Bus fee Q3'])
+        writer.writerow(['I003', '2024-01-25', '2000', 'Donation', 'Building Fund', 'Parent Donation', 'Cash', '2023-2024', 'Building fund donation'])
+        writer.writerow(['I004', '2024-01-28', '3000', 'Fee', 'Exam Fee', 'Amit Kumar', 'Cash', '2023-2024', 'Annual exam fee'])
+    else:
+        # Sample rows - Expense entries
+        writer.writerow(['V001', '2024-01-15', '50000', 'Salary', 'Teacher', 'Poonam Gupta', 'Cash', '2023-2024', 'Employee salary'])
+        writer.writerow(['V002', '2024-01-20', '5000', 'Operations', 'Books', 'ABC Book Publishers', 'Credit', '2023-2024', 'Books purchase'])
+        writer.writerow(['V003', '2024-01-25', '2000', 'Transport', 'Fuel', 'Van Fuel', 'Cash', '2023-2024', 'Transport fuel'])
+        writer.writerow(['V004', '2024-01-28', '1500', 'Operations', 'Maintenance', 'Office Maintenance', 'Cash', '2023-2024', 'General maintenance'])
     
     return response
 
@@ -769,57 +803,98 @@ def api_get_fee_account(request, srn):
 
 @never_cache
 def session_ledger_report(request):
-    """Generate a ledger report for a selected session showing income and expenses by major head"""
-    sessions = Session.objects.all()
+    """Generate a ledger report for a selected session (or all sessions) showing income and expenses by major head"""
+    sessions = Session.objects.all().order_by('session')
     selected_session_id = request.GET.get('session')
     
     report_data = []
     income_major_heads = []
     expense_major_heads = []
-    
-    if selected_session_id:
+    all_sessions_mode = (selected_session_id == 'all')
+    selected_session = None
+
+    if selected_session_id and not all_sessions_mode:
         try:
             selected_session = Session.objects.get(id=selected_session_id)
-            
-            # Get all unique income major heads for this session
-            income_major_heads = list(Income.objects.filter(
-                session_id=selected_session_id
-            ).values_list('major_head', flat=True).distinct().order_by('major_head'))
-            income_major_heads = [h for h in income_major_heads if h]  # Remove empty strings
-            
-            # Get all unique expense major heads for this session
-            expense_major_heads = list(Expense.objects.filter(
-                session_id=selected_session_id
-            ).values_list('major_head', flat=True).distinct().order_by('major_head'))
-            expense_major_heads = [h for h in expense_major_heads if h]  # Remove empty strings
-            
-            # Get all months from both Income and Expense for this session
-            income_months = Income.objects.filter(
-                session_id=selected_session_id
-            ).dates('date', 'month', order='ASC')
-            
-            expense_months = Expense.objects.filter(
-                session_id=selected_session_id
-            ).dates('date', 'month', order='ASC')
-            
-            # Combine and deduplicate months, sorted in financial year order (Apr → Mar)
+        except Session.DoesNotExist:
+            selected_session_id = None
+
+    if selected_session_id:
+        # Base querysets
+        if all_sessions_mode:
+            income_qs = Income.objects.all()
+            expense_qs = Expense.objects.all()
+        else:
+            income_qs = Income.objects.filter(session_id=selected_session_id)
+            expense_qs = Expense.objects.filter(session_id=selected_session_id)
+
+        # Get all unique income major heads
+        income_major_heads = list(income_qs.values_list('major_head', flat=True).distinct().order_by('major_head'))
+        income_major_heads = [h for h in income_major_heads if h]
+
+        # Get all unique expense major heads
+        expense_major_heads = list(expense_qs.values_list('major_head', flat=True).distinct().order_by('major_head'))
+        expense_major_heads = [h for h in expense_major_heads if h]
+
+        # Initialize column totals
+        income_head_totals = {head: 0.0 for head in income_major_heads}
+        expense_head_totals = {head: 0.0 for head in expense_major_heads}
+
+        if all_sessions_mode:
+            # Group by session — one row per session, ordered by session name
+            session_list = list(sessions)
+            for session in session_list:
+                income_amounts = []
+                expense_amounts = []
+                row_total_income = 0
+                row_total_expense = 0
+
+                for head in income_major_heads:
+                    amount = float(Income.objects.filter(
+                        session=session, major_head=head
+                    ).aggregate(total=Sum('amount'))['total'] or 0)
+                    income_amounts.append(amount)
+                    row_total_income += amount
+                    income_head_totals[head] += amount
+
+                for head in expense_major_heads:
+                    amount = float(Expense.objects.filter(
+                        session=session, major_head=head
+                    ).aggregate(total=Sum('amount'))['total'] or 0)
+                    expense_amounts.append(amount)
+                    row_total_expense += amount
+                    expense_head_totals[head] += amount
+
+                # Skip sessions with no data
+                if row_total_income == 0 and row_total_expense == 0:
+                    continue
+
+                row_balance = row_total_income - row_total_expense
+                report_data.append({
+                    'month': None,
+                    'month_display': session.session,
+                    'income_amounts': income_amounts,
+                    'expense_amounts': expense_amounts,
+                    'total_income': row_total_income,
+                    'total_expense': row_total_expense,
+                    'balance': row_balance,
+                })
+        else:
+            # Group by month within the selected session
+            income_months = income_qs.dates('date', 'month', order='ASC')
+            expense_months = expense_qs.dates('date', 'month', order='ASC')
+
             all_months = sorted(
                 set(list(income_months) + list(expense_months)),
                 key=lambda d: (d.year if d.month >= 4 else d.year - 1, (d.month - 4) % 12)
             )
-            
-            # Initialize column totals
-            income_head_totals = {head: 0.0 for head in income_major_heads}
-            expense_head_totals = {head: 0.0 for head in expense_major_heads}
-            
-            # Build report data for each month
+
             for month in all_months:
                 income_amounts = []
                 expense_amounts = []
                 month_total_income = 0
                 month_total_expense = 0
-                
-                # Get income amounts by major head for this month
+
                 for head in income_major_heads:
                     amount = float(Income.objects.filter(
                         session_id=selected_session_id,
@@ -830,8 +905,7 @@ def session_ledger_report(request):
                     income_amounts.append(amount)
                     month_total_income += amount
                     income_head_totals[head] += amount
-                
-                # Get expense amounts by major head for this month
+
                 for head in expense_major_heads:
                     amount = float(Expense.objects.filter(
                         session_id=selected_session_id,
@@ -842,42 +916,36 @@ def session_ledger_report(request):
                     expense_amounts.append(amount)
                     month_total_expense += amount
                     expense_head_totals[head] += amount
-                
+
                 month_balance = month_total_income - month_total_expense
-                
                 report_data.append({
                     'month': month,
-                    'month_display': month.strftime('%b'),
+                    'month_display': month.strftime('%b %Y'),
                     'income_amounts': income_amounts,
                     'expense_amounts': expense_amounts,
                     'total_income': month_total_income,
                     'total_expense': month_total_expense,
                     'balance': month_balance,
                 })
-            
-            # Calculate totals
-            total_income = sum(m['total_income'] for m in report_data)
-            total_expense = sum(m['total_expense'] for m in report_data)
-            total_balance = total_income - total_expense
-            
-            # Convert totals to lists in same order as major_heads
-            income_head_totals_list = [income_head_totals[head] for head in income_major_heads]
-            expense_head_totals_list = [expense_head_totals[head] for head in expense_major_heads]
-            
-        except Session.DoesNotExist:
-            selected_session = None
+
+        total_income = sum(m['total_income'] for m in report_data)
+        total_expense = sum(m['total_expense'] for m in report_data)
+        total_balance = total_income - total_expense
+        income_head_totals_list = [income_head_totals[head] for head in income_major_heads]
+        expense_head_totals_list = [expense_head_totals[head] for head in expense_major_heads]
+
     else:
-        selected_session = None
         total_income = 0
         total_expense = 0
         total_balance = 0
         income_head_totals_list = []
         expense_head_totals_list = []
-    
+
     context = {
         'sessions': sessions,
         'selected_session': selected_session,
         'selected_session_id': selected_session_id,
+        'all_sessions_mode': all_sessions_mode,
         'income_major_heads': income_major_heads,
         'expense_major_heads': expense_major_heads,
         'report_data': report_data,
@@ -887,7 +955,7 @@ def session_ledger_report(request):
         'income_head_totals_list': income_head_totals_list if selected_session_id else [],
         'expense_head_totals_list': expense_head_totals_list if selected_session_id else [],
     }
-    
+
     return render(request, 'dailyLedger/session_ledger_report.html', context)
 
 

@@ -50,17 +50,15 @@
    - Install: pip install mysqlclient gunicorn
 
 5. **Configure Database Settings**
-   - Edit schoolapp/settings.py
-   - Replace DATABASES section with MySQL config
-   - Add MySQL password (from step 2)
-   - Add production security settings
-   - Save file
+   - Copy production_settings_local.example.py to production_settings_local.py
+   - Add MySQL password and any server-only values there
+   - Leave tracked settings files unchanged
 
 6. **Initialize Database**
-   - Run: python manage.py migrate
-   - Run: python manage.py init_roles
-   - Run: python manage.py createsuperuser
-   - Run: python manage.py collectstatic
+   - Run: python manage.py migrate --settings=production_settings
+   - Run: python manage.py init_roles --settings=production_settings
+   - Run: python manage.py createsuperuser --settings=production_settings
+   - Run: python manage.py collectstatic --noinput --settings=production_settings
 
 7. **Configure Web App**
    - Create web app on PythonAnywhere
@@ -90,7 +88,8 @@ All these files are now in your SchoolLedger folder:
 ✅ QUICKSTART.md                      ← 5-step overview
 ✅ DEPLOYMENT_STEPS.md                ← Detailed walkthrough
 ✅ RBAC_SETUP.md                      ← RBAC documentation
-✅ production_settings.py             ← Reference settings
+✅ production_settings.py             ← Stable production wrapper
+✅ production_settings_local.example.py ← Copy to a gitignored local file on the server
 ✅ requirements.txt                   ← All Python packages (auto-generated)
 ✅ .git/                              ← Git repository (all code committed)
 ```

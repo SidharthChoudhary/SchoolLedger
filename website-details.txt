@@ -37,10 +37,12 @@ python manage.py collectstatic --noinput
 --
 on PAW.com
 1, git pull 
-2. reset db details on schoolapp/settings.py ( same DATABSE details as in production_settings.py)
+2. do not edit tracked settings files after pull
+3. keep real db details in production_settings_local.py
+4. update only production_settings_local.py when credentials change
 3.
 for database changes, 
-3.1 python manage.py migrate
+3.1 python manage.py migrate --settings=production_settings
 for css changes 
 python manage.py collectstatic --settings=production_settings
 

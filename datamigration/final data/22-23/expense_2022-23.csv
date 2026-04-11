@@ -1,0 +1,4 @@
+Voucher_Number,Date,Amount,Major_Head,Head,Sub_Head,Payment_Type,Session,Details,Emp_No
+1,31/03/2023,1829453,Salary,Other,Other,Cash,2022-2023,Data Migration from session 22-23,
+2,31/03/2023,159000,Other,Other,Other,Cash,2022-2023,Data Migration from session 22-23,
+3,31/03/2023,258676,Transport,Other,Other,Cash,2022-2023,Data Migration from session 22-23,

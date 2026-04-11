@@ -13,7 +13,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 # Set Django settings module
-os.environ['DJANGO_SETTINGS_MODULE'] = 'schoolapp.settings'
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'production_settings')
 
 # Setup Django
 import django
