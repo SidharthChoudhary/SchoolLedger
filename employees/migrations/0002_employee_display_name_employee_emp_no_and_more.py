@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ManualSalaryData',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('amount_type', models.CharField(choices=[('salary', 'Salary'), ('old_due', 'Old Due'), ('other', 'Other')], max_length=20)),
                 ('amount', models.DecimalField(decimal_places=2, default=0, help_text='Amount in rupees', max_digits=10)),
                 ('month', models.CharField(help_text='Format: YYYY-MM (e.g., 2024-01)', max_length=7)),
@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EmployeeAttendance',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date', models.DateField()),
                 ('attendance', models.CharField(choices=[('present', 'Present'), ('absent', 'Absent'), ('half-day', 'Half Day'), ('leave', 'Leave')], default='present', max_length=10)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EmployeeRegister',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('month', models.CharField(default='2024-01', help_text='Format: YYYY-MM (e.g., 2024-01)', max_length=7)),
                 ('paid_days', models.DecimalField(decimal_places=2, default=0, help_text='Number of days to be paid', max_digits=5)),
                 ('payable_salary', models.DecimalField(decimal_places=2, default=0, help_text='Calculated monthly payable salary', max_digits=10)),
