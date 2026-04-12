@@ -173,7 +173,7 @@ def parse_csv_employees(csv_content, handle_duplicates='skip'):
                         results['warnings'].append((row_num, "Duplicate record (will be updated)"))
                         results['duplicate_rows'].append((row_num, data))
                 else:
-                    results['valid_rows'].append((data, row_num))
+                    results['valid_rows'].append((row_num, data))
             
             except Exception as e:
                 results['errors'].append((row_num, f"Error parsing row: {str(e)}"))
