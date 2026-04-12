@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
     # Student URLs
     path('add/', views.add_student, name='add_student'),
+    path('bulk-import/', views.bulk_import_students, name='bulk_import_students'),
+    path('download-template/', views.download_students_template, name='download_students_template'),
     path('confirm-fee-account/', views.confirm_fee_account_link, name='confirm_fee_account_link'),
     path('confirm-student-addition/', views.confirm_student_addition, name='confirm_student_addition'),
     path('view/', views.view_students, name='view_students'),

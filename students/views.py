@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.urls import reverse
 from datetime import date
+import csv
 from django.views.decorators.cache import never_cache
 from dailyLedger.models import Session
 from .models import (
@@ -21,6 +23,106 @@ from .forms import StudentForm, ClassForm, FeesAccountForm
 def add_student(request):
     """Redirect to view_students for add/edit functionality"""
     return redirect('view_students')
+
+
+def bulk_import_students(request):
+    from .forms import BulkImportStudentForm
+    from .utils import parse_csv_students, import_students
+
+    import_result = None
+
+    if request.method == 'POST':
+        form = BulkImportStudentForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = form.cleaned_data['csv_file']
+            handle_duplicates = form.cleaned_data['handle_duplicates']
+            dry_run = form.cleaned_data['dry_run']
+
+            try:
+                csv_content = csv_file.read().decode('utf-8')
+                parse_result = parse_csv_students(csv_content, handle_duplicates)
+
+                if parse_result['errors']:
+                    for row_num, msg in parse_result['errors']:
+                        messages.error(request, f'Row {row_num}: {msg}')
+
+                if parse_result['warnings']:
+                    for row_num, msg in parse_result['warnings']:
+                        messages.warning(request, f'Row {row_num}: {msg}')
+
+                if parse_result['valid_rows'] or parse_result['duplicate_rows']:
+                    if dry_run:
+                        import_result = {
+                            'created': len(parse_result['valid_rows']),
+                            'updated': len(parse_result['duplicate_rows']) if handle_duplicates == 'update' else 0,
+                            'skipped': len(parse_result['duplicate_rows']) if handle_duplicates == 'skip' else 0,
+                            'dry_run': True,
+                            'valid_rows': parse_result['valid_rows'],
+                            'duplicate_rows': parse_result['duplicate_rows'],
+                            'handle_duplicates': handle_duplicates,
+                        }
+                        messages.info(request, "Dry run mode: no records were written. Uncheck 'Dry Run' to import.")
+                    else:
+                        import_result = import_students(
+                            parse_result['valid_rows'],
+                            parse_result['duplicate_rows'],
+                            handle_duplicates,
+                        )
+                        if import_result['created']:
+                            messages.success(request, f"Created {import_result['created']} student(s)")
+                        if import_result['updated']:
+                            messages.success(request, f"Updated {import_result['updated']} student(s)")
+                        if import_result['skipped']:
+                            messages.info(request, f"Skipped {import_result['skipped']} duplicate student(s)")
+                        if import_result['errors']:
+                            for row_num, msg in import_result['errors']:
+                                messages.error(request, f'Row {row_num}: {msg}')
+                else:
+                    messages.error(request, 'No valid records to import')
+
+            except Exception as exc:
+                messages.error(request, f'Error processing file: {exc}')
+    else:
+        form = BulkImportStudentForm()
+
+    return render(
+        request,
+        'students/bulk_import_students.html',
+        {
+            'form': form,
+            'import_result': import_result,
+        },
+    )
+
+
+def download_students_template(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="students_template.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'First_Name', 'Last_Name', 'Gender', 'Fathers_Name', 'Mothers_Name',
+        'Class_Code', 'Class_Name', 'Session', 'SRN',
+        'Date_of_Birth', 'Admission_Date', 'Transport_Method', 'RTE', 'Primary_Account_Holder',
+        'Fathers_Phone', 'Mothers_Phone', 'Gardians_Name', 'Gardians_Phone',
+        'Previous_School', 'Medical_Conditions', 'Dietary_Restrictions'
+    ])
+    writer.writerow([
+        'Aarav', 'Sharma', 'male', 'Rajesh Sharma', 'Sunita Sharma',
+        '5', 'Class 5', '2025-2026', 'SRN-1001',
+        '2015-06-14', '2025-04-01', 'yes', 'no', 'no',
+        '9876543210', '9876543211', '', '',
+        'ABC Public School', '', ''
+    ])
+    writer.writerow([
+        'Anaya', 'Verma', 'female', 'Manoj Verma', 'Priya Verma',
+        '6', 'Class 6', '2025-2026', 'SRN-1002',
+        '2014-09-03', '2025-04-01', 'no', 'yes', 'no',
+        '9876543220', '9876543221', '', '',
+        '', 'Asthma', 'No peanuts'
+    ])
+
+    return response
 
 
 def confirm_fee_account_link(request):

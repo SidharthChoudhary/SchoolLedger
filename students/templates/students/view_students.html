@@ -4,6 +4,15 @@
 
 <h2 style="margin-top:0;">View Pupils</h2>
 
+<div style="margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+  <a href="{% url 'bulk_import_students' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: var(--teal-700); color: white; text-decoration: none; font-size: 14px;">
+    Bulk Import Students
+  </a>
+  <a href="{% url 'download_students_template' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: #059669; color: white; text-decoration: none; font-size: 14px;">
+    Download CSV Template
+  </a>
+</div>
+
 <div class="card" style="margin-bottom:14px;">
   <h3 class="form-section">Add / Edit Student</h3>
 

@@ -2,6 +2,31 @@ from django import forms
 from .models import Student, Class, FeesAccount
 
 
+class BulkImportStudentForm(forms.Form):
+    DUPLICATE_CHOICES = [
+        ('error', 'Mark as error'),
+        ('skip', 'Skip duplicates'),
+        ('update', 'Update duplicates'),
+    ]
+
+    csv_file = forms.FileField(
+        label='CSV File',
+        help_text='Upload a CSV file with student data'
+    )
+    handle_duplicates = forms.ChoiceField(
+        choices=DUPLICATE_CHOICES,
+        initial='error',
+        label='Handle Duplicates',
+        help_text='Decide how to handle duplicate student records'
+    )
+    dry_run = forms.BooleanField(
+        required=False,
+        initial=False,
+        label='Dry Run',
+        help_text='Preview changes without saving to database'
+    )
+
+
 class ClassForm(forms.ModelForm):
     class Meta:
         model = Class
