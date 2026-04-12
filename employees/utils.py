@@ -203,7 +203,7 @@ def import_employees(valid_rows, duplicate_rows, handle_duplicates='skip'):
     }
     
     # Import valid rows (new records)
-    for data, row_num in valid_rows:
+    for row_num, data in valid_rows:
         try:
             Employee.objects.create(**data)
             result['created'] += 1
