@@ -148,17 +148,16 @@ def _build_monthly_ledger_report_data(selected_session_id=None, selected_fy=None
 
     fy_start, fy_end = _parse_fy_label(selected_fy)
     report_rows = []
+    income_major_heads = []
+    expense_major_heads = []
 
     totals = {
-        'fee_income': 0.0,
-        'other_income': 0.0,
         'total_income': 0.0,
-        'salary_expense': 0.0,
-        'transport_expense': 0.0,
-        'other_expense': 0.0,
         'total_expense': 0.0,
         'balance': 0.0,
     }
+    income_head_totals = {}
+    expense_head_totals = {}
 
     if fy_start and fy_end:
         start_date = dt_date(fy_start, 4, 1)
@@ -166,6 +165,19 @@ def _build_monthly_ledger_report_data(selected_session_id=None, selected_fy=None
 
         income_qs = income_qs.filter(date__range=(start_date, end_date))
         expense_qs = expense_qs.filter(date__range=(start_date, end_date))
+
+        income_major_heads = list(
+            income_qs.values_list('major_head', flat=True).distinct().order_by('major_head')
+        )
+        income_major_heads = [head for head in income_major_heads if head]
+
+        expense_major_heads = list(
+            expense_qs.values_list('major_head', flat=True).distinct().order_by('major_head')
+        )
+        expense_major_heads = [head for head in expense_major_heads if head]
+
+        income_head_totals = {head: 0.0 for head in income_major_heads}
+        expense_head_totals = {head: 0.0 for head in expense_major_heads}
 
         financial_months = list(range(4, 13)) + list(range(1, 4))
 
@@ -175,39 +187,42 @@ def _build_monthly_ledger_report_data(selected_session_id=None, selected_fy=None
             monthly_income = income_qs.filter(date__year=year, date__month=month)
             monthly_expense = expense_qs.filter(date__year=year, date__month=month)
 
-            total_income = float(monthly_income.aggregate(total=Sum('amount'))['total'] or 0)
-            fee_income = float(monthly_income.filter(major_head__icontains='fee').aggregate(total=Sum('amount'))['total'] or 0)
-            other_income = total_income - fee_income
+            income_amounts = []
+            expense_amounts = []
+            total_income = 0.0
+            total_expense = 0.0
 
-            total_expense = float(monthly_expense.aggregate(total=Sum('amount'))['total'] or 0)
-            salary_expense = float(monthly_expense.filter(major_head__icontains='salary').aggregate(total=Sum('amount'))['total'] or 0)
-            transport_expense = float(monthly_expense.filter(major_head__icontains='transport').aggregate(total=Sum('amount'))['total'] or 0)
-            other_expense = total_expense - salary_expense - transport_expense
+            for head in income_major_heads:
+                amount = float(monthly_income.filter(major_head=head).aggregate(total=Sum('amount'))['total'] or 0)
+                income_amounts.append(amount)
+                total_income += amount
+                income_head_totals[head] += amount
+
+            for head in expense_major_heads:
+                amount = float(monthly_expense.filter(major_head=head).aggregate(total=Sum('amount'))['total'] or 0)
+                expense_amounts.append(amount)
+                total_expense += amount
+                expense_head_totals[head] += amount
 
             balance = total_income - total_expense
 
             row = {
                 'month_num': month,
                 'month': calendar.month_name[month],
-                'fee_income': fee_income,
-                'other_income': other_income,
+                'income_amounts': income_amounts,
+                'expense_amounts': expense_amounts,
                 'total_income': total_income,
-                'salary_expense': salary_expense,
-                'transport_expense': transport_expense,
-                'other_expense': other_expense,
                 'total_expense': total_expense,
                 'balance': balance,
             }
             report_rows.append(row)
 
-            totals['fee_income'] += fee_income
-            totals['other_income'] += other_income
             totals['total_income'] += total_income
-            totals['salary_expense'] += salary_expense
-            totals['transport_expense'] += transport_expense
-            totals['other_expense'] += other_expense
             totals['total_expense'] += total_expense
             totals['balance'] += balance
+
+    income_head_totals_list = [income_head_totals[head] for head in income_major_heads]
+    expense_head_totals_list = [expense_head_totals[head] for head in expense_major_heads]
 
     return {
         'sessions': sessions,
@@ -215,6 +230,10 @@ def _build_monthly_ledger_report_data(selected_session_id=None, selected_fy=None
         'selected_session_id': str(selected_session_id) if selected_session_id else '',
         'fy_options': fy_options,
         'selected_fy': selected_fy,
+        'income_major_heads': income_major_heads,
+        'expense_major_heads': expense_major_heads,
+        'income_head_totals_list': income_head_totals_list,
+        'expense_head_totals_list': expense_head_totals_list,
         'report_rows': report_rows,
         'totals': totals,
     }
@@ -1129,36 +1148,31 @@ def monthly_ledger_report_csv(request):
     response['Content-Disposition'] = f'attachment; filename="monthly_ledger_report_{session_name}_{context["selected_fy"]}.csv"'
 
     writer = csv.writer(response)
-    writer.writerow([
-        'Month', 'Fee Income', 'Other Income', 'Total Income',
-        'Salary Expense', 'Transport Expense', 'Other Expense', 'Total Expense', 'Balance'
-    ])
+    header = ['Month']
+    header.extend(context['income_major_heads'])
+    header.append('Total Income')
+    header.extend(context['expense_major_heads'])
+    header.append('Total Expense')
+    header.append('Balance')
+    writer.writerow(header)
 
     for row in context['report_rows']:
-        writer.writerow([
-            row['month'],
-            f"{row['fee_income']:.0f}",
-            f"{row['other_income']:.0f}",
-            f"{row['total_income']:.0f}",
-            f"{row['salary_expense']:.0f}",
-            f"{row['transport_expense']:.0f}",
-            f"{row['other_expense']:.0f}",
-            f"{row['total_expense']:.0f}",
-            f"{row['balance']:.0f}",
-        ])
+        csv_row = [row['month']]
+        csv_row.extend([f"{amount:.0f}" for amount in row['income_amounts']])
+        csv_row.append(f"{row['total_income']:.0f}")
+        csv_row.extend([f"{amount:.0f}" for amount in row['expense_amounts']])
+        csv_row.append(f"{row['total_expense']:.0f}")
+        csv_row.append(f"{row['balance']:.0f}")
+        writer.writerow(csv_row)
 
     totals = context['totals']
-    writer.writerow([
-        'Total',
-        f"{totals['fee_income']:.0f}",
-        f"{totals['other_income']:.0f}",
-        f"{totals['total_income']:.0f}",
-        f"{totals['salary_expense']:.0f}",
-        f"{totals['transport_expense']:.0f}",
-        f"{totals['other_expense']:.0f}",
-        f"{totals['total_expense']:.0f}",
-        f"{totals['balance']:.0f}",
-    ])
+    total_row = ['Total']
+    total_row.extend([f"{total:.0f}" for total in context['income_head_totals_list']])
+    total_row.append(f"{totals['total_income']:.0f}")
+    total_row.extend([f"{total:.0f}" for total in context['expense_head_totals_list']])
+    total_row.append(f"{totals['total_expense']:.0f}")
+    total_row.append(f"{totals['balance']:.0f}")
+    writer.writerow(total_row)
 
     return response
 

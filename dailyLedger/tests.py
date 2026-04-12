@@ -192,6 +192,8 @@ class LedgerViewTests(TestCase):
         })
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'April')
+        self.assertContains(resp, 'Fees')
+        self.assertContains(resp, 'Salary')
 
     def test_monthly_ledger_report_csv_export(self):
         Income.objects.create(date=date(2025, 4, 10), amount=6000, session=self.session, major_head='Fees')

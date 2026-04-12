@@ -62,12 +62,17 @@
       <thead>
         <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
           <th style="padding:10px; text-align:left; border:1px solid #e5e7eb; font-weight:700;">Month</th>
-          <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#e0f2fe;">Fee Income</th>
-          <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#e0f2fe;">Other Income</th>
+
+          {% for head in income_major_heads %}
+          <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#e0f2fe;">{{ head }}</th>
+          {% endfor %}
+
           <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#dbeafe;">Total Income</th>
-          <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fce7f3;">Salary Expense</th>
-          <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fce7f3;">Transport Expense</th>
-          <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fce7f3;">Other Expense</th>
+
+          {% for head in expense_major_heads %}
+          <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fce7f3;">{{ head }}</th>
+          {% endfor %}
+
           <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fbecf3;">Total Expense</th>
           <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#f0fdf4;">Balance</th>
         </tr>
@@ -76,12 +81,17 @@
         {% for row in report_rows %}
         <tr style="border-bottom:1px solid #e5e7eb;">
           <td style="padding:10px; border:1px solid #e5e7eb; font-weight:600;">{{ row.month }}</td>
-          <td style="padding:10px; text-align:right; border:1px solid #e5e7eb;">{{ row.fee_income|floatformat:0 }}</td>
-          <td style="padding:10px; text-align:right; border:1px solid #e5e7eb;">{{ row.other_income|floatformat:0 }}</td>
+
+          {% for amount in row.income_amounts %}
+          <td style="padding:10px; text-align:right; border:1px solid #e5e7eb;">{{ amount|floatformat:0 }}</td>
+          {% endfor %}
+
           <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:600; background:#dbeafe;">{{ row.total_income|floatformat:0 }}</td>
-          <td style="padding:10px; text-align:right; border:1px solid #e5e7eb;">{{ row.salary_expense|floatformat:0 }}</td>
-          <td style="padding:10px; text-align:right; border:1px solid #e5e7eb;">{{ row.transport_expense|floatformat:0 }}</td>
-          <td style="padding:10px; text-align:right; border:1px solid #e5e7eb;">{{ row.other_expense|floatformat:0 }}</td>
+
+          {% for amount in row.expense_amounts %}
+          <td style="padding:10px; text-align:right; border:1px solid #e5e7eb;">{{ amount|floatformat:0 }}</td>
+          {% endfor %}
+
           <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:600; background:#fbecf3;">{{ row.total_expense|floatformat:0 }}</td>
           {% if row.balance >= 0 %}
           <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:600; background:#f0fdf4; color:#15803d;">
@@ -95,12 +105,17 @@
 
         <tr style="background:#f9fafb; border-top:2px solid #d1d5db; border-bottom:2px solid #d1d5db; font-weight:700;">
           <td style="padding:10px; border:1px solid #d1d5db; white-space:nowrap;">Total</td>
-          <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#e0f2fe; white-space:nowrap;">{{ totals.fee_income|indian_number }}</td>
-          <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#e0f2fe; white-space:nowrap;">{{ totals.other_income|indian_number }}</td>
+
+          {% for total in income_head_totals_list %}
+          <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#e0f2fe; white-space:nowrap;">{{ total|indian_number }}</td>
+          {% endfor %}
+
           <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#dbeafe; white-space:nowrap;">{{ totals.total_income|indian_number }}</td>
-          <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fce7f3; white-space:nowrap;">{{ totals.salary_expense|indian_number }}</td>
-          <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fce7f3; white-space:nowrap;">{{ totals.transport_expense|indian_number }}</td>
-          <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fce7f3; white-space:nowrap;">{{ totals.other_expense|indian_number }}</td>
+
+          {% for total in expense_head_totals_list %}
+          <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fce7f3; white-space:nowrap;">{{ total|indian_number }}</td>
+          {% endfor %}
+
           <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fbecf3; white-space:nowrap;">{{ totals.total_expense|indian_number }}</td>
           {% if totals.balance >= 0 %}
           <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#f0fdf4; white-space:nowrap; color:#15803d;">{{ totals.balance|indian_number }}</td>
