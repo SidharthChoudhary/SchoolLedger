@@ -189,7 +189,6 @@ class LedgerViewTests(TestCase):
         Expense.objects.create(date=date(2025, 4, 18), amount=2000, session=self.session, major_head='Salary')
         resp = self.client.get(reverse('monthly_ledger_report'), {
             'session': self.session.id,
-            'financial_year': '2025-2026',
         })
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'April')
@@ -198,7 +197,6 @@ class LedgerViewTests(TestCase):
         Income.objects.create(date=date(2025, 4, 10), amount=6000, session=self.session, major_head='Fees')
         resp = self.client.get(reverse('monthly_ledger_report_csv'), {
             'session': self.session.id,
-            'financial_year': '2025-2026',
         })
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp['Content-Type'], 'text/csv')
@@ -209,7 +207,6 @@ class LedgerViewTests(TestCase):
     def test_monthly_ledger_report_pdf_view(self):
         resp = self.client.get(reverse('monthly_ledger_report_pdf'), {
             'session': self.session.id,
-            'financial_year': '2025-2026',
         })
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Monthly Ledger Report')

@@ -126,12 +126,23 @@ def _build_monthly_ledger_report_data(selected_session_id=None, selected_fy=None
 
     fy_options = sorted(fy_set, key=lambda x: int(x.split('-')[0]), reverse=True)
 
+    session_fy = None
+    if selected_session and selected_session.session:
+        fy_start_guess, fy_end_guess = _parse_fy_label(selected_session.session)
+        if fy_start_guess and fy_end_guess:
+            session_fy = selected_session.session
+
+    if not selected_fy and session_fy:
+        selected_fy = session_fy
+
     if selected_fy not in fy_options:
         current_fy = _fy_label_from_date(dt_date.today())
         if current_fy in fy_options:
             selected_fy = current_fy
         elif fy_options:
             selected_fy = fy_options[0]
+        elif session_fy:
+            selected_fy = session_fy
         else:
             selected_fy = current_fy
 
