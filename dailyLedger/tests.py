@@ -171,13 +171,22 @@ class LedgerViewTests(TestCase):
         resp = self.client.get(reverse('session_ledger_report'))
         self.assertEqual(resp.status_code, 200)
 
-    def test_session_ledger_report_with_session(self):
+    def test_session_ledger_report_shows_session_row(self):
         Expense.objects.create(date=date(2026, 1, 1), amount=1000, session=self.session, major_head='Salary')
         Income.objects.create(date=date(2026, 1, 5), amount=5000, session=self.session, major_head='Fees')
+        # Single session selected — should show session name, not month names
         resp = self.client.get(reverse('session_ledger_report'), {'session': self.session.id})
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Salary')
         self.assertContains(resp, 'Fees')
+        self.assertContains(resp, self.session.session)  # session label in a row
+        self.assertNotContains(resp, 'Jan 2026')          # no monthly rows
+
+    def test_session_ledger_report_all_sessions(self):
+        Expense.objects.create(date=date(2026, 1, 1), amount=500, session=self.session, major_head='Salary')
+        resp = self.client.get(reverse('session_ledger_report'), {'session': 'all'})
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, self.session.session)
 
     def test_monthly_ledger_report_loads(self):
         resp = self.client.get(reverse('monthly_ledger_report'))

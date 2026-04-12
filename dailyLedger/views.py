@@ -969,130 +969,80 @@ def api_get_fee_account(request, srn):
 
 @never_cache
 def session_ledger_report(request):
-    """Generate a ledger report for a selected session (or all sessions) showing income and expenses by major head"""
+    """Session summary report — one row per session showing income and expenses by major head."""
     sessions = Session.objects.all().order_by('session')
     selected_session_id = request.GET.get('session')
-    
+
     report_data = []
     income_major_heads = []
     expense_major_heads = []
-    all_sessions_mode = (selected_session_id == 'all')
     selected_session = None
 
-    if selected_session_id and not all_sessions_mode:
+    if selected_session_id and selected_session_id != 'all':
         try:
             selected_session = Session.objects.get(id=selected_session_id)
         except Session.DoesNotExist:
             selected_session_id = None
 
-    if selected_session_id:
-        # Base querysets
-        if all_sessions_mode:
-            income_qs = Income.objects.all()
-            expense_qs = Expense.objects.all()
-        else:
-            income_qs = Income.objects.filter(session_id=selected_session_id)
-            expense_qs = Expense.objects.filter(session_id=selected_session_id)
+    # Determine which sessions to summarise
+    if selected_session_id == 'all' or not selected_session_id:
+        sessions_to_show = list(sessions)
+    else:
+        sessions_to_show = [selected_session]
 
-        # Get all unique income major heads
-        income_major_heads = list(income_qs.values_list('major_head', flat=True).distinct().order_by('major_head'))
+    # Build major heads from the relevant sessions
+    if selected_session_id:
+        if selected_session_id == 'all':
+            income_qs_all = Income.objects.all()
+            expense_qs_all = Expense.objects.all()
+        else:
+            income_qs_all = Income.objects.filter(session_id=selected_session_id)
+            expense_qs_all = Expense.objects.filter(session_id=selected_session_id)
+
+        income_major_heads = list(income_qs_all.values_list('major_head', flat=True).distinct().order_by('major_head'))
         income_major_heads = [h for h in income_major_heads if h]
 
-        # Get all unique expense major heads
-        expense_major_heads = list(expense_qs.values_list('major_head', flat=True).distinct().order_by('major_head'))
+        expense_major_heads = list(expense_qs_all.values_list('major_head', flat=True).distinct().order_by('major_head'))
         expense_major_heads = [h for h in expense_major_heads if h]
 
-        # Initialize column totals
         income_head_totals = {head: 0.0 for head in income_major_heads}
         expense_head_totals = {head: 0.0 for head in expense_major_heads}
 
-        if all_sessions_mode:
-            # Group by session — one row per session, ordered by session name
-            session_list = list(sessions)
-            for session in session_list:
-                income_amounts = []
-                expense_amounts = []
-                row_total_income = 0
-                row_total_expense = 0
+        # One summary row per session
+        for session in sessions_to_show:
+            income_amounts = []
+            expense_amounts = []
+            row_total_income = 0
+            row_total_expense = 0
 
-                for head in income_major_heads:
-                    amount = float(Income.objects.filter(
-                        session=session, major_head=head
-                    ).aggregate(total=Sum('amount'))['total'] or 0)
-                    income_amounts.append(amount)
-                    row_total_income += amount
-                    income_head_totals[head] += amount
+            for head in income_major_heads:
+                amount = float(Income.objects.filter(
+                    session=session, major_head=head
+                ).aggregate(total=Sum('amount'))['total'] or 0)
+                income_amounts.append(amount)
+                row_total_income += amount
+                income_head_totals[head] += amount
 
-                for head in expense_major_heads:
-                    amount = float(Expense.objects.filter(
-                        session=session, major_head=head
-                    ).aggregate(total=Sum('amount'))['total'] or 0)
-                    expense_amounts.append(amount)
-                    row_total_expense += amount
-                    expense_head_totals[head] += amount
+            for head in expense_major_heads:
+                amount = float(Expense.objects.filter(
+                    session=session, major_head=head
+                ).aggregate(total=Sum('amount'))['total'] or 0)
+                expense_amounts.append(amount)
+                row_total_expense += amount
+                expense_head_totals[head] += amount
 
-                # Skip sessions with no data
-                if row_total_income == 0 and row_total_expense == 0:
-                    continue
+            if row_total_income == 0 and row_total_expense == 0:
+                continue
 
-                row_balance = row_total_income - row_total_expense
-                report_data.append({
-                    'month': None,
-                    'month_display': session.session,
-                    'income_amounts': income_amounts,
-                    'expense_amounts': expense_amounts,
-                    'total_income': row_total_income,
-                    'total_expense': row_total_expense,
-                    'balance': row_balance,
-                })
-        else:
-            # Group by month within the selected session
-            income_months = income_qs.dates('date', 'month', order='ASC')
-            expense_months = expense_qs.dates('date', 'month', order='ASC')
-
-            all_months = sorted(
-                set(list(income_months) + list(expense_months)),
-                key=lambda d: (d.year if d.month >= 4 else d.year - 1, (d.month - 4) % 12)
-            )
-
-            for month in all_months:
-                income_amounts = []
-                expense_amounts = []
-                month_total_income = 0
-                month_total_expense = 0
-
-                for head in income_major_heads:
-                    amount = float(Income.objects.filter(
-                        session_id=selected_session_id,
-                        major_head=head,
-                        date__year=month.year,
-                        date__month=month.month
-                    ).aggregate(total=Sum('amount'))['total'] or 0)
-                    income_amounts.append(amount)
-                    month_total_income += amount
-                    income_head_totals[head] += amount
-
-                for head in expense_major_heads:
-                    amount = float(Expense.objects.filter(
-                        session_id=selected_session_id,
-                        major_head=head,
-                        date__year=month.year,
-                        date__month=month.month
-                    ).aggregate(total=Sum('amount'))['total'] or 0)
-                    expense_amounts.append(amount)
-                    month_total_expense += amount
-                    expense_head_totals[head] += amount
-
-                month_balance = month_total_income - month_total_expense
-                report_data.append({
-                    'month': month,
-                    'month_display': month.strftime('%b %Y'),
-                    'income_amounts': income_amounts,
-                    'expense_amounts': expense_amounts,
-                    'total_income': month_total_income,
-                    'total_expense': month_total_expense,
-                    'balance': month_balance,
-                })
+            row_balance = row_total_income - row_total_expense
+            report_data.append({
+                'month_display': session.session,
+                'income_amounts': income_amounts,
+                'expense_amounts': expense_amounts,
+                'total_income': row_total_income,
+                'total_expense': row_total_expense,
+                'balance': row_balance,
+            })
 
         total_income = sum(m['total_income'] for m in report_data)
         total_expense = sum(m['total_expense'] for m in report_data)
@@ -1111,7 +1061,6 @@ def session_ledger_report(request):
         'sessions': sessions,
         'selected_session': selected_session,
         'selected_session_id': selected_session_id,
-        'all_sessions_mode': all_sessions_mode,
         'income_major_heads': income_major_heads,
         'expense_major_heads': expense_major_heads,
         'report_data': report_data,
