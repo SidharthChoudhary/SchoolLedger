@@ -1,5 +1,6 @@
 {% extends "website/base.html" %}
 {% load static %}
+{% load custom_filters %}
 {% block title %}Salary Grid - Paid{% endblock %}
 
 {% block content %}
@@ -61,16 +62,16 @@
       <!-- Grand Due shown in header totals row -->
       <tr style="background:#dbeafe; font-weight:700; border-bottom:2px solid #93c5fd;">
         <td colspan="2" style="padding:8px 12px; color:#1e3a5f; font-size:13px; position:sticky; left:0; background:#dbeafe; z-index:2;">Total</td>
-        <td style="padding:8px 12px; text-align:right; color:#1e3a5f;">₹ {{ grand_total_salary|floatformat:0 }}</td>
-        <td style="padding:8px 12px; text-align:right; color:#166534; background:#dcfce7;">₹ {{ grand_paid_salary|floatformat:0 }}</td>
+        <td style="padding:8px 12px; text-align:right; color:#1e3a5f;">₹{{ grand_total_salary|indian_number }}</td>
+        <td style="padding:8px 12px; text-align:right; color:#166534; background:#dcfce7;">₹{{ grand_paid_salary|indian_number }}</td>
         <td style="padding:8px 12px; text-align:right;
           {% if grand_due > 0 %}color:#b91c1c; background:#fee2e2;{% else %}color:#166534; background:#dcfce7;{% endif %}">
-          ₹ {{ grand_due|floatformat:0 }}
+          ₹{{ grand_due|indian_number }}
         </td>
         <td style="padding:8px 12px;"></td>
         {% for ct in col_totals_list %}
         <td style="padding:8px 12px; text-align:right; color:#1b4f4a;">
-          {% if ct %}₹ {{ ct|floatformat:0 }}{% else %}—{% endif %}
+          {% if ct %}₹{{ ct|indian_number }}{% else %}—{% endif %}
         </td>
         {% endfor %}
       </tr>
@@ -110,23 +111,23 @@
         </td>
         <!-- Summary columns -->
         <td style="padding:8px 12px; text-align:right; color:{% if row.employee.status == 'left' %}#b91c1c{% else %}#374151{% endif %};">
-          {% if row.total_salary %}₹ {{ row.total_salary|floatformat:0 }}{% else %}—{% endif %}
+          {% if row.total_salary %}₹{{ row.total_salary|indian_number }}{% else %}—{% endif %}
         </td>
         <td style="padding:8px 12px; text-align:right; background:{% if row.employee.status == 'left' %}#fff5f5{% else %}#f0fdf4{% endif %}; color:#166534; font-weight:600;">
-          {% if row.paid_salary %}₹ {{ row.paid_salary|floatformat:0 }}{% else %}—{% endif %}
+          {% if row.paid_salary %}₹{{ row.paid_salary|indian_number }}{% else %}—{% endif %}
         </td>
         <td style="padding:8px 12px; text-align:right;
           {% if row.due > 0 %}background:#fef2f2; color:#b91c1c; font-weight:600;
           {% elif row.due < 0 %}background:#f0fdf4; color:#166534; font-weight:600;
           {% else %}color:#9ca3af;{% endif %}">
-          {% if row.due %}₹ {{ row.due|floatformat:0 }}{% else %}—{% endif %}
+          {% if row.due %}₹{{ row.due|indian_number }}{% else %}—{% endif %}
         </td>
         <!-- Spacer between summary and monthly -->
         <td style="padding:8px 12px; border-left:2px solid #e5e7eb;"></td>
         <!-- Monthly paid amounts -->
         {% for val in row.monthly %}
         <td style="padding:8px 12px; text-align:right; color:{% if row.employee.status == 'left' %}#b91c1c{% else %}#374151{% endif %};">
-          {% if val %}<span style="font-weight:500;">₹ {{ val|floatformat:0 }}</span>{% else %}<span style="color:#d1d5db;">—</span>{% endif %}
+          {% if val %}<span style="font-weight:500;">₹{{ val|indian_number }}</span>{% else %}<span style="color:#d1d5db;">—</span>{% endif %}
         </td>
         {% endfor %}
       </tr>
@@ -135,16 +136,16 @@
     <tfoot>
       <tr style="background:#e6f4f1; font-weight:700; border-top:2px solid #9ca3af;">
         <td colspan="2" style="padding:9px 12px; color:#374151; position:sticky; left:0; background:#e6f4f1; z-index:2;">Total</td>
-        <td style="padding:9px 12px; text-align:right; color:#374151;">₹ {{ grand_total_salary|floatformat:0 }}</td>
-        <td style="padding:9px 12px; text-align:right; background:#dcfce7; color:#166534;">₹ {{ grand_paid_salary|floatformat:0 }}</td>
+        <td style="padding:9px 12px; text-align:right; color:#374151;">₹{{ grand_total_salary|indian_number }}</td>
+        <td style="padding:9px 12px; text-align:right; background:#dcfce7; color:#166534;">₹{{ grand_paid_salary|indian_number }}</td>
         <td style="padding:9px 12px; text-align:right;
           {% if grand_due > 0 %}background:#fee2e2; color:#b91c1c;{% else %}background:#dcfce7; color:#166534;{% endif %}">
-          ₹ {{ grand_due|floatformat:0 }}
+          ₹{{ grand_due|indian_number }}
         </td>
         <td style="padding:9px 12px; border-left:2px solid #e5e7eb;"></td>
         {% for ct in col_totals_list %}
         <td style="padding:9px 12px; text-align:right; color:#1b4f4a;">
-          {% if ct %}₹ {{ ct|floatformat:0 }}{% else %}—{% endif %}
+          {% if ct %}₹{{ ct|indian_number }}{% else %}—{% endif %}
         </td>
         {% endfor %}
       </tr>

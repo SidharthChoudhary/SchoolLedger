@@ -1,5 +1,6 @@
 {% extends "website/base.html" %}
 {% load static %}
+{% load custom_filters %}
 {% block title %}Staff Salary Detail{% endblock %}
 
 {% block content %}
@@ -130,16 +131,16 @@
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.year }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.month }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ row.payment_type }}</td>
-        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right;">&#8377; {{ row.basic_pay }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right;">&#8377;{{ row.basic_pay|indian_number }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; color:#888;">{{ row.notes }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;"
-            title="Salary: ₹{{ row.payable|floatformat:2 }}{% if row.old_due %} | Old Dues: ₹{{ row.old_due|floatformat:2 }}{% endif %}{% if row.other %} | Other: ₹{{ row.other|floatformat:2 }}{% endif %}">
-          {{ row.amount|floatformat:2 }}
+            title="Salary: ₹{{ row.payable|indian_number }}{% if row.old_due %} | Old Dues: ₹{{ row.old_due|indian_number }}{% endif %}{% if row.other %} | Other: ₹{{ row.other|indian_number }}{% endif %}">
+          ₹{{ row.amount|indian_number }}
         </td>
-        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;">{{ row.paid|floatformat:2 }}</td>
+        <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#f0f7fc;">₹{{ row.paid|indian_number }}</td>
         <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right; background:#fefce8;
           {% if row.net_due < 0 %}color:#dc2626;{% else %}color:#16a34a;{% endif %}">
-          {{ row.net_due|floatformat:2 }}
+          {% if row.net_due < 0 %}-₹{{ row.net_due|indian_number|slice:"1:" }}{% else %}₹{{ row.net_due|indian_number }}{% endif %}
         </td>
       </tr>
       {% endfor %}
@@ -147,11 +148,11 @@
     <tfoot>
       <tr style="background:#f0f9f8; font-weight:700;">
         <td colspan="5" style="padding:10px 16px; text-align:right; color:#374151; font-size:13px;">Total Salary to Pay</td>
-        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">{{ monthly_total|floatformat:2 }}</td>
-        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">{{ total_paid|floatformat:2 }}</td>
+        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">₹{{ monthly_total|indian_number }}</td>
+        <td style="padding:10px 16px; text-align:right; background:#dbeafe;">₹{{ total_paid|indian_number }}</td>
         <td style="padding:10px 16px; text-align:right; background:#fef9c3;
           {% if net_due < 0 %}color:#dc2626;{% else %}color:#16a34a;{% endif %}">
-          {{ net_due|floatformat:2 }}
+          {% if net_due < 0 %}-₹{{ net_due|indian_number|slice:"1:" }}{% else %}₹{{ net_due|indian_number }}{% endif %}
         </td>
       </tr>
     </tfoot>
@@ -181,12 +182,12 @@
           <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ tx.month }}</td>
           <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6;">{{ tx.payment_date }}</td>
           <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; color:#555;">{{ tx.remarks }}</td>
-          <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right;">{{ tx.amount }}</td>
+          <td style="padding:9px 16px; border-bottom:1px solid #f3f4f6; text-align:right;">₹{{ tx.amount|indian_number }}</td>
         </tr>
         {% endfor %}
         <tr style="background:#f0f9f8; font-weight:700; border-top:2px solid #e5e7eb;">
           <td colspan="4" style="padding:10px 16px; text-align:right; color:#374151;">Total Paid</td>
-          <td style="padding:10px 16px; text-align:right; color:#1b4f4a;">{{ total_paid|floatformat:2 }}</td>
+          <td style="padding:10px 16px; text-align:right; color:#1b4f4a;">₹{{ total_paid|indian_number }}</td>
         </tr>
       {% else %}
         <tr>
@@ -204,20 +205,20 @@
 
     <div style="background:#f0f9f8; border:1px solid #d1e9e7; border-radius:10px; padding:16px 20px;">
       <div style="font-size:12px; color:#6b7280; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Total Salary Due</div>
-      <div class="summary-value" style="font-size:28px; font-weight:800; color:#1b4f4a; margin:6px 0 4px;">{{ total_salary_due }}</div>
+      <div class="summary-value" style="font-size:28px; font-weight:800; color:#1b4f4a; margin:6px 0 4px;">₹{{ total_salary_due|indian_number }}</div>
       <div style="font-size:11px; color:#9ca3af;">
-        Basic Pay: &#8377; {{ base_salary }} &times; 12 months
+        Basic Pay: &#8377;{{ base_salary|indian_number }} &times; 12 months
       </div>
     </div>
 
     <div style="background:#f0f9f8; border:1px solid #d1e9e7; border-radius:10px; padding:16px 20px;">
       <div style="font-size:12px; color:#6b7280; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Total Amount Paid</div>
-      <div class="summary-value" style="font-size:28px; font-weight:800; color:#1b4f4a; margin:6px 0 4px;">{{ total_paid }}</div>
+      <div class="summary-value" style="font-size:28px; font-weight:800; color:#1b4f4a; margin:6px 0 4px;">₹{{ total_paid|indian_number }}</div>
     </div>
 
     <div style="background:#fff5f5; border:1px solid #fecaca; border-radius:10px; padding:16px 20px;">
       <div style="font-size:12px; color:#6b7280; font-weight:600; text-transform:uppercase; letter-spacing:.4px;">Total Amount Due</div>
-      <div class="summary-value" style="font-size:28px; font-weight:800; color:#dc2626; margin:6px 0 4px;">{{ net_due }}</div>
+      <div class="summary-value" style="font-size:28px; font-weight:800; color:#dc2626; margin:6px 0 4px;">₹{{ net_due|indian_number }}</div>
     </div>
 
   </div>
