@@ -71,6 +71,143 @@ def _build_filter_head_data():
 
 from django.views.decorators.cache import never_cache
 
+
+def _parse_fy_label(fy_label):
+    """Parse financial year label like 2025-2026 and return start/end years."""
+    if not fy_label or '-' not in fy_label:
+        return None, None
+    try:
+        start_str, end_str = fy_label.split('-', 1)
+        start_year = int(start_str)
+        end_year = int(end_str)
+    except ValueError:
+        return None, None
+
+    if end_year != start_year + 1:
+        return None, None
+    return start_year, end_year
+
+
+def _fy_label_from_date(date_value):
+    """Return FY label in YYYY-YYYY format for a given date."""
+    start_year = date_value.year if date_value.month >= 4 else date_value.year - 1
+    return f"{start_year}-{start_year + 1}"
+
+
+def _build_monthly_ledger_report_data(selected_session_id=None, selected_fy=None):
+    """Build report rows and totals for Monthly Ledger Report."""
+    sessions = Session.objects.all().order_by('session')
+    selected_session = None
+
+    if selected_session_id:
+        try:
+            selected_session = Session.objects.get(id=selected_session_id)
+        except Session.DoesNotExist:
+            selected_session = None
+            selected_session_id = None
+    else:
+        selected_session = Session.objects.filter(status='current_session').order_by('-id').first()
+        selected_session_id = str(selected_session.id) if selected_session else None
+
+    income_qs = Income.objects.all()
+    expense_qs = Expense.objects.all()
+
+    if selected_session_id:
+        income_qs = income_qs.filter(session_id=selected_session_id)
+        expense_qs = expense_qs.filter(session_id=selected_session_id)
+
+    fy_set = set()
+    for d in income_qs.values_list('date', flat=True):
+        if d:
+            fy_set.add(_fy_label_from_date(d))
+    for d in expense_qs.values_list('date', flat=True):
+        if d:
+            fy_set.add(_fy_label_from_date(d))
+
+    fy_options = sorted(fy_set, key=lambda x: int(x.split('-')[0]), reverse=True)
+
+    if selected_fy not in fy_options:
+        current_fy = _fy_label_from_date(dt_date.today())
+        if current_fy in fy_options:
+            selected_fy = current_fy
+        elif fy_options:
+            selected_fy = fy_options[0]
+        else:
+            selected_fy = current_fy
+
+    fy_start, fy_end = _parse_fy_label(selected_fy)
+    report_rows = []
+
+    totals = {
+        'fee_income': 0.0,
+        'other_income': 0.0,
+        'total_income': 0.0,
+        'salary_expense': 0.0,
+        'transport_expense': 0.0,
+        'other_expense': 0.0,
+        'total_expense': 0.0,
+        'balance': 0.0,
+    }
+
+    if fy_start and fy_end:
+        start_date = dt_date(fy_start, 4, 1)
+        end_date = dt_date(fy_end, 3, 31)
+
+        income_qs = income_qs.filter(date__range=(start_date, end_date))
+        expense_qs = expense_qs.filter(date__range=(start_date, end_date))
+
+        financial_months = list(range(4, 13)) + list(range(1, 4))
+
+        for month in financial_months:
+            year = fy_start if month >= 4 else fy_end
+
+            monthly_income = income_qs.filter(date__year=year, date__month=month)
+            monthly_expense = expense_qs.filter(date__year=year, date__month=month)
+
+            total_income = float(monthly_income.aggregate(total=Sum('amount'))['total'] or 0)
+            fee_income = float(monthly_income.filter(major_head__icontains='fee').aggregate(total=Sum('amount'))['total'] or 0)
+            other_income = total_income - fee_income
+
+            total_expense = float(monthly_expense.aggregate(total=Sum('amount'))['total'] or 0)
+            salary_expense = float(monthly_expense.filter(major_head__icontains='salary').aggregate(total=Sum('amount'))['total'] or 0)
+            transport_expense = float(monthly_expense.filter(major_head__icontains='transport').aggregate(total=Sum('amount'))['total'] or 0)
+            other_expense = total_expense - salary_expense - transport_expense
+
+            balance = total_income - total_expense
+
+            row = {
+                'month_num': month,
+                'month': calendar.month_name[month],
+                'fee_income': fee_income,
+                'other_income': other_income,
+                'total_income': total_income,
+                'salary_expense': salary_expense,
+                'transport_expense': transport_expense,
+                'other_expense': other_expense,
+                'total_expense': total_expense,
+                'balance': balance,
+            }
+            report_rows.append(row)
+
+            totals['fee_income'] += fee_income
+            totals['other_income'] += other_income
+            totals['total_income'] += total_income
+            totals['salary_expense'] += salary_expense
+            totals['transport_expense'] += transport_expense
+            totals['other_expense'] += other_expense
+            totals['total_expense'] += total_expense
+            totals['balance'] += balance
+
+    return {
+        'sessions': sessions,
+        'selected_session': selected_session,
+        'selected_session_id': str(selected_session_id) if selected_session_id else '',
+        'fy_options': fy_options,
+        'selected_fy': selected_fy,
+        'report_rows': report_rows,
+        'totals': totals,
+    }
+
 @never_cache
 def _ledger_view(request, model, form_class, template_name, page_title, ledger_type="Expense"):
     """Generic ledger view for Expense and Income"""
@@ -957,6 +1094,72 @@ def session_ledger_report(request):
     }
 
     return render(request, 'dailyLedger/session_ledger_report.html', context)
+
+
+@never_cache
+def monthly_ledger_report(request):
+    """Monthly ledger report with FY and session filters."""
+    selected_session_id = request.GET.get('session')
+    selected_fy = request.GET.get('financial_year')
+    context = _build_monthly_ledger_report_data(selected_session_id, selected_fy)
+    context['print_mode'] = False
+    return render(request, 'dailyLedger/monthly_ledger_report.html', context)
+
+
+@never_cache
+def monthly_ledger_report_csv(request):
+    """Export monthly ledger report as CSV for selected filters."""
+    selected_session_id = request.GET.get('session')
+    selected_fy = request.GET.get('financial_year')
+    context = _build_monthly_ledger_report_data(selected_session_id, selected_fy)
+
+    response = HttpResponse(content_type='text/csv')
+    session_name = context['selected_session'].session if context['selected_session'] else 'all-sessions'
+    response['Content-Disposition'] = f'attachment; filename="monthly_ledger_report_{session_name}_{context["selected_fy"]}.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'Month', 'Fee Income', 'Other Income', 'Total Income',
+        'Salary Expense', 'Transport Expense', 'Other Expense', 'Total Expense', 'Balance'
+    ])
+
+    for row in context['report_rows']:
+        writer.writerow([
+            row['month'],
+            f"{row['fee_income']:.0f}",
+            f"{row['other_income']:.0f}",
+            f"{row['total_income']:.0f}",
+            f"{row['salary_expense']:.0f}",
+            f"{row['transport_expense']:.0f}",
+            f"{row['other_expense']:.0f}",
+            f"{row['total_expense']:.0f}",
+            f"{row['balance']:.0f}",
+        ])
+
+    totals = context['totals']
+    writer.writerow([
+        'Total',
+        f"{totals['fee_income']:.0f}",
+        f"{totals['other_income']:.0f}",
+        f"{totals['total_income']:.0f}",
+        f"{totals['salary_expense']:.0f}",
+        f"{totals['transport_expense']:.0f}",
+        f"{totals['other_expense']:.0f}",
+        f"{totals['total_expense']:.0f}",
+        f"{totals['balance']:.0f}",
+    ])
+
+    return response
+
+
+@never_cache
+def monthly_ledger_report_pdf(request):
+    """Print-friendly monthly report page for Save as PDF from browser."""
+    selected_session_id = request.GET.get('session')
+    selected_fy = request.GET.get('financial_year')
+    context = _build_monthly_ledger_report_data(selected_session_id, selected_fy)
+    context['print_mode'] = True
+    return render(request, 'dailyLedger/monthly_ledger_report.html', context)
 
 
 @never_cache

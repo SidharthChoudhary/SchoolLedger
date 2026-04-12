@@ -158,6 +158,10 @@
              href="/ledger-expense/session-ledger-report/">
             <i class="fa-solid fa-chart-bar"></i> Session Ledger Report
           </a>
+          <a class="nav-link nav-subitem {% if '/ledger-expense/monthly-ledger-report/' in request.path %}active{% endif %}"
+             href="/ledger-expense/monthly-ledger-report/">
+            <i class="fa-solid fa-table"></i> Monthly Ledger Report
+          </a>
           {% else %}
           <p style="padding: 12px 16px; color: #999; font-size: 12px;">Admin access required</p>
           {% endif %}

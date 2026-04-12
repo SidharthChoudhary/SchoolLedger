@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
+import csv
 
 from .models import Expense, Income, Head, Session
 
@@ -177,6 +178,41 @@ class LedgerViewTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, 'Salary')
         self.assertContains(resp, 'Fees')
+
+    def test_monthly_ledger_report_loads(self):
+        resp = self.client.get(reverse('monthly_ledger_report'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Monthly Ledger Report')
+
+    def test_monthly_ledger_report_with_filters(self):
+        Income.objects.create(date=date(2025, 4, 10), amount=6000, session=self.session, major_head='Fees')
+        Expense.objects.create(date=date(2025, 4, 18), amount=2000, session=self.session, major_head='Salary')
+        resp = self.client.get(reverse('monthly_ledger_report'), {
+            'session': self.session.id,
+            'financial_year': '2025-2026',
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'April')
+
+    def test_monthly_ledger_report_csv_export(self):
+        Income.objects.create(date=date(2025, 4, 10), amount=6000, session=self.session, major_head='Fees')
+        resp = self.client.get(reverse('monthly_ledger_report_csv'), {
+            'session': self.session.id,
+            'financial_year': '2025-2026',
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp['Content-Type'], 'text/csv')
+        csv_text = resp.content.decode('utf-8')
+        reader = list(csv.reader(csv_text.splitlines()))
+        self.assertTrue(reader[0][0] == 'Month')
+
+    def test_monthly_ledger_report_pdf_view(self):
+        resp = self.client.get(reverse('monthly_ledger_report_pdf'), {
+            'session': self.session.id,
+            'financial_year': '2025-2026',
+        })
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Monthly Ledger Report')
 
     def test_add_expense_via_post(self):
         make_head('Salary', 'Teaching', '', 'Expense')
