@@ -191,7 +191,7 @@ class LedgerViewTests(TestCase):
             'session': self.session.id,
         })
         self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, 'April')
+        self.assertContains(resp, 'Apr')
         self.assertContains(resp, 'Fees')
         self.assertContains(resp, 'Salary')
 

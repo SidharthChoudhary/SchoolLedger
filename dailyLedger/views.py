@@ -159,13 +159,8 @@ def _build_monthly_ledger_report_data(selected_session_id=None, selected_fy=None
     income_head_totals = {}
     expense_head_totals = {}
 
-    if fy_start and fy_end:
-        start_date = dt_date(fy_start, 4, 1)
-        end_date = dt_date(fy_end, 3, 31)
-
-        income_qs = income_qs.filter(date__range=(start_date, end_date))
-        expense_qs = expense_qs.filter(date__range=(start_date, end_date))
-
+    if selected_session_id:
+        # Collect all distinct major heads for this session (no date range filter — must match session report)
         income_major_heads = list(
             income_qs.values_list('major_head', flat=True).distinct().order_by('major_head')
         )
@@ -179,13 +174,17 @@ def _build_monthly_ledger_report_data(selected_session_id=None, selected_fy=None
         income_head_totals = {head: 0.0 for head in income_major_heads}
         expense_head_totals = {head: 0.0 for head in expense_major_heads}
 
-        financial_months = list(range(4, 13)) + list(range(1, 4))
+        # Get all months that actually have data in this session (same as session_ledger_report)
+        income_months = income_qs.dates('date', 'month', order='ASC')
+        expense_months = expense_qs.dates('date', 'month', order='ASC')
+        all_months = sorted(
+            set(list(income_months) + list(expense_months)),
+            key=lambda d: (d.year if d.month >= 4 else d.year - 1, (d.month - 4) % 12)
+        )
 
-        for month in financial_months:
-            year = fy_start if month >= 4 else fy_end
-
-            monthly_income = income_qs.filter(date__year=year, date__month=month)
-            monthly_expense = expense_qs.filter(date__year=year, date__month=month)
+        for month_date in all_months:
+            monthly_income = income_qs.filter(date__year=month_date.year, date__month=month_date.month)
+            monthly_expense = expense_qs.filter(date__year=month_date.year, date__month=month_date.month)
 
             income_amounts = []
             expense_amounts = []
@@ -207,8 +206,8 @@ def _build_monthly_ledger_report_data(selected_session_id=None, selected_fy=None
             balance = total_income - total_expense
 
             row = {
-                'month_num': month,
-                'month': calendar.month_name[month],
+                'month_num': month_date.month,
+                'month': month_date.strftime('%b %Y'),
                 'income_amounts': income_amounts,
                 'expense_amounts': expense_amounts,
                 'total_income': total_income,
