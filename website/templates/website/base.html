@@ -25,7 +25,7 @@
       </div>
 
       <div class="topbar-center">
-        <h3 class="school-subtitle">Devki Public School</h3>
+        <h3 class="school-subtitle">Devki Public School, Tibariyan</h3>
         <div class="school-tagline school-tagline--motto">A new horizon in school education</div>
         <div class="school-tagline">Devki Education Society (R) &nbsp;|&nbsp; 35 Pradhan Jiki Dhani, Tibariyan, Hingonia Road, Jaipur (Rajasthan)</div>
         <div class="school-tagline">9887005428 &nbsp;&bull;&nbsp; 9610211173</div>
@@ -153,6 +153,14 @@
           <i class="fa-solid fa-chevron-down toggle-icon"></i>
         </button>
         <div id="statements-menu" class="nav-submenu">
+          <a class="nav-link nav-subitem {% if '/students/fee-status-account-wise/' in request.path %}active{% endif %}"
+             href="/students/fee-status-account-wise/">
+            <i class="fa-solid fa-receipt"></i> Fees Report
+          </a>
+          <a class="nav-link nav-subitem {% if '/students/fees-statement-parents/' in request.path %}active{% endif %}"
+             href="/students/fees-statement-parents/">
+            <i class="fa-solid fa-file-lines"></i> Fees Statement for Parents
+          </a>
           {% if user.is_superuser or user.profile.is_admin|default:False %}
           <a class="nav-link nav-subitem {% if '/ledger-expense/session-ledger-report/' in request.path %}active{% endif %}"
              href="/ledger-expense/session-ledger-report/">
@@ -207,29 +215,25 @@
           <i class="fa-solid fa-chevron-down toggle-icon"></i>
         </button>
         <div id="students-menu" class="nav-submenu">
-          <a class="nav-link nav-subitem {% if '/students/add/' in request.path %}active{% endif %}"
-             href="/students/add/">
+           <a class="nav-link nav-subitem {% if '/students/add/' in request.path or request.GET.mode == 'add' %}active{% endif %}"
+             href="/students/view/?mode=add#student-form">
             <i class="fa-solid fa-user-plus"></i> Add Students
           </a>
-          <a class="nav-link nav-subitem {% if '/students/view/' in request.path %}active{% endif %}"
-             href="/students/view/">
+           <a class="nav-link nav-subitem {% if '/students/view/' in request.path and request.GET.mode != 'add' %}active{% endif %}"
+             href="/students/view/?mode=list#saved-students">
             <i class="fa-solid fa-eye"></i> List Students
-          </a>
-          <a class="nav-link nav-subitem {% if '/students/account/' in request.path %}active{% endif %}"
-             href="/students/account/">
-            <i class="fa-solid fa-receipt"></i> Student Account
           </a>
           <a class="nav-link nav-subitem {% if '/students/fees-account/' in request.path %}active{% endif %}"
              href="/students/fees-account/">
-            <i class="fa-solid fa-wallet"></i> Fees Account
+            <i class="fa-solid fa-wallet"></i> Fees Accounts
           </a>
-          <a class="nav-link nav-subitem {% if '/students/link-fee-account/' in request.path %}active{% endif %}"
-             href="/students/link-fee-account/">
-            <i class="fa-solid fa-link"></i> Link Fee Account
+          <a class="nav-link nav-subitem {% if '/students/fee-agreement/' in request.path %}active{% endif %}"
+             href="/students/fee-agreement/">
+            <i class="fa-solid fa-file-signature"></i> Agreed Fees
           </a>
           <a class="nav-link nav-subitem {% if '/students/manage-session-class-student-map/' in request.path %}active{% endif %}"
              href="/students/manage-session-class-student-map/">
-            <i class="fa-solid fa-sitemap"></i> Session Class Map
+            <i class="fa-solid fa-sitemap"></i> Session Class Map TBR
           </a>
         </div>
       </div>

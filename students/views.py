@@ -4,25 +4,28 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.urls import reverse
+from django.db.models import Q, Count, Sum
 from datetime import date
+from decimal import Decimal
 import csv
 from django.views.decorators.cache import never_cache
-from dailyLedger.models import Session
+from dailyLedger.models import Session, FeesStructure, Income
 from .models import (
     Student,
     StudentAccount,
     Class,
     FeesAccount,
+    FeesAccountAgreement,
     SessionClassStudentMap,
     StudentAttendance,
 )
-from .forms import StudentForm, ClassForm, FeesAccountForm
+from .forms import StudentForm, ClassForm, FeesAccountForm, FeesAccountAgreementForm
 
 
 @never_cache
 def add_student(request):
     """Redirect to view_students for add/edit functionality"""
-    return redirect('view_students')
+    return redirect(f"{reverse('view_students')}?mode=add#student-form")
 
 
 def bulk_import_students(request):
@@ -74,6 +77,11 @@ def bulk_import_students(request):
                             messages.success(request, f"Updated {import_result['updated']} student(s)")
                         if import_result['skipped']:
                             messages.info(request, f"Skipped {import_result['skipped']} duplicate student(s)")
+                        if import_result.get('accounts_created'):
+                            messages.success(
+                                request,
+                                f"Auto-created and linked {import_result['accounts_created']} fee account(s) for primary account holders"
+                            )
                         if import_result['errors']:
                             for row_num, msg in import_result['errors']:
                                 messages.error(request, f'Row {row_num}: {msg}')
@@ -102,21 +110,21 @@ def download_students_template(request):
     writer = csv.writer(response)
     writer.writerow([
         'First_Name', 'Last_Name', 'Gender', 'Fathers_Name', 'Mothers_Name',
-        'Class_Code', 'Class_Name', 'Session', 'SRN',
+        'Class_Code', 'Class_Name', 'Session', 'SRN', 'NIC_Student_ID',
         'Date_of_Birth', 'Admission_Date', 'Transport_Method', 'RTE', 'Primary_Account_Holder',
         'Fathers_Phone', 'Mothers_Phone', 'Gardians_Name', 'Gardians_Phone',
         'Previous_School', 'Medical_Conditions', 'Dietary_Restrictions'
     ])
     writer.writerow([
         'Aarav', 'Sharma', 'male', 'Rajesh Sharma', 'Sunita Sharma',
-        '5', 'Class 5', '2025-2026', 'SRN-1001',
+        '5', 'Class 5', '2025-2026', 'SRN-1001', 'NIC-2025-0001',
         '2015-06-14', '2025-04-01', 'yes', 'no', 'no',
         '9876543210', '9876543211', '', '',
         'ABC Public School', '', ''
     ])
     writer.writerow([
         'Anaya', 'Verma', 'female', 'Manoj Verma', 'Priya Verma',
-        '6', 'Class 6', '2025-2026', 'SRN-1002',
+        '6', 'Class 6', '2025-2026', 'SRN-1002', 'NIC-2025-0002',
         '2014-09-03', '2025-04-01', 'no', 'yes', 'no',
         '9876543220', '9876543221', '', '',
         '', 'Asthma', 'No peanuts'
@@ -181,11 +189,18 @@ def view_students(request):
     """View all students in a table and add/edit students on same page"""
     editing_student = None
     form = None
+    page_mode = request.GET.get('mode', 'list')
+    selected_session = request.GET.get('session', '')
+    selected_class = request.GET.get('student_class', '')
+    selected_fee_account = request.GET.get('fee_account', '')
+    filter_name = request.GET.get('name', '').strip()
+    filter_srn = request.GET.get('srn', '').strip()
     
     # Check if editing a student
     edit_id = request.GET.get('edit')
     if edit_id:
         editing_student = get_object_or_404(Student, pk=edit_id)
+        page_mode = 'add'
     
     if request.method == 'POST':
         if edit_id:
@@ -241,11 +256,45 @@ def view_students(request):
         else:
             form = StudentForm()
     
-    students = Student.objects.all().order_by('student_class', 'first_name')
+    students = Student.objects.select_related('session', 'student_class', 'fees_account').all()
+
+    if page_mode == 'list':
+        if selected_session:
+            students = students.filter(session_id=selected_session)
+        if selected_class:
+            students = students.filter(student_class_id=selected_class)
+        if filter_name:
+            students = students.filter(
+                Q(first_name__icontains=filter_name)
+                | Q(last_name__icontains=filter_name)
+                | Q(fathers_name__icontains=filter_name)
+            )
+        if filter_srn:
+            students = students.filter(srn__icontains=filter_srn)
+        if selected_fee_account:
+            if selected_fee_account == 'unlinked':
+                students = students.filter(fees_account__isnull=True)
+            else:
+                students = students.filter(fees_account_id=selected_fee_account)
+
+    students = students.order_by('student_class', 'first_name', 'last_name')
+    sessions = Session.objects.all().order_by('session')
+    classes = Class.objects.all().order_by('age', 'class_name')
+    fees_accounts = FeesAccount.objects.all().order_by('account_id', 'name')
+
     return render(request, 'students/view_students.html', {
         'students': students,
+        'sessions': sessions,
+        'classes': classes,
+        'fees_accounts': fees_accounts,
         'form': form,
-        'editing_student': editing_student
+        'editing_student': editing_student,
+        'page_mode': page_mode,
+        'selected_session': selected_session,
+        'selected_class': selected_class,
+        'selected_fee_account': selected_fee_account,
+        'filter_name': filter_name,
+        'filter_srn': filter_srn,
     })
 
 
@@ -274,7 +323,59 @@ def delete_student(request, pk):
 def select_student_for_account(request):
     """Select a student to view their account"""
     students = Student.objects.all().order_by('student_class', 'first_name')
-    return render(request, 'students/select_student_account.html', {'students': students})
+
+    selected_session = request.GET.get('session', '')
+    selected_class = request.GET.get('student_class', '')
+    filter_name = request.GET.get('name', '').strip()
+    filter_srn = request.GET.get('srn', '').strip()
+
+    if selected_session:
+        students = students.filter(session_id=selected_session)
+    if selected_class:
+        students = students.filter(student_class_id=selected_class)
+    if filter_name:
+        students = students.filter(
+            Q(first_name__icontains=filter_name)
+            | Q(last_name__icontains=filter_name)
+            | Q(fathers_name__icontains=filter_name)
+        )
+    if filter_srn:
+        students = students.filter(srn__icontains=filter_srn)
+
+    sessions = Session.objects.all().order_by('session')
+    classes = Class.objects.all().order_by('age', 'class_name')
+
+    return render(request, 'students/select_student_account.html', {
+        'students': students,
+        'sessions': sessions,
+        'classes': classes,
+        'selected_session': selected_session,
+        'selected_class': selected_class,
+        'filter_name': filter_name,
+        'filter_srn': filter_srn,
+        'page_title': 'Student Account',
+        'card_title': 'Select a Student',
+        'target_url_name': 'student_account_detail',
+    })
+
+
+def select_fee_account_for_agreement(request):
+    """Select a fees account to open account-level agreed fees"""
+    accounts = FeesAccount.objects.annotate(student_count=Count('students')).order_by('account_id')
+
+    account_id_filter = request.GET.get('account_id', '').strip()
+    name_filter = request.GET.get('name', '').strip()
+
+    if account_id_filter:
+        accounts = accounts.filter(account_id__icontains=account_id_filter)
+    if name_filter:
+        accounts = accounts.filter(name__icontains=name_filter)
+
+    return render(request, 'students/select_fee_account_agreement.html', {
+        'accounts': accounts,
+        'account_id_filter': account_id_filter,
+        'name_filter': name_filter,
+    })
 
 
 def student_account_detail(request, student_id):
@@ -285,6 +386,465 @@ def student_account_detail(request, student_id):
     return render(request, 'students/student_account_detail.html', {
         'student': student,
         'accounts': accounts
+    })
+
+
+def fee_account_agreement(request, account_id):
+    """Compare summed standard fees for all students in an account vs agreed account-level fees."""
+    fees_account = FeesAccount.objects.filter(pk=account_id).first()
+    if not fees_account:
+        # Backward-compatibility: old links may still pass student_id instead of account_id.
+        student = Student.objects.select_related('fees_account').filter(pk=account_id).first()
+        if student and student.fees_account_id:
+            messages.info(request, 'Opened linked fees account for selected student.')
+            return redirect('fee_account_agreement', account_id=student.fees_account_id)
+
+        messages.error(request, 'Fees account not found. Please select a valid fees account.')
+        return redirect('select_fee_account_agreement')
+
+    sessions = Session.objects.all().order_by('-session')
+
+    selected_session_id = (request.POST.get('session') or request.GET.get('session') or '').strip()
+    selected_session = Session.objects.filter(id=selected_session_id).first() if selected_session_id else None
+
+    linked_students = Student.objects.filter(fees_account=fees_account).select_related('student_class', 'session').order_by('student_class__age', 'first_name')
+    if selected_session:
+        linked_students = linked_students.filter(session=selected_session)
+
+    fee_heads = [
+        ('tuition_fees', 'fee_tuition'),
+        ('tc_fees', 'fee_tc'),
+        ('admission_fees', 'fee_admission'),
+        ('book_set', 'book_set'),
+        ('book_diary', 'book_diary'),
+        ('book_other', 'book_other'),
+        ('uniform_shirt', 'uniform_shirt'),
+        ('uniform_pant', 'uniform_pant'),
+        ('uniform_sweater', 'uniform_sweater'),
+        ('uniform_hoody', 'uniform_hoody'),
+        ('uniform_t_shirt', 'uniform_t_shirt'),
+        ('uniform_tie', 'uniform_tie'),
+        ('uniform_belt', 'uniform_belt'),
+        ('uniform_id_card', 'uniform_id_card'),
+    ]
+    standard_totals = {key: Decimal('0.00') for key, _ in fee_heads}
+    standard_total_amount = Decimal('0.00')
+    agreed_total_amount = Decimal('0.00')
+    missing_structure_classes = []
+    agreed_fees = None
+    form = None
+
+    if selected_session:
+        class_counts = linked_students.values('student_class_id').annotate(count=Count('id'))
+        class_id_to_count = {row['student_class_id']: row['count'] for row in class_counts if row['student_class_id']}
+
+        structures = FeesStructure.objects.filter(
+            session=selected_session,
+            class_code_id__in=class_id_to_count.keys(),
+        ).select_related('class_code')
+        structure_by_class = {fs.class_code_id: fs for fs in structures}
+
+        for class_id, count in class_id_to_count.items():
+            structure = structure_by_class.get(class_id)
+            if not structure:
+                missing_class = Class.objects.filter(id=class_id).first()
+                if missing_class:
+                    missing_structure_classes.append(missing_class.class_code or missing_class.class_name)
+                continue
+            for account_field, structure_field in fee_heads:
+                standard_totals[account_field] += getattr(structure, structure_field) * count
+
+        standard_total_amount = sum(standard_totals.values(), Decimal('0.00'))
+
+        # Build per-student fee breakdown for display
+        student_breakdowns = {key: [] for key, _ in fee_heads}
+        for student in linked_students:
+            structure = structure_by_class.get(student.student_class_id) if student.student_class_id else None
+            class_label = (student.student_class.class_code or student.student_class.class_name) if student.student_class else 'N/A'
+            for account_field, structure_field in fee_heads:
+                amount = getattr(structure, structure_field) if structure else Decimal('0.00')
+                student_breakdowns[account_field].append({
+                    'name': student.first_name,
+                    'class_label': class_label,
+                    'amount': amount,
+                })
+
+        agreed_fees, _ = FeesAccountAgreement.objects.get_or_create(
+            fees_account=fees_account,
+            session=selected_session,
+            defaults=standard_totals,
+        )
+        agreed_total_amount = agreed_fees.total_fees
+
+        if request.method == 'POST':
+            form = FeesAccountAgreementForm(request.POST, instance=agreed_fees)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Agreed fees saved for this account.')
+                return redirect(f'{reverse("fee_account_agreement", args=[fees_account.id])}?session={selected_session.id}')
+        else:
+            form = FeesAccountAgreementForm(instance=agreed_fees)
+    else:
+        messages.warning(request, 'Please select a session to load standard and agreed fees.')
+
+    return render(request, 'students/student_fee_agreement.html', {
+        'fees_account': fees_account,
+        'linked_students': linked_students,
+        'sessions': sessions,
+        'selected_session': selected_session,
+        'standard_totals': standard_totals,
+        'standard_total_amount': standard_total_amount,
+        'agreed_total_amount': agreed_total_amount,
+        'agreed_fees': agreed_fees,
+        'form': form,
+        'missing_structure_classes': missing_structure_classes,
+        'student_breakdowns': student_breakdowns if selected_session else {},
+    })
+
+
+def fee_status_account_wise(request):
+    """Account-wise fee status: payable vs paid vs balance by session."""
+    sessions = Session.objects.all().order_by('-session')
+    fee_accounts = FeesAccount.objects.all().order_by('account_id')
+    selected_session_id = (request.GET.get('session') or '').strip()
+    selected_account_id = (request.GET.get('account_id') or '').strip()
+    selected_class_id = (request.GET.get('class_id') or '').strip()
+    selected_student_id = (request.GET.get('student_id') or '').strip()
+
+    students_filter_qs = Student.objects.select_related('student_class', 'fees_account').filter(fees_account__isnull=False)
+    if selected_session_id:
+        students_filter_qs = students_filter_qs.filter(session_id=selected_session_id)
+
+    class_ids = students_filter_qs.values_list('student_class_id', flat=True).distinct()
+    classes_for_filter = Class.objects.filter(id__in=class_ids).order_by('age')
+
+    if selected_class_id:
+        students_filter_qs = students_filter_qs.filter(student_class_id=selected_class_id)
+
+    students_for_filter = students_filter_qs.order_by('first_name', 'last_name')
+    account_ids_from_student_filters = None
+    if selected_student_id:
+        selected_student = students_for_filter.filter(id=selected_student_id).first()
+        if selected_student and selected_student.fees_account_id:
+            account_ids_from_student_filters = [selected_student.fees_account_id]
+        else:
+            account_ids_from_student_filters = []
+    elif selected_class_id:
+        account_ids_from_student_filters = list(students_for_filter.values_list('fees_account_id', flat=True).distinct())
+
+    agreements_qs = FeesAccountAgreement.objects.select_related('session', 'fees_account')
+    payments_qs = Income.objects.filter(fees_account__isnull=False, session__isnull=False)
+
+    if selected_session_id:
+        agreements_qs = agreements_qs.filter(session_id=selected_session_id)
+        payments_qs = payments_qs.filter(session_id=selected_session_id)
+    if account_ids_from_student_filters is not None:
+        agreements_qs = agreements_qs.filter(fees_account_id__in=account_ids_from_student_filters)
+        payments_qs = payments_qs.filter(fees_account_id__in=account_ids_from_student_filters)
+    if selected_account_id:
+        agreements_qs = agreements_qs.filter(fees_account_id=selected_account_id)
+        payments_qs = payments_qs.filter(fees_account_id=selected_account_id)
+
+    rows_by_key = {}
+
+    for agreement in agreements_qs:
+        key = (agreement.session_id, agreement.fees_account_id)
+        rows_by_key[key] = {
+            'session': agreement.session,
+            'fees_account': agreement.fees_account,
+            'payable_fee': agreement.total_fees,
+            'paid_fee': Decimal('0.00'),
+        }
+
+    payment_totals = payments_qs.values('session_id', 'fees_account_id').annotate(total_paid=Sum('amount'))
+    session_map = Session.objects.in_bulk([row['session_id'] for row in payment_totals])
+    account_map = FeesAccount.objects.in_bulk([row['fees_account_id'] for row in payment_totals])
+
+    for row in payment_totals:
+        key = (row['session_id'], row['fees_account_id'])
+        paid_amount = row['total_paid'] or Decimal('0.00')
+        if key in rows_by_key:
+            rows_by_key[key]['paid_fee'] = paid_amount
+        else:
+            rows_by_key[key] = {
+                'session': session_map.get(row['session_id']),
+                'fees_account': account_map.get(row['fees_account_id']),
+                'payable_fee': Decimal('0.00'),
+                'paid_fee': paid_amount,
+            }
+
+    rows = list(rows_by_key.values())
+    for row in rows:
+        row['balance_fee'] = row['payable_fee'] - row['paid_fee']
+
+    # Build student + class summary per (session, account) for display in the report.
+    session_ids = {r['session'].id for r in rows if r.get('session')}
+    account_ids = {r['fees_account'].id for r in rows if r.get('fees_account')}
+    student_qs = Student.objects.select_related('student_class').filter(
+        session_id__in=session_ids,
+        fees_account_id__in=account_ids,
+    )
+    students_by_key = {}
+    for student in student_qs:
+        key = (student.session_id, student.fees_account_id)
+        class_label = 'N/A'
+        if student.student_class:
+            class_label = student.student_class.class_code or student.student_class.class_name or 'N/A'
+        students_by_key.setdefault(key, []).append(f"{student.first_name} {student.last_name} - {class_label}")
+
+    for row in rows:
+        session_obj = row.get('session')
+        account_obj = row.get('fees_account')
+        key = (session_obj.id, account_obj.id) if session_obj and account_obj else None
+        row['students_class_text'] = ', '.join(students_by_key.get(key, [])) if key else ''
+
+    rows.sort(key=lambda r: (r['session'].session if r['session'] else '', r['fees_account'].account_id if r['fees_account'] else ''), reverse=True)
+
+    total_payable = sum((r['payable_fee'] for r in rows), Decimal('0.00'))
+    total_paid = sum((r['paid_fee'] for r in rows), Decimal('0.00'))
+    total_balance = total_payable - total_paid
+
+    return render(request, 'students/fee_status_account_wise.html', {
+        'rows': rows,
+        'sessions': sessions,
+        'fee_accounts': fee_accounts,
+        'classes_for_filter': classes_for_filter,
+        'students_for_filter': students_for_filter,
+        'selected_session_id': selected_session_id,
+        'selected_account_id': selected_account_id,
+        'selected_class_id': selected_class_id,
+        'selected_student_id': selected_student_id,
+        'total_payable': total_payable,
+        'total_paid': total_paid,
+        'total_balance': total_balance,
+    })
+
+
+def fees_statement_parents(request):
+    """Fees Statement for Parents: 4 panels - account info, all-session summary, agreed fees, payment transactions."""
+    current_session = Session.objects.filter(status='current_session').first()
+    fee_accounts = FeesAccount.objects.all().order_by('account_id')
+    classes = Class.objects.all().order_by('age')
+
+    selected_account_id = (request.GET.get('account_id') or '').strip()
+    selected_class_id = (request.GET.get('class_id') or '').strip()
+    selected_student_id = (request.GET.get('student_id') or '').strip()
+
+    # Build students dropdown (filtered by class)
+    students_qs = Student.objects.select_related('student_class', 'fees_account').filter(fees_account__isnull=False)
+    if selected_class_id:
+        students_qs = students_qs.filter(student_class_id=selected_class_id)
+    students_for_filter = students_qs.order_by('first_name', 'last_name')
+
+    # Resolve the fees account to display
+    selected_account = None
+    if selected_account_id:
+        selected_account = FeesAccount.objects.filter(pk=selected_account_id).first()
+    elif selected_student_id:
+        student_obj = Student.objects.select_related('fees_account').filter(pk=selected_student_id).first()
+        if student_obj and student_obj.fees_account:
+            selected_account = student_obj.fees_account
+
+    # Panel 1 – Account Name + Student details in the account (current session)
+    account_students = []
+    if selected_account and current_session:
+        account_students = list(
+            Student.objects.filter(fees_account=selected_account, session=current_session)
+            .select_related('student_class')
+            .order_by('primary_account_holder', 'first_name', 'last_name')
+        )
+
+    # Shared head map used by Panel 2 and Panel 3
+    FEES_HEAD_MAP = [
+        # (agreement_field, structure_field)
+        ('tuition_fees',   'fee_tuition'),
+        ('tc_fees',        'fee_tc'),
+        ('admission_fees', 'fee_admission'),
+        ('book_set',       'book_set'),
+        ('book_diary',     'book_diary'),
+        ('book_other',     'book_other'),
+        ('uniform_shirt',  'uniform_shirt'),
+        ('uniform_pant',   'uniform_pant'),
+        ('uniform_sweater','uniform_sweater'),
+        ('uniform_hoody',  'uniform_hoody'),
+        ('uniform_t_shirt','uniform_t_shirt'),
+        ('uniform_tie',    'uniform_tie'),
+        ('uniform_belt',   'uniform_belt'),
+        ('uniform_id_card','uniform_id_card'),
+        ('bus_fees',       None),
+    ]
+
+    def _school_fees_for_session(account, session_obj, agreement):
+        """Sum FeesStructure amounts (only for heads where agreed fee != 0) for all students in this account+session."""
+        if agreement is None:
+            return Decimal('0.00')
+        students_in_session = list(
+            Student.objects.filter(fees_account=account, session=session_obj)
+            .values('student_class_id')
+        )
+        class_counts = {}
+        for s in students_in_session:
+            cid = s['student_class_id']
+            if cid:
+                class_counts[cid] = class_counts.get(cid, 0) + 1
+        if not class_counts:
+            return Decimal('0.00')
+        structures = {
+            fs.class_code_id: fs
+            for fs in FeesStructure.objects.filter(
+                session=session_obj,
+                class_code_id__in=class_counts.keys(),
+            )
+        }
+        total = Decimal('0.00')
+        for agr_field, str_field in FEES_HEAD_MAP:
+            if str_field is None:
+                continue
+            agreed_amt = getattr(agreement, agr_field, Decimal('0.00')) or Decimal('0.00')
+            if agreed_amt == Decimal('0.00'):
+                continue
+            for class_id, count in class_counts.items():
+                fs = structures.get(class_id)
+                if fs:
+                    total += getattr(fs, str_field, Decimal('0.00')) * count
+        return total
+
+    # Panel 2 – Summary of payments across all sessions
+    payment_summary = []
+    summary_total_payable = Decimal('0.00')
+    summary_total_paid = Decimal('0.00')
+    summary_total_school = Decimal('0.00')
+    if selected_account:
+        agreements = list(
+            FeesAccountAgreement.objects.filter(fees_account=selected_account)
+            .select_related('session')
+            .order_by('-session__session')
+        )
+        payments_by_session = Income.objects.filter(
+            fees_account=selected_account
+        ).values('session_id').annotate(total_paid=Sum('amount'))
+        payments_map = {row['session_id']: row['total_paid'] or Decimal('0.00') for row in payments_by_session}
+        seen_session_ids = set()
+        for agreement in agreements:
+            paid = payments_map.get(agreement.session_id, Decimal('0.00'))
+            payable = agreement.total_fees
+            school = _school_fees_for_session(selected_account, agreement.session, agreement)
+            payment_summary.append({
+                'session': agreement.session,
+                'school': school,
+                'payable': payable,
+                'paid': paid,
+                'balance': payable - paid,
+            })
+            seen_session_ids.add(agreement.session_id)
+            summary_total_payable += payable
+            summary_total_paid += paid
+            summary_total_school += school
+        # Payments without an agreement
+        for session_id, paid in payments_map.items():
+            if session_id not in seen_session_ids:
+                session_obj = Session.objects.filter(pk=session_id).first()
+                payment_summary.append({
+                    'session': session_obj,
+                    'school': Decimal('0.00'),
+                    'payable': Decimal('0.00'),
+                    'paid': paid,
+                    'balance': -paid,
+                })
+                summary_total_paid += paid
+        payment_summary.sort(
+            key=lambda r: r['session'].session if r['session'] else '',
+            reverse=True,
+        )
+
+    summary_total_balance = summary_total_payable - summary_total_paid
+
+    # Panel 3 – Agreed fees grid for current session (non-zero heads only)
+    # Labels aligned with FEES_HEAD_MAP order
+    PANEL3_LABELS = [
+        'Tuition Fees', 'TC Fees', 'Admission Fees',
+        'Book Set', 'Book Diary', 'Book (Other)',
+        'Uniform – Shirt', 'Uniform – Pant', 'Uniform – Sweater',
+        'Uniform – Hoody', 'Uniform – T-Shirt', 'Uniform – Tie',
+        'Uniform – Belt', 'Uniform – ID Card', 'Bus Fees',
+    ]
+    agreed_fees = None
+    fee_heads = []
+    p3_school_total = Decimal('0.00')
+    if selected_account and current_session:
+        agreed_fees = FeesAccountAgreement.objects.filter(
+            fees_account=selected_account, session=current_session
+        ).first()
+    if agreed_fees:
+        # Compute standard school fees per head from FeesStructure
+        p3_students = account_students or list(
+            Student.objects.filter(fees_account=selected_account, session=current_session)
+            .select_related('student_class')
+        )
+        class_counts = {}
+        for st in p3_students:
+            if st.student_class_id:
+                class_counts[st.student_class_id] = class_counts.get(st.student_class_id, 0) + 1
+        structures = {}
+        if class_counts:
+            for fs in FeesStructure.objects.filter(
+                session=current_session,
+                class_code_id__in=class_counts.keys(),
+            ):
+                structures[fs.class_code_id] = fs
+
+        def school_fee_for(str_field):
+            if str_field is None:
+                return Decimal('0.00')
+            total = Decimal('0.00')
+            for class_id, count in class_counts.items():
+                fs = structures.get(class_id)
+                if fs:
+                    total += getattr(fs, str_field, Decimal('0.00')) * count
+            return total
+
+        for label, (agr_field, str_field) in zip(PANEL3_LABELS, FEES_HEAD_MAP):
+            agreed_amt = getattr(agreed_fees, agr_field, Decimal('0.00')) or Decimal('0.00')
+            if agreed_amt == Decimal('0.00'):
+                continue
+            school_amt = school_fee_for(str_field)
+            fee_heads.append((label, school_amt, agreed_amt))
+            p3_school_total += school_amt
+
+    # Panel 4 – Payment transactions from income ledger (current session only)
+    income_transactions = []
+    income_total = Decimal('0.00')
+    if selected_account and current_session:
+        income_transactions = list(
+            Income.objects.filter(fees_account=selected_account, session=current_session)
+            .order_by('date', 'id')
+        )
+        income_total = sum((t.amount for t in income_transactions), Decimal('0.00'))
+
+    return render(request, 'students/fees_statement_parents.html', {
+        'fee_accounts': fee_accounts,
+        'classes': classes,
+        'students_for_filter': students_for_filter,
+        'selected_account_id': selected_account_id,
+        'selected_class_id': selected_class_id,
+        'selected_student_id': selected_student_id,
+        'selected_account': selected_account,
+        'current_session': current_session,
+        # Panel 1
+        'account_students': account_students,
+        # Panel 2
+        'payment_summary': payment_summary,
+        'summary_total_school': summary_total_school,
+        'summary_total_payable': summary_total_payable,
+        'summary_total_paid': summary_total_paid,
+        'summary_total_balance': summary_total_balance,
+        # Panel 3
+        'agreed_fees': agreed_fees,
+        'fee_heads': fee_heads,
+        'p3_school_total': p3_school_total,
+        # Panel 4
+        'income_transactions': income_transactions,
+        'income_total': income_total,
     })
 
 
@@ -524,17 +1084,18 @@ def link_fee_account(request):
     students_no_account = Student.objects.filter(fees_account__isnull=True)
     
     # Apply filters for Panel 3
-    session_filter = request.GET.get('session_filter')
-    class_filter = request.GET.get('class_filter')
-    student_name_filter = request.GET.get('student_name_filter')
-    
+    session_filter = request.GET.get('session_filter', '')
+    class_filter = request.GET.get('class_filter', '')
+    student_name_filter = request.GET.get('student_name_filter', '')
+
     if session_filter:
         students_no_account = students_no_account.filter(session_id=session_filter)
     if class_filter:
         students_no_account = students_no_account.filter(student_class_id=class_filter)
     if student_name_filter:
         students_no_account = students_no_account.filter(
-            first_name__icontains=student_name_filter) | students_no_account.filter(last_name__icontains=student_name_filter)
+            Q(first_name__icontains=student_name_filter) | Q(last_name__icontains=student_name_filter)
+        )
     
     # Panel 4 - All students with their accounts
     all_students = Student.objects.all().select_related('session', 'student_class', 'fees_account')

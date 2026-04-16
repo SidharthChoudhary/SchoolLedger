@@ -1,0 +1,346 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Fees Statement{% if current_session %} Session {{ current_session.session }}{% endif %}{% endblock %}
+{% block content %}
+
+{% include "website/_print_letterhead.html" %}
+
+<h2 style="margin-top:0;" class="no-print">Fees Statement{% if current_session %} Session {{ current_session.session }}{% endif %}</h2>
+
+<!-- ═══════════════════════ FILTER CARD ═══════════════════════ -->
+<div class="card no-print" style="margin-bottom:14px;">
+  <form method="get" id="filter-form" style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap;">
+
+    <div class="field" style="min-width:260px; margin:0;">
+      <label style="font-size:12px; font-weight:700;">Account Name</label>
+      <select name="account_id" id="account_id_select" style="height:40px;">
+        <option value="">-- Select Account --</option>
+        {% for acc in fee_accounts %}
+          <option value="{{ acc.id }}" {% if selected_account_id == acc.id|stringformat:"s" %}selected{% endif %}>
+            {{ acc.account_id }} – {{ acc.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field" style="min-width:180px; margin:0;">
+      <label style="font-size:12px; font-weight:700;">Class</label>
+      <select name="class_id" id="class_id_select" style="height:40px;" onchange="this.form.submit()">
+        <option value="">All Classes</option>
+        {% for c in classes %}
+          <option value="{{ c.id }}" {% if selected_class_id == c.id|stringformat:"s" %}selected{% endif %}>
+            {{ c.class_code|default:c.class_name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field" style="min-width:260px; margin:0;">
+      <label style="font-size:12px; font-weight:700;">Student Name</label>
+      <select name="student_id" id="student_id_select" style="height:40px;">
+        <option value="">-- Select Student --</option>
+        {% for st in students_for_filter %}
+          <option value="{{ st.id }}" {% if selected_student_id == st.id|stringformat:"s" %}selected{% endif %}>
+            {{ st.first_name }} {{ st.last_name }}
+            {% if st.student_class %} ({{ st.student_class.class_code|default:st.student_class.class_name }}){% endif %}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <button type="submit" class="btn-primary" style="height:40px; padding:0 20px;">Load</button>
+    </div>
+
+    {% if selected_account %}
+    <div style="margin-left:auto;">
+      <button type="button" onclick="window.print()"
+              style="height:40px; padding:0 20px; background:#0284c7; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:600; font-size:14px;">
+        🖨️ Print
+      </button>
+    </div>
+    {% endif %}
+  </form>
+</div>
+
+{% if not selected_account %}
+<div class="card" style="color:#6b7280; padding:24px;">
+  Please select an Account or a Student to view the Fees Statement.
+</div>
+{% else %}
+
+<!-- ═══════════════════════ PANEL 1 – ACCOUNT & STUDENT DETAILS ═══════════════════════ -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="report-heading" style="font-size:16px; font-weight:700; margin:0 0 12px;">
+    Account Summary
+    {% if current_session %}<span style="font-size:13px; font-weight:400; color:#6b7280;"> — {{ current_session.session }}</span>{% endif %}
+  </h3>
+
+  <!-- Account Info Row -->
+  <div style="display:flex; gap:24px; flex-wrap:wrap; margin-bottom:14px; padding:12px; background:#f8fafc; border-radius:6px; border:1px solid #e5e7eb;">
+    <div>
+      <span style="font-size:11px; color:#6b7280; text-transform:uppercase; font-weight:600;">Account ID</span><br>
+      <span style="font-size:15px; font-weight:700;">{{ selected_account.account_id }}</span>
+    </div>
+    <div>
+      <span style="font-size:11px; color:#6b7280; text-transform:uppercase; font-weight:600;">Account Name</span><br>
+      <span style="font-size:15px; font-weight:700;">{{ selected_account.name }}</span>
+    </div>
+    <div>
+      <span style="font-size:11px; color:#6b7280; text-transform:uppercase; font-weight:600;">Status</span><br>
+      <span style="font-size:14px; font-weight:600;
+        {% if selected_account.account_status == 'open' %}color:#16a34a;{% else %}color:#dc2626;{% endif %}">
+        {{ selected_account.account_status|capfirst }}
+      </span>
+    </div>
+    <div>
+      <span style="font-size:11px; color:#6b7280; text-transform:uppercase; font-weight:600;">Account Opened</span><br>
+      <span style="font-size:14px;">{{ selected_account.account_open|date:"d M Y" }}</span>
+    </div>
+    {% if selected_account.register_page %}
+    <div>
+      <span style="font-size:11px; color:#6b7280; text-transform:uppercase; font-weight:600;">Register Page</span><br>
+      <span style="font-size:14px;">{{ selected_account.register_page }}</span>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Students in this account (current session) -->
+  {% if account_students %}
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Student Name</th>
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Class</th>
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">SRN</th>
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Gender</th>
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Father's Name</th>
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Mother's Name</th>
+        <th style="padding:8px 10px; text-align:center; border:1px solid #e5e7eb;">Primary Holder</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for st in account_students %}
+      <tr style="border-bottom:1px solid #e5e7eb; {% if st.primary_account_holder %}background:#fefce8;{% endif %}">
+        <td style="padding:8px 10px; border:1px solid #e5e7eb; font-weight:{% if st.primary_account_holder %}700{% else %}400{% endif %};">
+          {{ st.first_name }} {{ st.last_name }}
+        </td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb;">
+          {{ st.student_class.class_code|default:st.student_class.class_name|default:"—" }}
+        </td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb;">{{ st.srn|default:"—" }}</td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb;">{{ st.get_gender_display|default:"—" }}</td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb;">{{ st.fathers_name|default:"—" }}</td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb;">{{ st.mothers_name|default:"—" }}</td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb; text-align:center;">
+          {% if st.primary_account_holder %}<span style="color:#16a34a; font-weight:700;">✔</span>{% else %}—{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p style="margin:0; color:#6b7280; font-size:13px;">No students linked to this account in the current session.</p>
+  {% endif %}
+</div>
+
+<!-- ═══════════════════════ PANEL 2 – PAYMENT SUMMARY (ALL SESSIONS) ═══════════════════════ -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="report-heading" style="font-size:16px; font-weight:700; margin:0 0 12px;">
+    Account Balance – All Sessions
+  </h3>
+  {% if payment_summary %}
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Session</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fef9c3;">School Fees (₹)</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe;">Payable Fees (₹)</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fbecf3;">Paid Fees (₹)</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#f0fdf4;">Balance (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in payment_summary %}
+      <tr style="border-bottom:1px solid #e5e7eb;">
+        <td style="padding:8px 10px; border:1px solid #e5e7eb; font-weight:600;">
+          {{ row.session.session|default:"—" }}
+        </td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fef9c3; color:#92400e;">
+          {{ row.school|indian_number }}
+        </td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe;">
+          {{ row.payable|indian_number }}
+        </td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fbecf3;">
+          {{ row.paid|indian_number }}
+        </td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#f0fdf4; font-weight:600;
+          {% if row.balance > 0 %}color:#dc2626;{% elif row.balance < 0 %}color:#16a34a;{% endif %}">
+          {{ row.balance|indian_number }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr style="background:#f9fafb; border-top:2px solid #d1d5db; font-weight:700;">
+        <td style="padding:8px 10px; border:1px solid #d1d5db;">Total</td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #d1d5db; background:#fef9c3; color:#92400e;">
+          {{ summary_total_school|indian_number }}
+        </td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #d1d5db; background:#dbeafe;">
+          {{ summary_total_payable|indian_number }}
+        </td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #d1d5db; background:#fbecf3;">
+          {{ summary_total_paid|indian_number }}
+        </td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #d1d5db; background:#f0fdf4;
+          {% if summary_total_balance > 0 %}color:#dc2626;{% elif summary_total_balance < 0 %}color:#16a34a;{% endif %}">
+          {{ summary_total_balance|indian_number }}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  {% else %}
+  <p style="margin:0; color:#6b7280; font-size:13px;">No payment records found for this account.</p>
+  {% endif %}
+</div>
+
+<!-- ═══════════════════════ PANEL 3 – AGREED FEES GRID (CURRENT SESSION) ═══════════════════════ -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="report-heading" style="font-size:16px; font-weight:700; margin:0 0 12px;">
+    Agreed Fees
+    {% if current_session %}<span style="font-size:13px; font-weight:400; color:#6b7280;"> — {{ current_session.session }}</span>{% endif %}
+  </h3>
+  {% if fee_heads %}
+  <table style="width:auto; min-width:460px; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
+        <th style="padding:8px 14px; text-align:left; border:1px solid #e5e7eb;">#</th>
+        <th style="padding:8px 14px; text-align:left; border:1px solid #e5e7eb;">Fee Head</th>
+        <th style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#fef9c3;">School Fees (₹)</th>
+        <th style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe;">Payable Amount (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for label, school_amt, agreed_amt in fee_heads %}
+      <tr style="border-bottom:1px solid #e5e7eb;">
+        <td style="padding:8px 14px; border:1px solid #e5e7eb; color:#9ca3af;">{{ forloop.counter }}</td>
+        <td style="padding:8px 14px; border:1px solid #e5e7eb;">{{ label }}</td>
+        <td style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#fef9c3; color:#92400e;">
+          {{ school_amt|indian_number }}
+        </td>
+        <td style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe; font-weight:600;">
+          {{ agreed_amt|indian_number }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr style="background:#f9fafb; border-top:2px solid #d1d5db; font-weight:700;">
+        <td colspan="2" style="padding:8px 14px; border:1px solid #d1d5db;">Total</td>
+        <td style="padding:8px 14px; text-align:right; border:1px solid #d1d5db; background:#fef9c3; color:#92400e;">
+          {{ p3_school_total|indian_number }}
+        </td>
+        <td style="padding:8px 14px; text-align:right; border:1px solid #d1d5db; background:#dbeafe;">
+          {{ agreed_fees.total_fees|indian_number }}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  {% elif agreed_fees %}
+  <p style="margin:0; color:#6b7280; font-size:13px;">No non-zero fee heads found in the agreement for this session.</p>
+  {% else %}
+  <p style="margin:0; color:#6b7280; font-size:13px;">No fee agreement found for this account in the current session.</p>
+  {% endif %}
+</div>
+
+<!-- ═══════════════════════ PANEL 4 – PAYMENT TRANSACTIONS (CURRENT SESSION) ═══════════════════════ -->
+<div class="card">
+  <h3 class="report-heading" style="font-size:16px; font-weight:700; margin:0 0 12px;">
+    Payment Transactions
+    {% if current_session %}<span style="font-size:13px; font-weight:400; color:#6b7280;"> — {{ current_session.session }}</span>{% endif %}
+  </h3>
+  {% if income_transactions %}
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead>
+      <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">#</th>
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Date</th>
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Voucher No.</th>
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Head</th>
+        <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Details</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fbecf3;">Amount (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for txn in income_transactions %}
+      <tr style="border-bottom:1px solid #e5e7eb;">
+        <td style="padding:8px 10px; border:1px solid #e5e7eb; color:#9ca3af;">{{ forloop.counter }}</td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb; white-space:nowrap;">{{ txn.date|date:"d M Y" }}</td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb; font-weight:600;">{{ txn.voucher_number|default:"—" }}</td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb;">
+          {% if txn.major_head %}{{ txn.major_head }}{% endif %}
+          {% if txn.head %} / {{ txn.head }}{% endif %}
+          {% if txn.sub_head %} / {{ txn.sub_head }}{% endif %}
+          {% if not txn.major_head and not txn.head and not txn.sub_head %}—{% endif %}
+        </td>
+        <td style="padding:8px 10px; border:1px solid #e5e7eb; color:#374151;">{{ txn.details|default:"—" }}</td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fbecf3; font-weight:600;">
+          {{ txn.amount|indian_number }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr style="background:#f9fafb; border-top:2px solid #d1d5db; font-weight:700;">
+        <td colspan="5" style="padding:8px 10px; border:1px solid #d1d5db;">Total Paid</td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #d1d5db; background:#fbecf3;">
+          {{ income_total|indian_number }}
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  {% else %}
+  <p style="margin:0; color:#6b7280; font-size:13px;">No payment transactions found for this account in the current session.</p>
+  {% endif %}
+</div>
+
+{% endif %}{# end if selected_account #}
+
+<style>
+  @media print {
+    @page { size: A4 portrait; margin: 8mm 10mm; }
+
+    .no-print,
+    .topbar, .sidebar, aside, nav, header, footer,
+    .nav-group, #sidebar { display: none !important; }
+
+    body { background:#fff !important; margin:0 !important; padding:0 !important; }
+    .page-content, .content-wrapper, main,
+    [class*="content"], [class*="main"] {
+      margin:0 !important; padding:0 !important;
+      width:100% !important; max-width:100% !important;
+    }
+
+    #print-letterhead { display:block !important; }
+
+    h2 { font-size:15px !important; margin:4px 0 !important; }
+    .report-heading { font-size:12px !important; margin:6px 0 4px !important; }
+    .card { box-shadow:none !important; border:1px solid #ccc !important; padding:6px !important; margin-bottom:6px !important; page-break-inside:avoid; }
+
+    table { width:100%; border-collapse:collapse; font-size:8px; }
+    th, td { border:1px solid #ccc !important; padding:2px 4px !important; }
+
+    td[style*="dbeafe"], th[style*="dbeafe"] { background:#dbeafe !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    td[style*="fbecf3"], th[style*="fbecf3"] { background:#fbecf3 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    td[style*="f0fdf4"], th[style*="f0fdf4"] { background:#f0fdf4 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    tr[style*="fefce8"] { background:#fefce8 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    tr[style*="f9fafb"] { background:#f9fafb !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+
+{% endblock %}
