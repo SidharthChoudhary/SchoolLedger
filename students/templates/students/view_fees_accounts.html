@@ -47,6 +47,11 @@
         {{ form.account_close }}
       </div>
 
+      <div class="field">
+        <label>Remark</label>
+        {{ form.remark }}
+      </div>
+
       <div class="field field-btn">
         <label>&nbsp;</label>
         <button type="submit">{% if editing_account %}Update{% else %}Save{% endif %}</button>
@@ -132,6 +137,7 @@
         <th>Open Date</th>
         <th>Status</th>
         <th>Close Date</th>
+        <th>Remark</th>
         <th>Actions</th>
       </tr>
 
@@ -154,6 +160,7 @@
             —
           {% endif %}
         </td>
+        <td>{{ account.remark|default:"—" }}</td>
         <td class="actions">
           <a class="btn-edit" href="{% url 'fee_account_agreement' account.id %}">Agreed Fees</a>
           <a class="btn-edit" href="/students/fees-account/?edit={{ account.id }}">Edit</a>

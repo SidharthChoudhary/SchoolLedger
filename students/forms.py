@@ -80,13 +80,14 @@ class StudentForm(forms.ModelForm):
 class FeesAccountForm(forms.ModelForm):
     class Meta:
         model = FeesAccount
-        fields = ['name', 'account_open', 'account_status', 'account_close', 'register_page']
+        fields = ['name', 'account_open', 'account_status', 'account_close', 'register_page', 'remark']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Name'}),
             'account_open': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'account_status': forms.Select(attrs={'class': 'form-control'}),
             'account_close': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'register_page': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Register Page'}),
+            'remark': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Remark (e.g. reason for closing)', 'rows': 2}),
         }
 
 

@@ -151,6 +151,7 @@ class FeesAccount(models.Model):
     account_open = models.DateField()
     account_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
     account_close = models.DateField(null=True, blank=True)
+    remark = models.TextField(blank=True, null=True, verbose_name='Remark')
     register_page = models.CharField(max_length=100, blank=True, null=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
