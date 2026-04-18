@@ -1428,40 +1428,116 @@ def promote_session_page(request):
                         student_class=new_class
                     ).delete()
                     
-                    # Get all mappings from current session and class
-                    current_mappings = SessionClassStudentMap.objects.filter(
+                    # Get all students in current session and class
+                    current_students = Student.objects.filter(
                         session=current_session,
                         student_class=current_class
                     )
                     
                     promoted_count = 0
-                    for mapping in current_mappings:
-                        # Create new mapping for new session and class
-                        SessionClassStudentMap.objects.get_or_create(
-                            session=new_session,
-                            student_class=new_class,
-                            student=mapping.student,
-                            defaults={
-                                'srn': mapping.student.srn,
-                                'promoted_date': timezone.now()
-                            }
-                        )
+                    for student in current_students:
+                        student.session = new_session
+                        student.student_class = new_class
+                        student.save(update_fields=['session', 'student_class', 'updated_at'])
                         promoted_count += 1
                     
                     messages.success(request, f"Successfully promoted {promoted_count} students from {current_class.class_code} ({current_session.session}) to {new_class.class_code} ({new_session.session})")
                     
                 except Exception as e:
                     messages.error(request, f"Error during promotion: {str(e)}")
+
+        elif action == 'promote_fee':
+            from dailyLedger.models import FeesStructure
+            current_session_id = request.POST.get('current_session')
+            new_session_id = request.POST.get('new_session')
+            current_class_id = request.POST.get('current_class')
+
+            if current_session_id and new_session_id and current_class_id:
+                try:
+                    current_session = Session.objects.get(id=current_session_id)
+                    new_session = Session.objects.get(id=new_session_id)
+                    current_class = Class.objects.get(id=current_class_id)
+
+                    source = FeesStructure.objects.filter(session=current_session, class_code=current_class).first()
+                    if not source:
+                        messages.warning(request, f"No fee structure found for {current_class.class_code} ({current_session.session}).")
+                    else:
+                        fee_fields = [
+                            'fee_tuition', 'fee_tc', 'fee_admission',
+                            'book_set', 'book_diary', 'book_other',
+                            'uniform_shirt', 'uniform_pant', 'uniform_sweater',
+                            'uniform_hoody', 'uniform_t_shirt', 'uniform_tie',
+                            'uniform_belt', 'uniform_id_card',
+                        ]
+                        defaults = {f: getattr(source, f) for f in fee_fields}
+                        obj, created = FeesStructure.objects.update_or_create(
+                            session=new_session,
+                            class_code=current_class,
+                            defaults=defaults,
+                        )
+                        action_word = "Created" if created else "Updated"
+                        messages.success(request, f"{action_word} fee structure for {current_class.class_code} ({new_session.session}) copied from ({current_session.session}).")
+
+                except Exception as e:
+                    messages.error(request, f"Error during fee promotion: {str(e)}")
+
+        elif action == 'promote_account':
+            current_session_id = request.POST.get('current_session')
+            new_session_id = request.POST.get('new_session')
+            fees_account_val = request.POST.get('fees_account')
+
+            if current_session_id and new_session_id and fees_account_val:
+                try:
+                    current_session = Session.objects.get(id=current_session_id)
+                    new_session = Session.objects.get(id=new_session_id)
+
+                    agreement_fields = [
+                        'tuition_fees', 'tc_fees', 'admission_fees',
+                        'book_set', 'book_diary', 'book_other',
+                        'uniform_shirt', 'uniform_pant', 'uniform_sweater',
+                        'uniform_hoody', 'uniform_t_shirt', 'uniform_tie',
+                        'uniform_belt', 'uniform_id_card', 'bus_fees',
+                    ]
+
+                    if fees_account_val == '__all__':
+                        sources = FeesAccountAgreement.objects.filter(session=current_session)
+                    else:
+                        account = FeesAccount.objects.get(id=fees_account_val)
+                        sources = FeesAccountAgreement.objects.filter(session=current_session, fees_account=account)
+
+                    promoted_count = 0
+                    for source in sources:
+                        defaults = {f: getattr(source, f) for f in agreement_fields}
+                        obj, created = FeesAccountAgreement.objects.update_or_create(
+                            fees_account=source.fees_account,
+                            session=new_session,
+                            defaults=defaults,
+                        )
+                        promoted_count += 1
+
+                    action_word = "Created/updated"
+                    messages.success(request, f"{action_word} {promoted_count} fees account(s) for {new_session.session} copied from {current_session.session}.")
+
+                except Exception as e:
+                    messages.error(request, f"Error during account promotion: {str(e)}")
     
-    # Get data for dropdowns
-    active_sessions = Session.objects.filter(status='current_session').order_by('-id')
-    new_sessions = Session.objects.filter(status='next_session').order_by('-id')
+    # Get data for dropdowns — show all sessions so user can promote between any two
+    active_sessions = Session.objects.all().order_by('-session')
+    new_sessions = Session.objects.all().order_by('-session')
+
+    # Default selections
+    default_current_session = Session.objects.filter(status='current_session').first()
+    default_new_session = Session.objects.filter(status='next_session').first()
     classes = Class.objects.all().order_by('age')
-    
+    fees_accounts = FeesAccount.objects.filter(account_status='open').order_by('account_id')
+
     context = {
         'active_sessions': active_sessions,
         'new_sessions': new_sessions,
         'classes': classes,
+        'fees_accounts': fees_accounts,
+        'default_current_session': default_current_session,
+        'default_new_session': default_new_session,
     }
-    
+
     return render(request, 'students/promote_session.html', context)

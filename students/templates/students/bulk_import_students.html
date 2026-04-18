@@ -68,7 +68,7 @@
           <li><strong>Required columns:</strong></li>
           <li class="csv-columns">First_Name, Last_Name, Gender, Fathers_Name, Mothers_Name, Class_Code, Session</li>
           <li><strong>Optional columns:</strong></li>
-          <li class="csv-columns">Class_Name, SRN, Date_of_Birth, Admission_Date, Transport_Method, RTE, Primary_Account_Holder, Fathers_Phone, Mothers_Phone, Gardians_Name, Gardians_Phone, Previous_School, Medical_Conditions, Dietary_Restrictions</li>
+          <li class="csv-columns">Class_Name, SRN, NIC_Student_ID, Date_of_Birth, Admission_Date, Transport_Method, RTE, Primary_Account_Holder, Fathers_Phone, Mothers_Phone, Gardians_Name, Gardians_Phone, Previous_School, Medical_Conditions, Dietary_Restrictions</li>
           <li><strong>Gender values:</strong> male, female, 3rd_gender</li>
           <li><strong>Date format:</strong> YYYY-MM-DD recommended</li>
           <li><strong>Boolean values:</strong> yes/no, true/false, 1/0</li>
@@ -158,6 +158,7 @@
               <th>Class</th>
               <th>Session</th>
               <th>SRN</th>
+              <th>NIC Student ID</th>
             </tr>
           </thead>
           <tbody>
@@ -168,6 +169,7 @@
               <td>{{ data.student_class.class_code }}</td>
               <td>{{ data.session.session }}</td>
               <td>{{ data.srn|default:'-' }}</td>
+              <td>{{ data.nic_student_id|default:'-' }}</td>
             </tr>
             {% endfor %}
           </tbody>

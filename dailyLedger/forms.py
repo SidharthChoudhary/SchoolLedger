@@ -216,7 +216,8 @@ class FeesStructureForm(forms.ModelForm):
             'session', 'class_code',
             'fee_tuition', 'fee_tc', 'fee_admission',
             'book_set', 'book_diary', 'book_other',
-            'uniform_shirt', 'uniform_pant', 'uniform_tie', 'uniform_belt', 'uniform_id_card'
+            'uniform_shirt', 'uniform_pant', 'uniform_sweater', 'uniform_hoody', 'uniform_t_shirt',
+            'uniform_tie', 'uniform_belt', 'uniform_id_card'
         ]
         widgets = {
             'session': forms.Select(attrs={'class': 'form-control'}),
@@ -229,6 +230,9 @@ class FeesStructureForm(forms.ModelForm):
             'book_other': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'maxlength': '6'}),
             'uniform_shirt': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'maxlength': '6'}),
             'uniform_pant': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'maxlength': '6'}),
+            'uniform_sweater': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'maxlength': '6'}),
+            'uniform_hoody': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'maxlength': '6'}),
+            'uniform_t_shirt': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'maxlength': '6'}),
             'uniform_tie': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'maxlength': '6'}),
             'uniform_belt': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'maxlength': '6'}),
             'uniform_id_card': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'maxlength': '6'}),

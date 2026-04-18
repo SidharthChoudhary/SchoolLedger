@@ -378,17 +378,24 @@ def income_home(request):
     
     other_form = None
     fees_form = None
+    editing_income_type = None
     income_type = request.POST.get('income_type', 'other')
     incomes = Income.objects.all()
     head_data_json = _build_head_data()
     sessions = Session.objects.all()
+    current_session = Session.objects.filter(status='current_session').order_by('-id').first()
+    default_session_initial = {'session': current_session.id} if current_session else {}
 
     # Edit mode
     edit_id = request.GET.get('edit')
     editing_entry = Income.objects.filter(pk=edit_id).first() if edit_id else None
+    if editing_entry:
+        editing_income_type = 'fees' if editing_entry.fees_account_id else 'other'
     
     # Get filter values from GET request
-    selected_session = request.GET.get('session', '')
+    selected_session = request.GET.get('session', '').strip()
+    if not selected_session and current_session:
+        selected_session = str(current_session.id)
     selected_major_head = request.GET.get('major_head', '')
     selected_head = request.GET.get('head', '')
     selected_sub_head = request.GET.get('sub_head', '')
@@ -422,32 +429,48 @@ def income_home(request):
         if entry_id:
             # Update existing income entry
             entry = get_object_or_404(Income, pk=entry_id)
-            other_form = IncomeForm(request.POST, instance=entry, ledger_type='Income')
-            if other_form.is_valid():
-                other_form.save()
-                messages.success(request, "Income entry updated successfully!")
-                return redirect("income_home")
-            fees_form = IncomeFeesForm()
+            edit_form_type = request.POST.get('income_type') or ('fees' if entry.fees_account_id else 'other')
+            if edit_form_type == 'fees':
+                fees_form = IncomeFeesForm(request.POST, instance=entry)
+                if fees_form.is_valid():
+                    fees_form.save()
+                    messages.success(request, "Fee income updated successfully!")
+                    return redirect("income_home")
+                other_form = IncomeForm(ledger_type='Income', initial=default_session_initial)
+                editing_income_type = 'fees'
+            else:
+                other_form = IncomeForm(request.POST, instance=entry, ledger_type='Income')
+                if other_form.is_valid():
+                    other_form.save()
+                    messages.success(request, "Income entry updated successfully!")
+                    return redirect("income_home")
+                fees_form = IncomeFeesForm(initial=default_session_initial)
+                editing_income_type = 'other'
         elif income_type == 'fees':
             fees_form = IncomeFeesForm(request.POST)
             if fees_form.is_valid():
                 fees_form.save()
                 messages.success(request, "Fee income recorded successfully!")
                 return redirect("income_home")
-            other_form = IncomeForm(ledger_type='Income')
+            other_form = IncomeForm(ledger_type='Income', initial=default_session_initial)
         else:
             other_form = IncomeForm(request.POST, ledger_type='Income')
             if other_form.is_valid():
                 other_form.save()
                 messages.success(request, "Income recorded successfully!")
                 return redirect("income_home")
-            fees_form = IncomeFeesForm()
+            fees_form = IncomeFeesForm(initial=default_session_initial)
     else:
         if editing_entry:
-            other_form = IncomeForm(instance=editing_entry, ledger_type='Income')
+            if editing_income_type == 'fees':
+                fees_form = IncomeFeesForm(instance=editing_entry)
+                other_form = IncomeForm(ledger_type='Income', initial=default_session_initial)
+            else:
+                other_form = IncomeForm(instance=editing_entry, ledger_type='Income')
+                fees_form = IncomeFeesForm(initial=default_session_initial)
         else:
-            other_form = IncomeForm(ledger_type='Income')
-        fees_form = IncomeFeesForm()
+            other_form = IncomeForm(ledger_type='Income', initial=default_session_initial)
+            fees_form = IncomeFeesForm(initial=default_session_initial)
     
     return render(request, "dailyLedger/income_home.html", {
         "incomes": incomes,
@@ -466,6 +489,8 @@ def income_home(request):
         "selected_account": selected_account,
         "income_total": income_total,
         "editing_entry": editing_entry,
+        "editing_income_type": editing_income_type,
+        "current_session": current_session,
     })
 
 
@@ -824,22 +849,21 @@ def download_ledger_template(request):
 @never_cache
 def fees_structure_list(request):
     """View all fees structures and add/edit on same page"""
+    from students.models import Class as StudentClass
     editing_fees = None
     form = None
-    
+
     # Check if editing a fees structure
     edit_id = request.GET.get('edit')
     if edit_id:
         editing_fees = get_object_or_404(FeesStructure, pk=edit_id)
-    
+
     if request.method == 'POST':
         if edit_id:
-            # Editing existing fees structure
             form = FeesStructureForm(request.POST, instance=editing_fees)
         else:
-            # Adding new fees structure
             form = FeesStructureForm(request.POST)
-        
+
         if form.is_valid():
             form.save()
             messages.success(request, f'Fees structure {"updated" if edit_id else "added"} successfully!')
@@ -849,12 +873,54 @@ def fees_structure_list(request):
             form = FeesStructureForm(instance=editing_fees)
         else:
             form = FeesStructureForm()
-    
+
+    # Filters for saved entries
+    filter_session = request.GET.get('filter_session', '')
+    filter_class = request.GET.get('filter_class', '')
+
     fees_structures = FeesStructure.objects.all().order_by('-session', 'class_code')
+    if filter_session:
+        fees_structures = fees_structures.filter(session__id=filter_session)
+    if filter_class:
+        fees_structures = fees_structures.filter(class_code__id=filter_class)
+
+    all_sessions = Session.objects.all().order_by('-session')
+    all_classes = StudentClass.objects.all().order_by('age')
+
+    # Resolve selected session name for print title
+    selected_session_name = ''
+    if filter_session:
+        try:
+            selected_session_name = Session.objects.get(id=filter_session).session
+        except Session.DoesNotExist:
+            pass
+    else:
+        # Auto-detect session if all displayed records share the same session
+        distinct_sessions = list({fs.session.session for fs in fees_structures})
+        if len(distinct_sessions) == 1:
+            selected_session_name = distinct_sessions[0]
+
+    fees_structures = list(fees_structures)
+
+    # Compute column totals
+    total_fields = [
+        'fee_tuition', 'fee_tc', 'fee_admission',
+        'book_set', 'book_diary', 'book_other',
+        'uniform_shirt', 'uniform_pant', 'uniform_sweater', 'uniform_hoody',
+        'uniform_t_shirt', 'uniform_tie', 'uniform_belt', 'uniform_id_card',
+    ]
+    totals = {f: sum(getattr(fs, f) or 0 for fs in fees_structures) for f in total_fields}
+
     return render(request, 'dailyLedger/fees_structure_list.html', {
         'fees_structures': fees_structures,
         'form': form,
-        'editing_fees': editing_fees
+        'editing_fees': editing_fees,
+        'all_sessions': all_sessions,
+        'all_classes': all_classes,
+        'filter_session': filter_session,
+        'filter_class': filter_class,
+        'selected_session_name': selected_session_name,
+        'totals': totals,
     })
 
 
@@ -883,19 +949,172 @@ def delete_fees_structure(request, pk):
     return render(request, 'dailyLedger/delete_fees_structure.html', {'fees_structure': fees_structure})
 
 
+FEES_STRUCTURE_CSV_COLUMNS = [
+    'session', 'class_code',
+    'fee_tuition', 'fee_tc', 'fee_admission',
+    'book_set', 'book_diary', 'book_other',
+    'uniform_shirt', 'uniform_pant', 'uniform_sweater', 'uniform_hoody',
+    'uniform_t_shirt', 'uniform_tie', 'uniform_belt', 'uniform_id_card',
+]
+
+
+@never_cache
+def bulk_import_fees_structure(request):
+    """Bulk import FeesStructure records from a CSV file."""
+    from students.models import Class as StudentClass
+
+    preview_rows = []
+    errors = []
+    success_count = 0
+    dry_run = True
+
+    if request.method == 'POST':
+        csv_file = request.FILES.get('csv_file')
+        dry_run = request.POST.get('dry_run') == 'on'
+        handle_duplicates = request.POST.get('handle_duplicates', 'skip')
+
+        if not csv_file:
+            messages.error(request, 'Please upload a CSV file.')
+            return redirect('bulk_import_fees_structure')
+
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Only CSV files are accepted.')
+            return redirect('bulk_import_fees_structure')
+
+        try:
+            text = csv_file.read().decode('utf-8-sig')
+        except UnicodeDecodeError:
+            messages.error(request, 'File encoding not supported. Please use UTF-8.')
+            return redirect('bulk_import_fees_structure')
+
+        reader = csv.DictReader(StringIO(text))
+        # Normalise header names
+        reader.fieldnames = [f.strip().lower() for f in (reader.fieldnames or [])]
+
+        required_cols = {'session', 'class_code'}
+        missing = required_cols - set(reader.fieldnames)
+        if missing:
+            messages.error(request, f'CSV is missing required columns: {", ".join(missing)}')
+            return redirect('bulk_import_fees_structure')
+
+        decimal_fields = FEES_STRUCTURE_CSV_COLUMNS[2:]  # all after session, class_code
+
+        for row_num, row in enumerate(reader, start=2):
+            row = {k.strip().lower(): v.strip() for k, v in row.items() if k}
+            session_name = row.get('session', '').strip()
+            class_code_val = row.get('class_code', '').strip()
+
+            if not session_name or not class_code_val:
+                errors.append(f'Row {row_num}: session and class_code are required.')
+                continue
+
+            try:
+                session_obj = Session.objects.get(session=session_name)
+            except Session.DoesNotExist:
+                errors.append(f'Row {row_num}: Session "{session_name}" not found.')
+                continue
+
+            try:
+                class_obj = StudentClass.objects.get(class_code=class_code_val)
+            except StudentClass.DoesNotExist:
+                errors.append(f'Row {row_num}: Class code "{class_code_val}" not found.')
+                continue
+
+            field_values = {}
+            parse_error = False
+            for field in decimal_fields:
+                raw = row.get(field, '0') or '0'
+                try:
+                    field_values[field] = float(raw)
+                except ValueError:
+                    errors.append(f'Row {row_num}: Invalid value "{raw}" for field "{field}".')
+                    parse_error = True
+                    break
+
+            if parse_error:
+                continue
+
+            existing = FeesStructure.objects.filter(session=session_obj, class_code=class_obj).first()
+            action = 'add'
+            if existing:
+                if handle_duplicates == 'skip':
+                    action = 'skip'
+                elif handle_duplicates == 'update':
+                    action = 'update'
+                else:
+                    errors.append(f'Row {row_num}: Duplicate — {session_name} / {class_code_val} already exists.')
+                    continue
+
+            preview_rows.append({
+                'row_num': row_num,
+                'session': session_name,
+                'class_code': class_code_val,
+                'action': action,
+                **field_values,
+            })
+
+            if not dry_run and action != 'skip':
+                if action == 'update' and existing:
+                    for field, val in field_values.items():
+                        setattr(existing, field, val)
+                    existing.save()
+                else:
+                    FeesStructure.objects.create(
+                        session=session_obj,
+                        class_code=class_obj,
+                        **field_values,
+                    )
+                success_count += 1
+
+        if not dry_run:
+            if success_count:
+                messages.success(request, f'{success_count} fees structure record(s) imported successfully.')
+            if errors:
+                for e in errors:
+                    messages.error(request, e)
+            return redirect('fees_structure_list')
+
+    sessions = Session.objects.all().order_by('-session')
+    return render(request, 'dailyLedger/bulk_import_fees_structure.html', {
+        'preview_rows': preview_rows,
+        'errors': errors,
+        'dry_run': dry_run,
+        'decimal_fields': FEES_STRUCTURE_CSV_COLUMNS[2:],
+    })
+
+
+@never_cache
+def download_fees_structure_template(request):
+    """Download a blank CSV template for fees structure bulk import."""
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="fees_structure_template.csv"'
+    writer = csv.writer(response)
+    writer.writerow(FEES_STRUCTURE_CSV_COLUMNS)
+    # Write a sample row
+    writer.writerow([
+        '2025-26', '1',
+        '1200', '200', '500',
+        '800', '100', '0',
+        '300', '300', '400', '0',
+        '150', '100', '80', '50',
+    ])
+    return response
+
+
 # API Endpoints for cascading dropdowns in fee income form
 @never_cache
 def api_get_classes(request, session_id):
     """Get all classes for a given session"""
-    from students.models import SessionClassStudentMap, Class
+    from students.models import Student, Class
     from django.http import JsonResponse
     
     try:
-        session = Session.objects.get(id=session_id)
-        # Get distinct class IDs from the mapping
-        class_ids = SessionClassStudentMap.objects.filter(session=session).values_list('student_class_id', flat=True).distinct()
-        # Get the actual Class objects
-        classes = Class.objects.filter(id__in=class_ids)
+        Session.objects.get(id=session_id)
+        class_ids = Student.objects.filter(
+            session_id=session_id,
+            student_class__isnull=False,
+        ).values_list('student_class_id', flat=True).distinct()
+        classes = Class.objects.filter(id__in=class_ids).order_by('age')
         class_list = [{'id': c.id, 'name': c.class_code} for c in classes]
         return JsonResponse({'classes': class_list})
     except Exception as e:
@@ -905,17 +1124,17 @@ def api_get_classes(request, session_id):
 @never_cache
 def api_get_students(request, session_id, class_id):
     """Get all students for a given session and class"""
-    from students.models import SessionClassStudentMap
+    from students.models import Student
     from django.http import JsonResponse
     
     try:
-        session = Session.objects.get(id=session_id)
-        students = SessionClassStudentMap.objects.filter(
-            session=session,
-            student_class_id=class_id
-        ).values_list('student_id', 'student__first_name', 'student__last_name').distinct()
-        
-        student_list = [{'id': s[0], 'name': f"{s[1]} {s[2]}"} for s in students]
+        Session.objects.get(id=session_id)
+        students = Student.objects.filter(
+            session_id=session_id,
+            student_class_id=class_id,
+        ).values('id', 'first_name', 'last_name').order_by('first_name', 'last_name')
+
+        student_list = [{'id': s['id'], 'name': f"{s['first_name']} {s['last_name']}"} for s in students]
         return JsonResponse({'students': student_list})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)

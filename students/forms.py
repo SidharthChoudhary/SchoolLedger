@@ -1,5 +1,5 @@
 from django import forms
-from .models import Student, Class, FeesAccount
+from .models import Student, Class, FeesAccount, StudentAccount, FeesAccountAgreement
 
 
 class BulkImportStudentForm(forms.Form):
@@ -47,7 +47,7 @@ class StudentForm(forms.ModelForm):
             'medical_conditions', 'dietary_restrictions',
             'fathers_phone', 'mothers_phone', 'gardians_phone',
             'student_class', 'session', 'transport_method', 'previous_school',
-            'srn', 'admission_date', 'rte', 'primary_account_holder', 'fees_account',
+            'srn', 'nic_student_id', 'admission_date', 'rte', 'primary_account_holder', 'fees_account',
             'image'
         ]
         widgets = {
@@ -68,6 +68,7 @@ class StudentForm(forms.ModelForm):
             'transport_method': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'previous_school': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Previous School Name'}),
             'srn': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Student Registration Number'}),
+            'nic_student_id': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'NIC Student ID'}),
             'admission_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'rte': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'primary_account_holder': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -86,4 +87,59 @@ class FeesAccountForm(forms.ModelForm):
             'account_status': forms.Select(attrs={'class': 'form-control'}),
             'account_close': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'register_page': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Register Page'}),
+        }
+
+
+class StudentAccountAgreementForm(forms.ModelForm):
+    class Meta:
+        model = StudentAccount
+        fields = [
+            'tuition_fees', 'tc_fees', 'admission_fees',
+            'book_set', 'book_diary', 'book_other',
+            'uniform_shirt', 'uniform_pant', 'uniform_sweater', 'uniform_hoody', 'uniform_t_shirt',
+            'uniform_tie', 'uniform_belt', 'uniform_id_card',
+        ]
+        widgets = {
+            'tuition_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'tc_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'admission_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'book_set': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'book_diary': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'book_other': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_shirt': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_pant': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_sweater': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_hoody': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_t_shirt': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_tie': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_belt': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_id_card': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+        }
+
+
+class FeesAccountAgreementForm(forms.ModelForm):
+    class Meta:
+        model = FeesAccountAgreement
+        fields = [
+            'tuition_fees', 'tc_fees', 'admission_fees',
+            'book_set', 'book_diary', 'book_other',
+            'uniform_shirt', 'uniform_pant', 'uniform_sweater', 'uniform_hoody', 'uniform_t_shirt',
+            'uniform_tie', 'uniform_belt', 'uniform_id_card', 'bus_fees',
+        ]
+        widgets = {
+            'tuition_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'tc_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'admission_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'book_set': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'book_diary': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'book_other': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_shirt': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_pant': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_sweater': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_hoody': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_t_shirt': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_tie': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_belt': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'uniform_id_card': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
+            'bus_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
         }

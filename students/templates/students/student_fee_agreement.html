@@ -1,0 +1,333 @@
+{% extends "website/base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Agreed Fees - {{ fees_account.account_id }}{% endblock %}
+{% block content %}
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;" class="no-print">
+  <h2 style="margin:0;">Agreed Fees - {{ fees_account.account_id }} ({{ fees_account.name }})</h2>
+  {% if selected_session and form %}
+  <button onclick="window.print()" style="display:inline-flex; align-items:center; gap:8px; padding:9px 20px; border-radius:10px; background:var(--teal-700); color:#fff; font-size:13px; font-weight:600; border:none; cursor:pointer;">
+    🖨️ Print
+  </button>
+  {% endif %}
+</div>
+
+<div class="no-print" style="margin-bottom: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+  <a href="{% url 'select_fee_account_agreement' %}" class="btn-secondary">Back to Accounts</a>
+  <a href="{% url 'view_fees_accounts' %}" class="btn-secondary">Fees Accounts List</a>
+</div>
+
+{% include "website/_print_letterhead.html" %}
+
+<div class="card no-print" style="margin-bottom:14px;">
+  <form method="get" style="display:flex; gap:12px; align-items:end; flex-wrap:wrap;">
+    <div class="field" style="min-width: 220px; margin: 0;">
+      <label style="font-size:12px; font-weight:700;">Session</label>
+      <select name="session" style="height:40px;">
+        <option value="">Select Session</option>
+        {% for s in sessions %}
+          <option value="{{ s.id }}" {% if selected_session and selected_session.id == s.id %}selected{% endif %}>{{ s.session }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <button type="submit" class="btn-primary">Load</button>
+    </div>
+  </form>
+
+  <div style="margin-top: 12px; font-size: 13px; color: #374151;">
+    Account Number : {{ fees_account.account_id }} | Total Students : {{ linked_students|length }} | Session {{ selected_session.session|default:'N/A' }}
+  </div>
+</div>
+
+{% if selected_session %}
+{% if missing_structure_classes %}
+<div class="card" style="margin-bottom:14px; background:#fff7ed; border:1px solid #fdba74; color:#9a3412;">
+  Missing fee structure for class(es): {{ missing_structure_classes|join:", " }}
+</div>
+{% endif %}
+
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="section-title">Session: {{ selected_session.session }} | Payable Fees for Account: {{ fees_account.account_id }}</h3>
+
+  {% if form %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="session" value="{{ selected_session.id }}">
+      <table class="table compact fee-grid">
+        <thead>
+          <tr>
+            <th>Fees/Expense Type</th>
+            <th>School Fees/Amount</th>
+            <th>Payable Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tuition Fees<div class="student-breakdown">{% for s in student_breakdowns.tuition_fees %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.tuition_fees|indian_number }}</td><td>₹{{ form.tuition_fees }}</td>
+          </tr>
+          <tr>
+            <td>TC Fees<div class="student-breakdown">{% for s in student_breakdowns.tc_fees %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.tc_fees|indian_number }}</td><td>₹{{ form.tc_fees }}</td>
+          </tr>
+          <tr>
+            <td>Admission Fees<div class="student-breakdown">{% for s in student_breakdowns.admission_fees %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.admission_fees|indian_number }}</td><td>₹{{ form.admission_fees }}</td>
+          </tr>
+          <tr>
+            <td>Book Set<div class="student-breakdown">{% for s in student_breakdowns.book_set %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.book_set|indian_number }}</td><td>₹{{ form.book_set }}</td>
+          </tr>
+          <tr>
+            <td>Book Diary<div class="student-breakdown">{% for s in student_breakdowns.book_diary %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.book_diary|indian_number }}</td><td>₹{{ form.book_diary }}</td>
+          </tr>
+          <tr>
+            <td>Book Other<div class="student-breakdown">{% for s in student_breakdowns.book_other %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.book_other|indian_number }}</td><td>₹{{ form.book_other }}</td>
+          </tr>
+          <tr>
+            <td>Uniform Shirt<div class="student-breakdown">{% for s in student_breakdowns.uniform_shirt %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.uniform_shirt|indian_number }}</td><td>₹{{ form.uniform_shirt }}</td>
+          </tr>
+          <tr>
+            <td>Uniform Pant<div class="student-breakdown">{% for s in student_breakdowns.uniform_pant %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.uniform_pant|indian_number }}</td><td>₹{{ form.uniform_pant }}</td>
+          </tr>
+          <tr>
+            <td>Uniform Sweater<div class="student-breakdown">{% for s in student_breakdowns.uniform_sweater %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.uniform_sweater|indian_number }}</td><td>₹{{ form.uniform_sweater }}</td>
+          </tr>
+          <tr>
+            <td>Uniform Hoody<div class="student-breakdown">{% for s in student_breakdowns.uniform_hoody %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.uniform_hoody|indian_number }}</td><td>₹{{ form.uniform_hoody }}</td>
+          </tr>
+          <tr>
+            <td>Uniform T-Shirt<div class="student-breakdown">{% for s in student_breakdowns.uniform_t_shirt %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.uniform_t_shirt|indian_number }}</td><td>₹{{ form.uniform_t_shirt }}</td>
+          </tr>
+          <tr>
+            <td>Uniform Tie<div class="student-breakdown">{% for s in student_breakdowns.uniform_tie %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.uniform_tie|indian_number }}</td><td>₹{{ form.uniform_tie }}</td>
+          </tr>
+          <tr>
+            <td>Uniform Belt<div class="student-breakdown">{% for s in student_breakdowns.uniform_belt %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.uniform_belt|indian_number }}</td><td>₹{{ form.uniform_belt }}</td>
+          </tr>
+          <tr>
+            <td>Uniform ID Card<div class="student-breakdown">{% for s in student_breakdowns.uniform_id_card %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
+            <td>₹{{ standard_totals.uniform_id_card|indian_number }}</td><td>₹{{ form.uniform_id_card }}</td>
+          </tr>
+          <tr>
+            <td>Bus Fees</td>
+            <td>—</td><td>₹{{ form.bus_fees }}</td>
+          </tr>
+          <tr class="total-row">
+            <td><strong>Total</strong></td>
+            <td><strong>₹{{ standard_total_amount|indian_number }}</strong></td>
+            <td><strong>₹{{ agreed_total_amount|indian_number }}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="no-print" style="display:flex; gap:8px; margin-top:12px;">
+        <button type="submit" class="btn-primary">Save Agreed Fees</button>
+      </div>
+    </form>
+  {% endif %}
+</div>
+
+<div class="card" style="margin-top:14px;">
+  <h3 class="section-title">Students details - </h3>
+  {% if linked_students %}
+  <table class="table compact">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Father's Name</th>
+        <th>Class</th>
+        <th>Session</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in linked_students %}
+      <tr>
+        <td>{{ student.first_name }} {{ student.last_name }}</td>
+        <td>{{ student.fathers_name|default:'N/A' }}</td>
+        <td>{{ student.student_class.class_code|default:'N/A' }}</td>
+        <td>{{ student.session.session|default:'N/A' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No linked students for this account in the selected session.</p>
+  {% endif %}
+</div>
+{% endif %}
+
+<style>
+  .student-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .student-breakdown span {
+    font-size: 11px;
+    color: #9ca3af;
+  }
+  .student-breakdown span:not(:last-child)::after {
+    content: ' |';
+    margin-left: 6px;
+    color: #d1d5db;
+  }
+
+  .grid-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .section-title {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+
+  .sub {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: #6b7280;
+    font-size: 13px;
+  }
+
+  .compact th,
+  .compact td {
+    padding: 8px;
+    vertical-align: middle;
+  }
+
+  .compact input {
+    width: 120px;
+  }
+
+  .fee-grid {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .fee-grid thead th {
+    border: 1px solid #d1d5db;
+    padding: 10px 12px;
+    color: #374151;
+    font-weight: 700;
+  }
+
+  .fee-grid thead th:nth-child(1) {
+    background: #f3f4f6;
+    text-align: left;
+  }
+
+  .fee-grid thead th:nth-child(2) {
+    background: #fefce8;
+    color: #92400e;
+    text-align: right;
+  }
+
+  .fee-grid thead th:nth-child(3) {
+    background: #f0fdf4;
+    color: #166534;
+    text-align: right;
+  }
+
+  .fee-grid tbody td {
+    border: 1px solid #e5e7eb;
+    padding: 8px 10px;
+    vertical-align: middle;
+  }
+
+  .fee-grid tbody td:nth-child(1) {
+    background: #ffffff;
+  }
+
+  .fee-grid tbody td:nth-child(2) {
+    background: #fffbeb;
+    text-align: right;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .fee-grid tbody td:nth-child(3) {
+    background: #f8fafc;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .fee-grid tbody td:nth-child(3) input {
+    width: 120px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 13px;
+    text-align: right;
+    background: #ffffff;
+    margin-left: 6px;
+  }
+
+  .fee-grid .total-row td:nth-child(2) {
+    background: #fef9c3;
+  }
+
+  .fee-grid .total-row td:nth-child(3) {
+    background: #dcfce7;
+  }
+
+  .total-row td {
+    background: #f3f4f6;
+    border-top: 2px solid #d1d5db;
+    font-weight: 700;
+  }
+
+  @media (max-width: 1024px) {
+    .grid-two {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media print {
+    @page { size: A4 portrait; margin: 8mm 10mm; }
+
+    .no-print,
+    .topbar, .sidebar, aside, nav, header, footer,
+    .nav-group, #sidebar { display: none !important; }
+
+    body { background: #fff !important; margin: 0 !important; padding: 0 !important; font-size: 11px !important; }
+    .page-content, .content-wrapper, main,
+    [class*="content"], [class*="main"] {
+      margin: 0 !important; padding: 0 !important;
+      width: 100% !important; max-width: 100% !important;
+    }
+
+    #print-letterhead { display: block !important; }
+
+    .card { box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 0 10px 0 !important; }
+
+    input[type=number] {
+      border: none !important;
+      background: transparent !important;
+      width: auto !important;
+      padding: 0 !important;
+      font-size: inherit !important;
+      color: inherit !important;
+      -moz-appearance: textfield;
+    }
+
+    a { text-decoration: none !important; color: inherit !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+
+{% endblock %}

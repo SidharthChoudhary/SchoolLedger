@@ -178,8 +178,15 @@
       if (sessionId && studentSession !== sessionId) show = false;
       if (classId && studentClass !== classId) show = false;
 
-      option.style.display = show ? 'block' : 'none';
+      option.disabled = !show;
+      option.hidden = !show;
     });
+    // Reset selection if currently selected option becomes hidden
+    const selected = studentIdSelect.options[studentIdSelect.selectedIndex];
+    if (selected && selected.hidden) {
+      studentIdSelect.value = '';
+      fatherNameDisplay.value = '';
+    }
   }
 
   sessionFilter.addEventListener('change', filterStudents);
@@ -219,8 +226,17 @@
       if (sessionId && studentSession !== sessionId) show = false;
       if (classId && studentClass !== classId) show = false;
 
-      option.style.display = show ? 'block' : 'none';
+      option.disabled = !show;
+      option.hidden = !show;
     });
+    // Reset selection if currently selected option becomes hidden
+    const selected = studentSelectRegister.options[studentSelectRegister.selectedIndex];
+    if (selected && selected.hidden) {
+      studentSelectRegister.value = '';
+      fatherNameRegisterDisplay.value = '';
+      srnDisplay.value = '';
+      studentIdRegisterInput.value = '';
+    }
   }
 
   sessionFilterPanel2.addEventListener('change', filterStudentsPanel2);

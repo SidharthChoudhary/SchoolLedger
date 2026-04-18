@@ -1,9 +1,13 @@
 {% extends "website/base.html" %}
+{% load custom_filters %}
 {% block title %}Fees Structure{% endblock %}
 {% block content %}
 
-<h2 style="margin-top:0;">Fees Structure</h2>
+{% include "website/_print_letterhead.html" %}
 
+<h2 style="margin-top:0;" class="no-print">Fees Structure</h2>
+
+<div class="no-print">
 <h3 class="form-section">Add / Edit</h3>
 
 <form method="post">
@@ -14,7 +18,7 @@
 
   <div class="form-section">
     <h4>Session, Class & Fees</h4>
-    <div class="row">
+    <div class="row-fees">
       <div class="field">
         <label for="{{ form.session.id_for_label }}">Session</label>
         {{ form.session }}
@@ -45,7 +49,7 @@
 
   <div class="form-section">
     <h4>Books & Uniform</h4>
-    <div class="row">
+    <div class="row-uniform">
       <div class="field">
         <label for="{{ form.book_set.id_for_label }}">Full Book Set</label>
         {{ form.book_set }}
@@ -72,6 +76,21 @@
         {% if form.uniform_pant.errors %}<span class="error">{{ form.uniform_pant.errors }}</span>{% endif %}
       </div>
       <div class="field">
+        <label for="{{ form.uniform_sweater.id_for_label }}">Sweater</label>
+        {{ form.uniform_sweater }}
+        {% if form.uniform_sweater.errors %}<span class="error">{{ form.uniform_sweater.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.uniform_hoody.id_for_label }}">Hoody</label>
+        {{ form.uniform_hoody }}
+        {% if form.uniform_hoody.errors %}<span class="error">{{ form.uniform_hoody.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
+        <label for="{{ form.uniform_t_shirt.id_for_label }}">T-Shirt</label>
+        {{ form.uniform_t_shirt }}
+        {% if form.uniform_t_shirt.errors %}<span class="error">{{ form.uniform_t_shirt.errors }}</span>{% endif %}
+      </div>
+      <div class="field">
         <label for="{{ form.uniform_tie.id_for_label }}">Tie</label>
         {{ form.uniform_tie }}
         {% if form.uniform_tie.errors %}<span class="error">{{ form.uniform_tie.errors }}</span>{% endif %}
@@ -89,7 +108,7 @@
     </div>
   </div>
 
-  <div style="margin-top: 20px;">
+  <div style="margin-top: 10px;">
     <button type="submit" class="btn-primary">{% if editing_fees %}Update{% else %}Save{% endif %}</button>
     {% if editing_fees %}
       <a href="{% url 'fees_structure_list' %}" class="btn-secondary" style="margin-left: 10px;">Cancel</a>
@@ -97,107 +116,204 @@
   </div>
 </form>
 
-<h3 class="form-section">Saved Fees Structures</h3>
+<h3 class="form-section">Bulk Import</h3>
+<p style="margin:0 0 12px 0; color:#555;">
+  Upload a CSV to import multiple fees structure records at once.
+  <a href="{% url 'download_fees_structure_template' %}" class="btn-secondary" style="margin-left:10px;">⬇ Download CSV Template</a>
+  <a href="{% url 'bulk_import_fees_structure' %}" class="btn-primary" style="margin-left:8px;">⬆ Bulk Import</a>
+</p>
+</div>{# end no-print #}
+
+<h3 class="form-section">Fees Structure</h3>
+
+{# Print-only heading with session name #}
+<h3 id="print-grid-title" style="display:none; text-align:center; font-size:16px; font-weight:700; margin:12px 0 8px 0; color:#1b4f4a;">
+  Fees Structure{% if selected_session_name %}, Session - {{ selected_session_name }}{% endif %}
+</h3>
+
+<div class="no-print" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+  <form method="get" style="display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;margin:0;">
+    {% if editing_fees %}<input type="hidden" name="edit" value="{{ editing_fees.pk }}">{% endif %}
+    <div class="field" style="min-width:140px;">
+      <label>Session</label>
+      <select name="filter_session" onchange="this.form.submit()">
+        <option value="">— All Sessions —</option>
+        {% for s in all_sessions %}
+          <option value="{{ s.id }}" {% if filter_session == s.id|stringformat:"s" %}selected{% endif %}>{{ s.session }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field" style="min-width:120px;">
+      <label>Class</label>
+      <select name="filter_class" onchange="this.form.submit()">
+        <option value="">— All Classes —</option>
+        {% for c in all_classes %}
+          <option value="{{ c.id }}" {% if filter_class == c.id|stringformat:"s" %}selected{% endif %}>{{ c.class_name }} ({{ c.class_code }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if filter_session or filter_class %}
+      <a href="{% url 'fees_structure_list' %}" class="btn-secondary" style="margin-bottom:1px;">✕ Clear</a>
+    {% endif %}
+  </form>
+  {% if fees_structures %}
+  <button onclick="window.print()"
+          style="padding:8px 18px;background:#0284c7;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;">
+    🖨️ Print
+  </button>
+  {% endif %}
+</div>
 
 {% if fees_structures %}
-  <div class="table-responsive">
-    <table class="table">
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
       <thead>
-        <tr>
-          <th>Session</th>
-          <th>Class</th>
-          <th>Tuition</th>
-          <th>TC</th>
-          <th>Admission</th>
-          <th>Book Set</th>
-          <th>Book Diary</th>
-          <th>Book Other</th>
-          <th>Shirt</th>
-          <th>Pant</th>
-          <th>Tie</th>
-          <th>Belt</th>
-          <th>ID Card</th>
-          <th>Actions</th>
+        <tr style="background:#f3f4f6;border-bottom:2px solid #d1d5db;">
+          <th style="padding:10px;text-align:left;border:1px solid #e5e7eb;font-weight:700;">Class</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#fef9c3;">Tuition</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#fef9c3;">TC</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#fef9c3;">Admission</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#dbeafe;">Book Set</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#dbeafe;">Diary</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#dbeafe;">Oth. Books</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#f0fdf4;">Shirt</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#f0fdf4;">Pant</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#f0fdf4;">Sweater</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#f0fdf4;">Hoody</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#f0fdf4;">T-Shirt</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#f0fdf4;">Tie</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#f0fdf4;">Belt</th>
+          <th style="padding:10px;text-align:right;border:1px solid #e5e7eb;font-weight:700;background:#f0fdf4;">ID Card</th>
+          <th style="padding:10px;text-align:center;border:1px solid #e5e7eb;font-weight:700;">Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for fees in fees_structures %}
-        <tr>
-          <td>{{ fees.session.session }}</td>
-          <td>{{ fees.class_code.class_code }}</td>
-          <td>{{ fees.fee_tuition|default:"-" }}</td>
-          <td>{{ fees.fee_tc|default:"-" }}</td>
-          <td>{{ fees.fee_admission|default:"-" }}</td>
-          <td>{{ fees.book_set|default:"-" }}</td>
-          <td>{{ fees.book_diary|default:"-" }}</td>
-          <td>{{ fees.book_other|default:"-" }}</td>
-          <td>{{ fees.uniform_shirt|default:"-" }}</td>
-          <td>{{ fees.uniform_pant|default:"-" }}</td>
-          <td>{{ fees.uniform_tie|default:"-" }}</td>
-          <td>{{ fees.uniform_belt|default:"-" }}</td>
-          <td>{{ fees.uniform_id_card|default:"-" }}</td>
-          <td class="actions">
+        <tr style="border-bottom:1px solid #e5e7eb;">
+          <td style="padding:10px;border:1px solid #e5e7eb;font-weight:600;">{{ fees.class_code.class_name }} ({{ fees.class_code.class_code }})</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#fef9c3;">₹{{ fees.fee_tuition|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#fef9c3;">₹{{ fees.fee_tc|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#fef9c3;">₹{{ fees.fee_admission|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#dbeafe;">₹{{ fees.book_set|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#dbeafe;">₹{{ fees.book_diary|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#dbeafe;">₹{{ fees.book_other|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#f0fdf4;">₹{{ fees.uniform_shirt|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#f0fdf4;">₹{{ fees.uniform_pant|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#f0fdf4;">₹{{ fees.uniform_sweater|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#f0fdf4;">₹{{ fees.uniform_hoody|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#f0fdf4;">₹{{ fees.uniform_t_shirt|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#f0fdf4;">₹{{ fees.uniform_tie|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#f0fdf4;">₹{{ fees.uniform_belt|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #e5e7eb;background:#f0fdf4;">₹{{ fees.uniform_id_card|indian_number }}</td>
+          <td style="padding:10px;text-align:center;border:1px solid #e5e7eb;white-space:nowrap;">
             <a class="btn-edit" href="?edit={{ fees.pk }}">Edit</a>
-            <a class="btn-delete"
-               onclick="return confirm('Delete this fees structure?')"
+            <a class="btn-delete" onclick="return confirm('Delete this fees structure?')"
                href="{% url 'delete_fees_structure' fees.pk %}">Delete</a>
           </td>
         </tr>
         {% endfor %}
       </tbody>
+      <tfoot>
+        <tr style="background:#f9fafb;border-top:2px solid #d1d5db;font-weight:700;">
+          <td style="padding:10px;border:1px solid #d1d5db;text-align:right;">Total</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#fef9c3;">₹{{ totals.fee_tuition|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#fef9c3;">₹{{ totals.fee_tc|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#fef9c3;">₹{{ totals.fee_admission|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#dbeafe;">₹{{ totals.book_set|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#dbeafe;">₹{{ totals.book_diary|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#dbeafe;">₹{{ totals.book_other|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#f0fdf4;">₹{{ totals.uniform_shirt|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#f0fdf4;">₹{{ totals.uniform_pant|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#f0fdf4;">₹{{ totals.uniform_sweater|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#f0fdf4;">₹{{ totals.uniform_hoody|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#f0fdf4;">₹{{ totals.uniform_t_shirt|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#f0fdf4;">₹{{ totals.uniform_tie|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#f0fdf4;">₹{{ totals.uniform_belt|indian_number }}</td>
+          <td style="padding:10px;text-align:right;border:1px solid #d1d5db;background:#f0fdf4;">₹{{ totals.uniform_id_card|indian_number }}</td>
+          <td style="border:1px solid #d1d5db;"></td>
+        </tr>
+      </tfoot>
     </table>
   </div>
   {% else %}
-  <p>No fees structures yet.</p>
+  <p>No fees structures{% if filter_session or filter_class %} matching the selected filters{% endif %}.</p>
   {% endif %}
 
 <style>
+  h2 { font-size: 20px; margin-bottom: 6px; }
+
   h3.form-section {
-    margin: 30px 0 20px 0;
-    padding-bottom: 10px;
+    margin: 16px 0 10px 0;
+    padding-bottom: 6px;
     border-bottom: 2px solid #0F4F4F;
+    font-size: 15px;
+  }
+
+  @media print {
+    @page { size: A3 landscape; margin: 8mm 10mm; }
+
+    .no-print,
+    .topbar, .sidebar, aside, nav, header, footer,
+    .nav-group, #sidebar { display: none !important; }
+
+    body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+    .page-content, .content-wrapper, main,
+    [class*="content"], [class*="main"] {
+      margin: 0 !important; padding: 0 !important;
+      width: 100% !important; max-width: 100% !important;
+    }
+
+    #print-letterhead { display: block !important; }
+    #print-grid-title { display: block !important; }
+
+    h3.form-section { display: none !important; }
+
+    /* Hide Actions column (last th/td) */
+    table th:last-child, table td:last-child { display: none !important; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9px;
+    }
+
+    table th, table td {
+      border: 1px solid #ccc !important;
+      padding: 4px 6px !important;
+    }
+
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 
   form > .form-section {
-    margin: 0;
-    padding: 0;
-    border-bottom: none;
+    margin: 0 0 8px 0;
+    padding: 10px 12px;
+    background: #f8fafa;
+    border: 1px solid #d4e4e4;
+    border-radius: 6px;
   }
 
   .form-section h4 {
-    margin: 0 0 15px 0;
-    font-size: 16px;
+    margin: 0 0 8px 0;
+    font-size: 13px;
     font-weight: 600;
-    color: #333;
-    border-bottom: none;
+    color: #0F4F4F;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
-  .form-section:last-of-type h4 {
-    border-bottom: none;
-  }
-
-  .row {
+  /* Section 1: 5 fields in one row */
+  .row-fees {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 15px;
-    margin-bottom: 10px;
+    grid-template-columns: 160px 130px 1fr 1fr 1fr;
+    gap: 8px;
   }
 
-  .form-section:last-of-type .row {
-    grid-template-columns: repeat(8, 1fr);
-    gap: 10px;
-  }
-
-  .form-section:last-of-type .field input {
-    padding: 6px 4px;
-    font-size: 12px;
-    width: 100%;
-    max-width: 80px;
-  }
-
-  .form-section:last-of-type .field label {
-    font-size: 12px;
-    margin-bottom: 3px;
+  /* Section 2: all uniform/book fields compact */
+  .row-uniform {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
   }
 
   .field {
@@ -207,38 +323,43 @@
 
   .field label {
     font-weight: 600;
-    margin-bottom: 5px;
-    color: #333;
+    font-size: 11px;
+    margin-bottom: 3px;
+    color: #444;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .field input,
   .field select {
-    padding: 8px;
+    padding: 5px 7px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 13px;
+    height: 30px;
   }
 
   .field input:focus,
   .field select:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    border-color: #0F4F4F;
+    box-shadow: 0 0 0 2px rgba(15,79,79,0.15);
   }
 
   .error {
     color: #dc3545;
-    font-size: 12px;
-    margin-top: 5px;
+    font-size: 11px;
+    margin-top: 2px;
   }
 
   .btn-primary,
   .btn-secondary {
-    padding: 10px 20px;
+    padding: 6px 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     text-decoration: none;
     display: inline-block;
     font-weight: 500;
@@ -249,22 +370,18 @@
     color: white;
   }
 
-  .btn-primary:hover {
-    background-color: #0a3a3a;
-  }
+  .btn-primary:hover { background-color: #0a3a3a; }
 
   .btn-secondary {
-    background-color: #0F4F4F;
+    background-color: #6c757d;
     color: white;
   }
 
-  .btn-secondary:hover {
-    background-color: #0a3a3a;
-  }
+  .btn-secondary:hover { background-color: #545b62; }
 
   .table-responsive {
     overflow-x: auto;
-    margin-top: 15px;
+    margin-top: 10px;
   }
   
   .table {
@@ -277,9 +394,10 @@
   }
   
   .table th, .table td {
-    padding: 12px;
+    padding: 6px 10px;
     text-align: left;
     border-bottom: 1px solid #dee2e6;
+    font-size: 13px;
   }
   
   .table tbody tr:hover {

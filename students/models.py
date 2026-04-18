@@ -59,6 +59,7 @@ class Student(models.Model):
     transport_method = models.BooleanField(default=False, verbose_name='Uses School Bus')
     previous_school = models.CharField(max_length=200, blank=True, null=True)
     srn = models.CharField(max_length=50, blank=True, null=True, unique=True, verbose_name='Student Registration Number')
+    nic_student_id = models.CharField(max_length=100, blank=True, null=True, db_column='NIC_Student_ID', verbose_name='NIC Student ID')
     rte = models.BooleanField(default=False, verbose_name='Right to Education')
     primary_account_holder = models.BooleanField(default=False, verbose_name='Primary Account Holder')
     admission_date = models.DateField(blank=True, null=True, verbose_name='Admission Date')
@@ -74,6 +75,13 @@ class Student(models.Model):
     class Meta:
         ordering = ['student_class__age', 'first_name', 'last_name']
     
+    def save(self, *args, **kwargs):
+        for field in ('first_name', 'last_name', 'fathers_name', 'mothers_name', 'gardians_name'):
+            val = getattr(self, field, None)
+            if val:
+                setattr(self, field, val.strip().title())
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
     
@@ -100,11 +108,15 @@ class StudentAccount(models.Model):
     # Fees fields
     tuition_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     tc_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    book_set = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     book_diary = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     book_other = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     admission_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     uniform_shirt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     uniform_pant = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_sweater = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_hoody = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_t_shirt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     uniform_tie = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     uniform_belt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     uniform_id_card = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -122,8 +134,8 @@ class StudentAccount(models.Model):
     @property
     def total_fees(self):
         """Calculate total fees"""
-        return (self.tuition_fees + self.tc_fees + self.book_diary + self.book_other +
-                self.admission_fees + self.uniform_shirt + self.uniform_pant + 
+        return (self.tuition_fees + self.tc_fees + self.book_set + self.book_diary + self.book_other +
+            self.admission_fees + self.uniform_shirt + self.uniform_pant + self.uniform_sweater + self.uniform_hoody + self.uniform_t_shirt +
                 self.uniform_tie + self.uniform_belt + self.uniform_id_card)
 
 
@@ -167,6 +179,49 @@ class FeesAccount(models.Model):
                 next_id = 1
             self.account_id = str(next_id).zfill(3)
         super().save(*args, **kwargs)
+
+
+class FeesAccountAgreement(models.Model):
+    """Agreed fee totals for a fees account in a session."""
+
+    fees_account = models.ForeignKey('FeesAccount', on_delete=models.CASCADE, related_name='agreements')
+    session = models.ForeignKey('dailyLedger.Session', on_delete=models.CASCADE, related_name='fees_account_agreements')
+
+    tuition_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tc_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    admission_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    book_set = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    book_diary = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    book_other = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_shirt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_pant = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_sweater = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_hoody = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_t_shirt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_tie = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_belt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    uniform_id_card = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    bus_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ['fees_account', 'session']
+        ordering = ['-session', 'fees_account__account_id']
+
+    def __str__(self):
+        return f"{self.fees_account.account_id} - {self.session.session}"
+
+    @property
+    def total_fees(self):
+        return (
+            self.tuition_fees + self.tc_fees + self.admission_fees +
+            self.book_set + self.book_diary + self.book_other +
+            self.uniform_shirt + self.uniform_pant + self.uniform_sweater + self.uniform_hoody + self.uniform_t_shirt +
+            self.uniform_tie + self.uniform_belt + self.uniform_id_card +
+            self.bus_fees
+        )
 
 
 class SessionClassStudentMap(models.Model):

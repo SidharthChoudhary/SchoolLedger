@@ -16,11 +16,10 @@
 
 <!-- Promote Session to New Session -->
 <div class="card" style="margin-bottom:14px;">
-  <h3 class="form-section">Promote Session to New Session</h3>
+  <h3 class="form-section">Promote Class to Next Session</h3>
   
   <form method="post">
     {% csrf_token %}
-    <input type="hidden" name="action" value="promote_session">
     
     <div class="entry-grid">
       <div class="field">
@@ -28,7 +27,7 @@
         <select name="current_session" id="current_session" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
           <option value="">-- Select Current Session --</option>
           {% for session in active_sessions %}
-            <option value="{{ session.id }}">{{ session.session }} ({{ session.get_status_display }})</option>
+            <option value="{{ session.id }}" {% if session == default_current_session %}selected{% endif %}>{{ session.session }} ({{ session.get_status_display }})</option>
           {% endfor %}
         </select>
       </div>
@@ -38,7 +37,7 @@
         <select name="new_session" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
           <option value="">-- Select New Session --</option>
           {% for session in new_sessions %}
-            <option value="{{ session.id }}">{{ session.session }} ({{ session.get_status_display }})</option>
+            <option value="{{ session.id }}" {% if session == default_new_session %}selected{% endif %}>{{ session.session }} ({{ session.get_status_display }})</option>
           {% endfor %}
         </select>
       </div>
@@ -61,7 +60,54 @@
 
       <div class="field field-btn">
         <label>&nbsp;</label>
-        <button type="submit">Promote Students</button>
+        <button type="submit" name="action" value="promote_session">Promote Class</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Create Fees Structure for New Session -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Create Fees Structure for New Session</h3>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="entry-grid">
+      <div class="field">
+        <label>Current Session</label>
+        <select name="current_session" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Current Session --</option>
+          {% for session in active_sessions %}
+            <option value="{{ session.id }}" {% if session == default_current_session %}selected{% endif %}>{{ session.session }} ({{ session.get_status_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>New Session</label>
+        <select name="new_session" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select New Session --</option>
+          {% for session in new_sessions %}
+            <option value="{{ session.id }}" {% if session == default_new_session %}selected{% endif %}>{{ session.session }} ({{ session.get_status_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Class</label>
+        <select name="current_class" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Class --</option>
+          {% for class in classes %}
+            <option value="{{ class.id }}">{{ class.class_code }}</option>
+          {% endfor %}
+        </select>
+        <input type="hidden" name="new_class" value="">
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit" name="action" value="promote_fee">Promote Fees</button>
       </div>
     </div>
   </form>
@@ -104,5 +150,52 @@
 
   currentClassSelect.addEventListener('change', updateNewClass);
 </script>
+
+<!-- Promote Fees Accounts to New Session -->
+<div class="card" style="margin-bottom:14px;">
+  <h3 class="form-section">Promote Fees Accounts to New Session</h3>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="entry-grid">
+      <div class="field">
+        <label>Current Session</label>
+        <select name="current_session" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Current Session --</option>
+          {% for session in active_sessions %}
+            <option value="{{ session.id }}" {% if session == default_current_session %}selected{% endif %}>{{ session.session }} ({{ session.get_status_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>New Session</label>
+        <select name="new_session" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select New Session --</option>
+          {% for session in new_sessions %}
+            <option value="{{ session.id }}" {% if session == default_new_session %}selected{% endif %}>{{ session.session }} ({{ session.get_status_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Fees Account</label>
+        <select name="fees_account" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+          <option value="">-- Select Fees Account --</option>
+          <option value="__all__">— All Accounts —</option>
+          {% for account in fees_accounts %}
+            <option value="{{ account.id }}">{{ account.account_id }} - {{ account.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field field-btn">
+        <label>&nbsp;</label>
+        <button type="submit" name="action" value="promote_account">Promote Account</button>
+      </div>
+    </div>
+  </form>
+</div>
 
 {% endblock %}

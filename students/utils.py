@@ -1,13 +1,33 @@
 import csv
-from datetime import datetime
+from datetime import date, datetime
 from io import StringIO
 
 from dailyLedger.models import Session
 
-from .models import Class, Student
+from .models import Class, FeesAccount, Student
 
 
 TRUE_VALUES = {'1', 'true', 'yes', 'y'}
+
+CLASS_ALIAS_TO_CODE = {
+    'first': '1',
+    'second': '2',
+    'third': '3',
+    'fourth': '4',
+    'fifth': '5',
+    'sixth': '6',
+    'seventh': '7',
+    'eight': '8',
+    'eighth': '8',
+    'nine': '9',
+    'ninth': '9',
+    'ten': '10',
+    'tenth': '10',
+    'eleven': '11',
+    'eleventh': '11',
+    'twelve': '12',
+    'twelfth': '12',
+}
 
 
 def _parse_bool(value):
@@ -32,13 +52,34 @@ def _parse_date(value, field_name, row_num, results):
 
 
 def _get_class(class_code, class_name):
-    if class_code:
-        match = Class.objects.filter(class_code__iexact=class_code).first()
+    candidates = []
+    for raw in (class_code, class_name):
+        value = (raw or '').strip()
+        if not value:
+            continue
+        candidates.append(value)
+
+        mapped = CLASS_ALIAS_TO_CODE.get(value.lower())
+        if mapped:
+            candidates.append(mapped)
+
+    # Preserve order while removing duplicates
+    seen = set()
+    unique_candidates = []
+    for candidate in candidates:
+        key = candidate.lower()
+        if key not in seen:
+            seen.add(key)
+            unique_candidates.append(candidate)
+
+    for candidate in unique_candidates:
+        match = Class.objects.filter(class_code__iexact=candidate).first()
         if match:
             return match
 
-    if class_name:
-        return Class.objects.filter(class_name__iexact=class_name).first()
+        match = Class.objects.filter(class_name__iexact=candidate).first()
+        if match:
+            return match
 
     return None
 
@@ -47,6 +88,28 @@ def _get_session(session_label):
     if not session_label:
         return None
     return Session.objects.filter(session__iexact=session_label).first()
+
+
+def _build_fee_account_name(student, account_id):
+    srn_part = student.srn or 'NO-SRN'
+    return f"{account_id}-{student.last_name} {student.first_name}-{srn_part}"
+
+
+def _ensure_primary_fee_account(student):
+    if not student.primary_account_holder or student.fees_account_id:
+        return False
+
+    fees_account = FeesAccount.objects.create(
+        name='Temp Account',
+        account_open=date.today(),
+        account_status='open',
+    )
+    fees_account.name = _build_fee_account_name(student, fees_account.account_id)
+    fees_account.save(update_fields=['name'])
+
+    student.fees_account = fees_account
+    student.save(update_fields=['fees_account'])
+    return True
 
 
 def parse_csv_students(csv_content, handle_duplicates='error'):
@@ -94,6 +157,7 @@ def parse_csv_students(csv_content, handle_duplicates='error'):
             session_label = normalized.get('session', '')
 
             srn = normalized.get('srn', '') or None
+            nic_student_id = normalized.get('nic_student_id', '') or None
             date_of_birth = _parse_date(normalized.get('date_of_birth', ''), 'Date_of_Birth', row_num, results)
             admission_date = _parse_date(normalized.get('admission_date', ''), 'Admission_Date', row_num, results)
 
@@ -103,9 +167,14 @@ def parse_csv_students(csv_content, handle_duplicates='error'):
             if gender not in {'male', 'female', '3rd_gender'}:
                 results['errors'].append((row_num, "Gender must be one of: male, female, 3rd_gender"))
                 continue
-            if not fathers_name or not mothers_name:
-                results['errors'].append((row_num, "Fathers_Name and Mothers_Name are required"))
-                continue
+
+            if not fathers_name:
+                fathers_name = 'NA'
+                results['warnings'].append((row_num, "Fathers_Name missing (using 'NA')"))
+
+            if not mothers_name:
+                mothers_name = 'NA'
+                results['warnings'].append((row_num, "Mothers_Name missing (using 'NA')"))
 
             school_class = _get_class(class_code, class_name)
             if not school_class:
@@ -135,6 +204,7 @@ def parse_csv_students(csv_content, handle_duplicates='error'):
                 'transport_method': _parse_bool(normalized.get('transport_method', '')),
                 'previous_school': normalized.get('previous_school', '') or None,
                 'srn': srn,
+                'nic_student_id': nic_student_id,
                 'admission_date': admission_date,
                 'date_of_birth': date_of_birth,
                 'rte': _parse_bool(normalized.get('rte', '')),
@@ -180,12 +250,15 @@ def import_students(valid_rows, duplicate_rows, handle_duplicates='skip'):
         'created': 0,
         'updated': 0,
         'skipped': 0,
+        'accounts_created': 0,
         'errors': [],
     }
 
     for row_num, data in valid_rows:
         try:
-            Student.objects.create(**data)
+            student = Student.objects.create(**data)
+            if _ensure_primary_fee_account(student):
+                result['accounts_created'] += 1
             result['created'] += 1
         except Exception as exc:
             result['errors'].append((row_num, f'Failed to create: {exc}'))
@@ -195,13 +268,17 @@ def import_students(valid_rows, duplicate_rows, handle_duplicates='skip'):
             try:
                 student = Student.objects.filter(**match_filters).first()
                 if not student:
-                    Student.objects.create(**data)
+                    student = Student.objects.create(**data)
+                    if _ensure_primary_fee_account(student):
+                        result['accounts_created'] += 1
                     result['created'] += 1
                     continue
 
                 for key, value in data.items():
                     setattr(student, key, value)
                 student.save()
+                if _ensure_primary_fee_account(student):
+                    result['accounts_created'] += 1
                 result['updated'] += 1
             except Exception as exc:
                 result['errors'].append((row_num, f'Failed to update: {exc}'))

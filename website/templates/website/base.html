@@ -25,7 +25,7 @@
       </div>
 
       <div class="topbar-center">
-        <h3 class="school-subtitle">Devki Public School, Tibariyan</h3>
+        <h3 class="school-subtitle">Devki Public School, Tibariyan, Jaipur</h3>
         <div class="school-tagline school-tagline--motto">A new horizon in school education</div>
         <div class="school-tagline">Devki Education Society (R) &nbsp;|&nbsp; 35 Pradhan Jiki Dhani, Tibariyan, Hingonia Road, Jaipur (Rajasthan)</div>
         <div class="school-tagline">9887005428 &nbsp;&bull;&nbsp; 9610211173</div>
@@ -83,33 +83,10 @@
              href="/ledger-expense/fees-structure/">
             <i class="fa-solid fa-money-bill"></i> Fees Structure
           </a>
-           <a class="nav-link nav-subitem {% if '/students/attendance/' in request.path %}active{% endif %}"
-             href="/students/attendance/">
-            <i class="fa-solid fa-user-graduate"></i> Student Attendance
-           </a>
-           <a class="nav-link nav-subitem {% if '/students/attendance-records/' in request.path %}active{% endif %}"
-             href="/students/attendance-records/">
-            <i class="fa-solid fa-table-list"></i> Student Attendance Records
-           </a>
         </div>
       </div>
 
-      <div class="nav-group">
-        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'attendance-menu')">
-          <i class="fa-solid fa-clipboard-user"></i> Attendance Register
-          <i class="fa-solid fa-chevron-down toggle-icon"></i>
-        </button>
-        <div id="attendance-menu" class="nav-submenu">
-          <a class="nav-link nav-subitem {% if '/employees/attendance-rally/' in request.path %}active{% endif %}"
-             href="/employees/attendance-rally/">
-            <i class="fa-solid fa-clipboard-check"></i> Daily Attendance
-          </a>
-          <a class="nav-link nav-subitem {% if '/employees/attendance-register/' in request.path %}active{% endif %}"
-             href="/employees/attendance-register/">
-            <i class="fa-solid fa-table-list"></i> Attendance Register
-          </a>
-        </div>
-      </div>
+
 
       <div class="nav-group">
         <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'ledger-menu')">
@@ -136,10 +113,18 @@
 
       <div class="nav-group">
         <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'account-entry-menu')">
-          <i class="fa-solid fa-pen-to-square"></i> Payroll
+          <i class="fa-solid fa-pen-to-square"></i> Payroll Mgmt
           <i class="fa-solid fa-chevron-down toggle-icon"></i>
         </button>
         <div id="account-entry-menu" class="nav-submenu">
+          <a class="nav-link nav-subitem {% if '/employees/attendance-rally/' in request.path %}active{% endif %}"
+             href="/employees/attendance-rally/">
+            <i class="fa-solid fa-clipboard-check"></i> Daily Attendance
+          </a>
+          <a class="nav-link nav-subitem {% if '/employees/attendance-register/' in request.path %}active{% endif %}"
+             href="/employees/attendance-register/">
+            <i class="fa-solid fa-table-list"></i> Attendance Register
+          </a>
           <a class="nav-link nav-subitem {% if '/employees/payroll/' in request.path %}active{% endif %}"
              href="/employees/payroll/">
             <i class="fa-solid fa-money-bill-wave"></i> Monthly Payroll
@@ -234,6 +219,23 @@
           <a class="nav-link nav-subitem {% if '/students/manage-session-class-student-map/' in request.path %}active{% endif %}"
              href="/students/manage-session-class-student-map/">
             <i class="fa-solid fa-sitemap"></i> Session Class Map TBR
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'teacher-menu')">
+          <i class="fa-solid fa-chalkboard-teacher"></i> Teacher
+          <i class="fa-solid fa-chevron-down toggle-icon"></i>
+        </button>
+        <div id="teacher-menu" class="nav-submenu">
+          <a class="nav-link nav-subitem {% if '/students/attendance/' in request.path %}active{% endif %}"
+             href="/students/attendance/">
+            <i class="fa-solid fa-user-graduate"></i> Student Attendance
+          </a>
+          <a class="nav-link nav-subitem {% if '/students/attendance-records/' in request.path %}active{% endif %}"
+             href="/students/attendance-records/">
+            <i class="fa-solid fa-table-list"></i> Student Attendance Records
           </a>
         </div>
       </div>

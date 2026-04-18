@@ -1,3 +1,4 @@
+1amm@@n
 Mygithub@2026
 
 
@@ -37,14 +38,47 @@ python manage.py collectstatic --noinput
 --
 on PAW.com
 1, git pull 
-2. do not edit tracked settings files after pull
-3. keep real db details in production_settings_local.py
-4. update only production_settings_local.py when credentials change
+2. reset db details on schoolapp/settings.py ( same DATABSE details as in production_settings.py)
 3.
 for database changes, 
-3.1 python manage.py migrate --settings=production_settings
+3.1 python manage.py migrate
 for css changes 
 python manage.py collectstatic --settings=production_settings
 
+goto websire and , website and do "Reload dpstibariyan.pythonanywhere.com "`
+
+
+
 Git hardreset 
 git reset --hard
+
+
+-----
+python manage.py migrate --settings=production_settings
+python manage.py collectstatic --noinput --settings=production_settings
+
+
+cp production_settings_local.example.py production_settings_local.py
+nano production_settings_local.py
+
+
+
+rm employees/migrations/0003_alter_employee_id_alter_employeeattendance_id_and_more.py
+rm -f employees/migrations/__pycache__/*
+python manage.py migrate --settings=production_settings
+
+
+python manage.py migrate dailyLedger 0004_add_employee_fk_to_expense --fake --settings=production_settings
+python manage.py migrate --settings=production_settings
+
+
+
+cd ~/SchoolLedger
+workon SchoolLedger
+git pull origin main
+python manage.py migrate --settings=production_settings
+python manage.py collectstatic --noinput --settings=production_settings
+
+
+python manage.py migrate employees 0003_employeepayrollentry --fake --settings=production_settings
+python manage.py migrate --settings=production_settings

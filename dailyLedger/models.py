@@ -183,6 +183,9 @@ class FeesStructure(models.Model):
     # Uniform
     uniform_shirt = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     uniform_pant = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
+    uniform_sweater = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
+    uniform_hoody = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
+    uniform_t_shirt = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     uniform_tie = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     uniform_belt = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)
     uniform_id_card = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True)

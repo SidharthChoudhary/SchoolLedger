@@ -4,6 +4,7 @@
 
 <h2 style="margin-top:0;">View Pupils</h2>
 
+{% if page_mode == 'add' %}
 <div style="margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
   <a href="{% url 'bulk_import_students' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: var(--teal-700); color: white; text-decoration: none; font-size: 14px;">
     Bulk Import Students
@@ -12,8 +13,10 @@
     Download CSV Template
   </a>
 </div>
+{% endif %}
 
-<div class="card" style="margin-bottom:14px;">
+{% if page_mode == 'add' %}
+<div id="student-form" class="card" style="margin-bottom:14px; scroll-margin-top: 24px;">
   <h3 class="form-section">Add / Edit Student</h3>
 
   <form method="post" enctype="multipart/form-data">
@@ -128,6 +131,11 @@
           {% if form.srn.errors %}<span class="error">{{ form.srn.errors }}</span>{% endif %}
         </div>
         <div class="field">
+          <label for="{{ form.nic_student_id.id_for_label }}">NIC Student ID</label>
+          {{ form.nic_student_id }}
+          {% if form.nic_student_id.errors %}<span class="error">{{ form.nic_student_id.errors }}</span>{% endif %}
+        </div>
+        <div class="field">
           <label for="{{ form.transport_method.id_for_label }}">Uses School Bus</label>
           {{ form.transport_method }}
           {% if form.transport_method.errors %}<span class="error">{{ form.transport_method.errors }}</span>{% endif %}
@@ -165,9 +173,63 @@
     </div>
   </form>
 </div>
+{% endif %}
 
-<div class="card">
+{% if page_mode == 'list' %}
+<div id="saved-students" class="card" style="scroll-margin-top: 24px;">
   <h3 class="form-section">Saved Students</h3>
+
+  <form method="get" style="margin-bottom: 15px; display:flex; gap:12px; align-items:end; flex-wrap:wrap; background: #fbfbfc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px;">
+    <input type="hidden" name="mode" value="list">
+
+    <div class="field" style="min-width: 180px; margin: 0;">
+      <label style="font-size:12px; font-weight:700;">Session</label>
+      <select name="session" style="height:40px;">
+        <option value="">All</option>
+        {% for session in sessions %}
+          <option value="{{ session.id }}" {% if selected_session == session.id|stringformat:"s" %}selected{% endif %}>{{ session.session }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field" style="min-width: 180px; margin: 0;">
+      <label style="font-size:12px; font-weight:700;">Class</label>
+      <select name="student_class" style="height:40px;">
+        <option value="">All</option>
+        {% for school_class in classes %}
+          <option value="{{ school_class.id }}" {% if selected_class == school_class.id|stringformat:"s" %}selected{% endif %}>{{ school_class.class_name }}{% if school_class.class_code %} ({{ school_class.class_code }}){% endif %}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="field" style="min-width: 220px; margin: 0;">
+      <label style="font-size:12px; font-weight:700;">Name</label>
+      <input type="text" name="name" value="{{ filter_name }}" placeholder="Student or father name" style="height:40px;">
+    </div>
+
+    <div class="field" style="min-width: 180px; margin: 0;">
+      <label style="font-size:12px; font-weight:700;">SRN</label>
+      <input type="text" name="srn" value="{{ filter_srn }}" placeholder="Search SRN" style="height:40px;">
+    </div>
+
+    <div class="field" style="min-width: 220px; margin: 0;">
+      <label style="font-size:12px; font-weight:700;">Fee Account</label>
+      <select name="fee_account" style="height:40px;">
+        <option value="">All</option>
+        <option value="unlinked" {% if selected_fee_account == 'unlinked' %}selected{% endif %}>Unlinked</option>
+        {% for account in fees_accounts %}
+          <option value="{{ account.id }}" {% if selected_fee_account == account.id|stringformat:"s" %}selected{% endif %}>
+            {{ account.account_id }} - {{ account.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button type="submit" class="btn-primary">Apply</button>
+      <a href="{% url 'view_students' %}?mode=list" class="btn-secondary">Clear</a>
+    </div>
+  </form>
 
   {% if students %}
   <div class="table-responsive">
@@ -209,6 +271,10 @@
           <td class="actions">
             <a class="btn-view" href="{% url 'student_details' student.pk %}">View</a>
             <a class="btn-edit" href="?edit={{ student.pk }}">Edit</a>
+            <a class="btn-secondary" href="{% url 'student_account_detail' student.pk %}" style="font-size:12px; padding:3px 8px;">Account</a>
+            {% if student.fees_account %}
+            <a class="btn-secondary" href="{% url 'fee_account_agreement' student.fees_account.id %}" style="font-size:12px; padding:3px 8px;">Agreed Fees</a>
+            {% endif %}
             <a class="btn-delete"
                onclick="return confirm('Delete this student?')"
                href="{% url 'delete_student' student.pk %}">Delete</a>
@@ -222,6 +288,7 @@
   <p>No students yet.</p>
   {% endif %}
 </div>
+{% endif %}
 
 <style>
   .form-section {

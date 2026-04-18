@@ -16,6 +16,8 @@ from .views import (
     add_fees_structure,
     edit_fees_structure,
     delete_fees_structure,
+    bulk_import_fees_structure,
+    download_fees_structure_template,
     api_get_classes,
     api_get_students,
     api_get_student_srn,
@@ -61,6 +63,8 @@ urlpatterns = [
     path("fees-structure/add/", add_fees_structure, name="add_fees_structure"),
     path("fees-structure/edit/<int:pk>/", edit_fees_structure, name="edit_fees_structure"),
     path("fees-structure/delete/<int:pk>/", delete_fees_structure, name="delete_fees_structure"),
+    path("fees-structure/bulk-import/", bulk_import_fees_structure, name="bulk_import_fees_structure"),
+    path("fees-structure/download-template/", download_fees_structure_template, name="download_fees_structure_template"),
     
     # API Endpoints for cascading dropdowns
     path("api/classes/<int:session_id>/", api_get_classes, name="api_get_classes"),

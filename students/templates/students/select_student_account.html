@@ -1,16 +1,49 @@
 {% extends "website/base.html" %}
-{% block title %}Student Account{% endblock %}
+{% block title %}{{ page_title|default:'Student Account' }}{% endblock %}
 {% block content %}
 
-<h2 style="margin-top:0;">Student Account</h2>
+<h2 style="margin-top:0;">{{ page_title|default:'Student Account' }}</h2>
 
 <div class="card" style="margin-bottom:14px;">
-  <h4 style="margin-top:0; padding-bottom:10px; border-bottom: 1px solid #ddd;">Select a Student</h4>
-  
+  <h4 style="margin-top:0; padding-bottom:10px; border-bottom: 1px solid #ddd;">{{ card_title|default:'Select a Student' }}</h4>
+
+  <form method="get" style="display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; margin-bottom:16px;">
+    <div>
+      <label style="display:block; font-size:12px; margin-bottom:3px;">Session</label>
+      <select name="session" style="padding:6px 10px; border:1px solid #ccc; border-radius:4px; min-width:130px;">
+        <option value="">All Sessions</option>
+        {% for s in sessions %}
+          <option value="{{ s.id }}" {% if selected_session == s.id|stringformat:"s" %}selected{% endif %}>{{ s.session }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label style="display:block; font-size:12px; margin-bottom:3px;">Class</label>
+      <select name="student_class" style="padding:6px 10px; border:1px solid #ccc; border-radius:4px; min-width:130px;">
+        <option value="">All Classes</option>
+        {% for c in classes %}
+          <option value="{{ c.id }}" {% if selected_class == c.id|stringformat:"s" %}selected{% endif %}>{{ c.class_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label style="display:block; font-size:12px; margin-bottom:3px;">Name</label>
+      <input type="text" name="name" value="{{ filter_name }}" placeholder="Search name..." style="padding:6px 10px; border:1px solid #ccc; border-radius:4px; min-width:150px;">
+    </div>
+    <div>
+      <label style="display:block; font-size:12px; margin-bottom:3px;">SRN</label>
+      <input type="text" name="srn" value="{{ filter_srn }}" placeholder="Search SRN..." style="padding:6px 10px; border:1px solid #ccc; border-radius:4px; min-width:120px;">
+    </div>
+    <div>
+      <button type="submit" class="btn-primary" style="padding:6px 16px;">Apply</button>
+      <a href="?" style="margin-left:8px; font-size:13px;">Clear</a>
+    </div>
+  </form>
+
   {% if students %}
   <div class="student-grid">
     {% for student in students %}
-    <a href="{% url 'student_account_detail' student.id %}" class="student-card">
+    <a href="{% url target_url_name|default:'student_account_detail' student.id %}" class="student-card">
       <div class="student-card-content">
         {% if student.image %}
           <img src="{{ student.image.url }}" alt="{{ student.name }}" class="student-card-image">

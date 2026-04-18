@@ -6,6 +6,9 @@
 
 <div style="margin-bottom: 20px;">
   <a href="{% url 'select_student_account' %}" class="btn-secondary">← Back to Student Selection</a>
+  {% if student.fees_account %}
+  <a href="{% url 'fee_account_agreement' student.fees_account.id %}" class="btn-secondary" style="margin-left: 10px;">Agreed Fees</a>
+  {% endif %}
 </div>
 
 <div class="card" style="margin-bottom:14px;">

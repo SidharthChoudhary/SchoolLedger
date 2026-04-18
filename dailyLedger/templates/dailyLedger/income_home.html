@@ -11,21 +11,21 @@
 	<a href="{% url 'export_income_csv' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: #059669; color: white; text-decoration: none; font-size: 14px;">
 		⬇️ Export to CSV
 	</a>
-	<a href="{% url 'delete_all_income' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 600; background: #dc2626; color: white; text-decoration: none; font-size: 14px;">
+	<a href="{% url 'delete_all_income' %}" style="display: inline-block; padding: 10px 14px; border-radius: 12px; cursor: not-allowed; font-weight: 600; background: #9ca3af; color: #e5e7eb; text-decoration: none; font-size: 14px; opacity: 0.6; pointer-events: none;">
 		🗑️ Delete All
 	</a>
 </div>
 
 <!-- PANEL 1: Add Income - Other -->
-<div class="card" style="margin-bottom:14px;{% if editing_entry %} border: 2px solid #0284c7;{% endif %}">
-	<h3 class="form-section">{% if editing_entry %}Edit Income Entry #{{ editing_entry.voucher_number }}{% else %}Add Income - Other{% endif %}</h3>
-	{% if editing_entry %}
+<div class="card" style="margin-bottom:14px;{% if editing_entry and editing_income_type == 'other' %} border: 2px solid #0284c7;{% endif %}">
+	<h3 class="form-section">{% if editing_entry and editing_income_type == 'other' %}Edit Income Entry #{{ editing_entry.voucher_number }}{% else %}Add Income - Other{% endif %}</h3>
+	{% if editing_entry and editing_income_type == 'other' %}
 	<p style="color:#0284c7; font-size:13px; margin:-8px 0 10px;">Editing entry — make changes below and click Save.</p>
 	{% endif %}
 	<form method="post" id="other-form">
 		{% csrf_token %}
 		<input type="hidden" name="income_type" value="other">
-		{% if editing_entry %}
+		{% if editing_entry and editing_income_type == 'other' %}
 		<input type="hidden" name="entry_id" value="{{ editing_entry.id }}">
 		{% endif %}
 		<div class="entry-grid" style="background: #fbfbfc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px;">
@@ -70,11 +70,17 @@
 </div>
 
 <!-- PANEL 2: Add Income - Fees -->
-<div class="card" style="margin-bottom:14px;">
-	<h3 class="form-section">Add Income - Fees (Student)</h3>
+<div class="card" style="margin-bottom:14px;{% if editing_entry and editing_income_type == 'fees' %} border: 2px solid #0284c7;{% endif %}">
+	<h3 class="form-section">{% if editing_entry and editing_income_type == 'fees' %}Edit Fee Income Entry #{{ editing_entry.voucher_number }}{% else %}Add Income - Fees (Student){% endif %}</h3>
+	{% if editing_entry and editing_income_type == 'fees' %}
+	<p style="color:#0284c7; font-size:13px; margin:-8px 0 10px;">Editing fee entry — make changes below and click Save.</p>
+	{% endif %}
 	<form method="post" id="fees-form">
 		{% csrf_token %}
 		<input type="hidden" name="income_type" value="fees">
+		{% if editing_entry and editing_income_type == 'fees' %}
+		<input type="hidden" name="entry_id" value="{{ editing_entry.id }}">
+		{% endif %}
 		
 		<!-- Cascading section -->
 		<div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; margin-bottom: 14px; background: #fbfbfc;">
@@ -429,6 +435,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			})
 			.catch(err => console.error('Error fetching classes:', err));
 	});
+
+	// Load classes immediately for the default/pre-selected session
+	if (sessionSelect.value) {
+		sessionSelect.dispatchEvent(new Event('change'));
+	}
 	
 	// Class -> Student cascade
 	classSelect.addEventListener('change', function() {
