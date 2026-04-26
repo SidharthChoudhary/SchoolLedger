@@ -187,6 +187,7 @@ class FeesAccountAgreement(models.Model):
 
     fees_account = models.ForeignKey('FeesAccount', on_delete=models.CASCADE, related_name='agreements')
     session = models.ForeignKey('dailyLedger.Session', on_delete=models.CASCADE, related_name='fees_account_agreements')
+    opening_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     tuition_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     tc_fees = models.DecimalField(max_digits=10, decimal_places=2, default=0)

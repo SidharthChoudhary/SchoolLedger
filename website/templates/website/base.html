@@ -79,10 +79,6 @@
              href="/students/promote-session/">
             <i class="fa-solid fa-arrow-up"></i> Promote Session
           </a>
-          <a class="nav-link nav-subitem {% if '/ledger-expense/fees-structure/' in request.path %}active{% endif %}"
-             href="/ledger-expense/fees-structure/">
-            <i class="fa-solid fa-money-bill"></i> Fees Structure
-          </a>
         </div>
       </div>
 
@@ -128,6 +124,31 @@
           <a class="nav-link nav-subitem {% if '/employees/payroll/' in request.path %}active{% endif %}"
              href="/employees/payroll/">
             <i class="fa-solid fa-money-bill-wave"></i> Monthly Payroll
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <button class="nav-link nav-toggle" onclick="toggleMenu(event, 'fees-mgmt-menu')">
+          <i class="fa-solid fa-receipt"></i> Fees Mgmt
+          <i class="fa-solid fa-chevron-down toggle-icon"></i>
+        </button>
+        <div id="fees-mgmt-menu" class="nav-submenu">
+          <a class="nav-link nav-subitem {% if '/ledger-expense/fees-structure/' in request.path %}active{% endif %}"
+             href="/ledger-expense/fees-structure/">
+            <i class="fa-solid fa-money-bill"></i> Fees Structure
+          </a>
+          <a class="nav-link nav-subitem {% if '/students/fees-account/' in request.path %}active{% endif %}"
+             href="/students/fees-account/">
+            <i class="fa-solid fa-wallet"></i> A/c - Create
+          </a>
+          <a class="nav-link nav-subitem {% if '/students/link-fee-account/' in request.path %}active{% endif %}"
+             href="/students/link-fee-account/">
+            <i class="fa-solid fa-link"></i> A/c - Link
+          </a>
+          <a class="nav-link nav-subitem {% if '/students/fee-agreement/' in request.path %}active{% endif %}"
+             href="/students/fee-agreement/">
+            <i class="fa-solid fa-file-signature"></i> Agreed Fees
           </a>
         </div>
       </div>
@@ -207,14 +228,6 @@
            <a class="nav-link nav-subitem {% if '/students/view/' in request.path and request.GET.mode != 'add' %}active{% endif %}"
              href="/students/view/?mode=list#saved-students">
             <i class="fa-solid fa-eye"></i> List Students
-          </a>
-          <a class="nav-link nav-subitem {% if '/students/fees-account/' in request.path %}active{% endif %}"
-             href="/students/fees-account/">
-            <i class="fa-solid fa-wallet"></i> Fees Accounts
-          </a>
-          <a class="nav-link nav-subitem {% if '/students/fee-agreement/' in request.path %}active{% endif %}"
-             href="/students/fee-agreement/">
-            <i class="fa-solid fa-file-signature"></i> Agreed Fees
           </a>
           <a class="nav-link nav-subitem {% if '/students/manage-session-class-student-map/' in request.path %}active{% endif %}"
              href="/students/manage-session-class-student-map/">

@@ -12,6 +12,11 @@
 
 <form method="post">
   {% csrf_token %}
+  {% if form.non_field_errors %}
+    <div style="padding: 12px; margin-bottom: 15px; border-radius: 4px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
+      {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+    </div>
+  {% endif %}
   {% if editing_fees %}
     <input type="hidden" name="fees_id" value="{{ editing_fees.id }}">
   {% endif %}

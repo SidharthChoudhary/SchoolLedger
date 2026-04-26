@@ -59,11 +59,15 @@
         <thead>
           <tr>
             <th>Fees/Expense Type</th>
-            <th>School Fees/Amount</th>
-            <th>Payable Amount</th>
+            <th>Standard Fees</th>
+            <th>Agreed Fees</th>
           </tr>
         </thead>
         <tbody>
+          <tr>
+            <td>Opening Balance / Old Dues</td>
+            <td>—</td><td>₹{{ form.opening_balance }}</td>
+          </tr>
           <tr>
             <td>Tuition Fees<div class="student-breakdown">{% for s in student_breakdowns.tuition_fees %}<span>{{ s.name }} ({{ s.class_label }}): ₹{{ s.amount|indian_number }}</span>{% endfor %}</div></td>
             <td>₹{{ standard_totals.tuition_fees|indian_number }}</td><td>₹{{ form.tuition_fees }}</td>
@@ -125,9 +129,14 @@
             <td>—</td><td>₹{{ form.bus_fees }}</td>
           </tr>
           <tr class="total-row">
-            <td><strong>Total</strong></td>
+            <td><strong>Agreed Fees Total</strong></td>
             <td><strong>₹{{ standard_total_amount|indian_number }}</strong></td>
             <td><strong>₹{{ agreed_total_amount|indian_number }}</strong></td>
+          </tr>
+          <tr class="total-row">
+            <td><strong>Total Due Including Opening Balance</strong></td>
+            <td><strong>—</strong></td>
+            <td><strong>₹{{ overall_due_amount|indian_number }}</strong></td>
           </tr>
         </tbody>
       </table>

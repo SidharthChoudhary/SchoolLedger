@@ -218,6 +218,15 @@ class Command(BaseCommand):
                 skipped += 1
                 continue
 
+            if student.fees_account_id is not None:
+                existing = student.fees_account.account_id
+                self.stdout.write(self.style.ERROR(
+                    f'  Row {i}: SRN "{srn}" is already linked to account "{existing}"'
+                    f' — cannot reassign to "{account_id}". Skipped.'
+                ))
+                errors += 1
+                continue
+
             self.stdout.write(
                 f'  Row {i}: LINK SRN "{srn}" ({student.first_name} {student.last_name}) → account "{account_id}"'
             )

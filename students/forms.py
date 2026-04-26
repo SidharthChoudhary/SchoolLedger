@@ -122,12 +122,14 @@ class FeesAccountAgreementForm(forms.ModelForm):
     class Meta:
         model = FeesAccountAgreement
         fields = [
+            'opening_balance',
             'tuition_fees', 'tc_fees', 'admission_fees',
             'book_set', 'book_diary', 'book_other',
             'uniform_shirt', 'uniform_pant', 'uniform_sweater', 'uniform_hoody', 'uniform_t_shirt',
             'uniform_tie', 'uniform_belt', 'uniform_id_card', 'bus_fees',
         ]
         widgets = {
+            'opening_balance': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'tuition_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
             'tc_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),
             'admission_fees': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0'}),

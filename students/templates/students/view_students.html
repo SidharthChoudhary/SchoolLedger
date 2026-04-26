@@ -1,5 +1,16 @@
 {% extends "website/base.html" %}
 {% block title %}View Students{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+  .select2-container { width: 100% !important; }
+  .select2-selection--single { height: 38px !important; padding: 4px 8px !important; border: 1px solid #ccc !important; border-radius: 4px !important; }
+  .select2-selection__rendered { line-height: 28px !important; }
+  .select2-selection__arrow { height: 36px !important; }
+</style>
+{% endblock %}
+
 {% block content %}
 
 <h2 style="margin-top:0;">View Pupils</h2>
@@ -214,7 +225,7 @@
 
     <div class="field" style="min-width: 220px; margin: 0;">
       <label style="font-size:12px; font-weight:700;">Fee Account</label>
-      <select name="fee_account" style="height:40px;">
+      <select name="fee_account" id="fee_account_filter" style="height:40px;">
         <option value="">All</option>
         <option value="unlinked" {% if selected_fee_account == 'unlinked' %}selected{% endif %}>Unlinked</option>
         {% for account in fees_accounts %}
@@ -244,6 +255,7 @@
           <th>Admission Class</th>
           <th>SRN</th>
           <th>RTE</th>
+          <th>Fee Account</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -267,6 +279,13 @@
             <span class="status {% if student.rte %}status-yes{% else %}status-no{% endif %}">
               {% if student.rte %}Yes{% else %}No{% endif %}
             </span>
+          </td>
+          <td>
+            {% if student.fees_account %}
+              {{ student.fees_account.account_id }}
+            {% else %}
+              <span style="color:#999;">—</span>
+            {% endif %}
           </td>
           <td class="actions">
             <a class="btn-view" href="{% url 'student_details' student.pk %}">View</a>
@@ -522,5 +541,15 @@
   }
 </style>
 
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('#fee_account_filter').select2({ placeholder: 'All', allowClear: true });
+});
+</script>
 {% endblock %}
 

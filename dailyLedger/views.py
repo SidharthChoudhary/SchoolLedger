@@ -868,6 +868,8 @@ def fees_structure_list(request):
             form.save()
             messages.success(request, f'Fees structure {"updated" if edit_id else "added"} successfully!')
             return redirect('fees_structure_list')
+        else:
+            messages.error(request, 'Failed to save fees structure. Please check the errors below.')
     else:
         if edit_id:
             form = FeesStructureForm(instance=editing_fees)

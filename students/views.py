@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.messages import get_messages
 from django.utils import timezone
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.urls import reverse
+from django.db import transaction
 from django.db.models import Q, Count, Sum
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 import csv
 from django.views.decorators.cache import never_cache
@@ -430,6 +432,8 @@ def fee_account_agreement(request, account_id):
     standard_totals = {key: Decimal('0.00') for key, _ in fee_heads}
     standard_total_amount = Decimal('0.00')
     agreed_total_amount = Decimal('0.00')
+    opening_balance_amount = Decimal('0.00')
+    overall_due_amount = Decimal('0.00')
     missing_structure_classes = []
     agreed_fees = None
     form = None
@@ -475,11 +479,16 @@ def fee_account_agreement(request, account_id):
             defaults=standard_totals,
         )
         agreed_total_amount = agreed_fees.total_fees
+        opening_balance_amount = agreed_fees.opening_balance
+        overall_due_amount = agreed_total_amount + opening_balance_amount
 
         if request.method == 'POST':
             form = FeesAccountAgreementForm(request.POST, instance=agreed_fees)
             if form.is_valid():
-                form.save()
+                saved_agreement = form.save()
+                agreed_total_amount = saved_agreement.total_fees
+                opening_balance_amount = saved_agreement.opening_balance
+                overall_due_amount = agreed_total_amount + opening_balance_amount
                 messages.success(request, 'Agreed fees saved for this account.')
                 return redirect(f'{reverse("fee_account_agreement", args=[fees_account.id])}?session={selected_session.id}')
         else:
@@ -495,6 +504,8 @@ def fee_account_agreement(request, account_id):
         'standard_totals': standard_totals,
         'standard_total_amount': standard_total_amount,
         'agreed_total_amount': agreed_total_amount,
+        'opening_balance_amount': opening_balance_amount,
+        'overall_due_amount': overall_due_amount,
         'agreed_fees': agreed_fees,
         'form': form,
         'missing_structure_classes': missing_structure_classes,
@@ -554,6 +565,7 @@ def fee_status_account_wise(request):
             'fees_account': agreement.fees_account,
             'payable_fee': agreement.total_fees,
             'paid_fee': Decimal('0.00'),
+            'opening_balance': agreement.opening_balance,
         }
 
     payment_totals = payments_qs.values('session_id', 'fees_account_id').annotate(total_paid=Sum('amount'))
@@ -571,11 +583,12 @@ def fee_status_account_wise(request):
                 'fees_account': account_map.get(row['fees_account_id']),
                 'payable_fee': Decimal('0.00'),
                 'paid_fee': paid_amount,
+                'opening_balance': Decimal('0.00'),
             }
 
     rows = list(rows_by_key.values())
     for row in rows:
-        row['balance_fee'] = row['payable_fee'] - row['paid_fee']
+        row['balance_fee'] = row['payable_fee'] + row['opening_balance'] - row['paid_fee']
 
     # Build student + class summary per (session, account) for display in the report.
     session_ids = {r['session'].id for r in rows if r.get('session')}
@@ -602,7 +615,8 @@ def fee_status_account_wise(request):
 
     total_payable = sum((r['payable_fee'] for r in rows), Decimal('0.00'))
     total_paid = sum((r['paid_fee'] for r in rows), Decimal('0.00'))
-    total_balance = total_payable - total_paid
+    total_opening_balance = sum((r['opening_balance'] for r in rows), Decimal('0.00'))
+    total_balance = total_payable + total_opening_balance - total_paid
 
     return render(request, 'students/fee_status_account_wise.html', {
         'rows': rows,
@@ -616,13 +630,159 @@ def fee_status_account_wise(request):
         'selected_student_id': selected_student_id,
         'total_payable': total_payable,
         'total_paid': total_paid,
+        'total_opening_balance': total_opening_balance,
         'total_balance': total_balance,
     })
 
 
+def download_legacy_balance_template(request):
+    """Download CSV template for importing opening balances into fee agreements."""
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="opening_balance_template.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'session',
+        'fees_account_id',
+        'register_page',
+        'fees_account_name',
+        'opening_balance',
+        'note',
+    ])
+    writer.writerow([
+        '2024-2025',
+        '001',
+        '12',
+        'Sample Account',
+        '1250.00',
+        'Historical balance carried into agreement',
+    ])
+    return response
+
+
+def import_legacy_balance_csv(request):
+    """Import opening balances onto fee agreement rows for historical sessions."""
+    if request.method != 'POST':
+        messages.error(request, 'Invalid request method for opening balance import.')
+        return redirect('fee_status_account_wise')
+
+    csv_file = request.FILES.get('csv_file')
+    if not csv_file:
+        messages.error(request, 'Please select a CSV file to import.')
+        return redirect('fee_status_account_wise')
+
+    try:
+        csv_text = csv_file.read().decode('utf-8-sig')
+    except UnicodeDecodeError:
+        messages.error(request, 'Unable to read file. Please upload a UTF-8 CSV file.')
+        return redirect('fee_status_account_wise')
+
+    reader = csv.DictReader(csv_text.splitlines())
+    required_columns = {'session', 'fees_account_id', 'opening_balance'}
+
+    if not reader.fieldnames or not required_columns.issubset(set(reader.fieldnames)):
+        messages.error(
+            request,
+            'Invalid CSV format. Required columns: session, fees_account_id, opening_balance',
+        )
+        return redirect('fee_status_account_wise')
+
+    stats = {'created': 0, 'updated': 0, 'failed': 0}
+    row_errors = []
+
+    for row_num, row in enumerate(reader, start=2):
+        session_name = (row.get('session') or '').strip()
+        fees_account_id = (row.get('fees_account_id') or '').strip()
+        register_page = (row.get('register_page') or '').strip()
+        account_name = (row.get('fees_account_name') or '').strip()
+        opening_balance_raw = (row.get('opening_balance') or '').strip()
+        note = (row.get('note') or '').strip()
+
+        try:
+            if not session_name:
+                raise ValueError('session is required')
+            if not fees_account_id and not register_page and not account_name:
+                raise ValueError('fees_account_id (or register_page / fees_account_name) is required')
+
+            try:
+                opening_balance = Decimal(opening_balance_raw)
+            except Exception as exc:
+                raise ValueError(f'invalid opening_balance "{opening_balance_raw}"') from exc
+
+            session_obj = Session.objects.filter(session__iexact=session_name).first()
+            if not session_obj:
+                raise ValueError(f'session "{session_name}" not found')
+
+            account_obj = None
+            if fees_account_id:
+                account_obj = FeesAccount.objects.filter(account_id=fees_account_id).first()
+            if not account_obj and register_page:
+                account_obj = FeesAccount.objects.filter(register_page=register_page).first()
+            if not account_obj and account_name:
+                account_obj = FeesAccount.objects.filter(name__iexact=account_name).first()
+
+            if not account_obj:
+                raise ValueError('fees account not found')
+
+            _, created = FeesAccountAgreement.objects.update_or_create(
+                fees_account=account_obj,
+                session=session_obj,
+                defaults={
+                    'opening_balance': opening_balance,
+                    'tuition_fees': Decimal('0.00'),
+                    'tc_fees': Decimal('0.00'),
+                    'admission_fees': Decimal('0.00'),
+                    'book_set': Decimal('0.00'),
+                    'book_diary': Decimal('0.00'),
+                    'book_other': Decimal('0.00'),
+                    'uniform_shirt': Decimal('0.00'),
+                    'uniform_pant': Decimal('0.00'),
+                    'uniform_sweater': Decimal('0.00'),
+                    'uniform_hoody': Decimal('0.00'),
+                    'uniform_t_shirt': Decimal('0.00'),
+                    'uniform_tie': Decimal('0.00'),
+                    'uniform_belt': Decimal('0.00'),
+                    'uniform_id_card': Decimal('0.00'),
+                    'bus_fees': Decimal('0.00'),
+                },
+            )
+            if note:
+                existing_remark = account_obj.remark or ''
+                note_line = f'Opening balance note [{session_obj.session}]: {note}'
+                if note_line not in existing_remark:
+                    account_obj.remark = f'{existing_remark}\n{note_line}'.strip() if existing_remark else note_line
+                    account_obj.save(update_fields=['remark', 'updated_at'])
+            if created:
+                stats['created'] += 1
+            else:
+                stats['updated'] += 1
+
+        except Exception as exc:
+            stats['failed'] += 1
+            row_errors.append(f'Row {row_num}: {exc}')
+
+    messages.success(
+        request,
+        f'Opening balance import complete. Created: {stats["created"]}, Updated: {stats["updated"]}, Failed: {stats["failed"]}.',
+    )
+    for err in row_errors[:20]:
+        messages.error(request, err)
+    if len(row_errors) > 20:
+        messages.error(request, f'Additional errors not shown: {len(row_errors) - 20}')
+
+    return redirect('fee_status_account_wise')
+
+
 def fees_statement_parents(request):
     """Fees Statement for Parents: 4 panels - account info, all-session summary, agreed fees, payment transactions."""
-    current_session = Session.objects.filter(status='current_session').first()
+    sessions = Session.objects.all().order_by('-session')
+    selected_session_id = (request.GET.get('session') or '').strip()
+    current_session = None
+    if selected_session_id:
+        current_session = Session.objects.filter(pk=selected_session_id).first()
+    if not current_session:
+        current_session = Session.objects.filter(status='current_session').first()
+
     fee_accounts = FeesAccount.objects.all().order_by('account_id')
     classes = Class.objects.all().order_by('age')
 
@@ -709,55 +869,30 @@ def fees_statement_parents(request):
                     total += getattr(fs, str_field, Decimal('0.00')) * count
         return total
 
-    # Panel 2 – Summary of payments across all sessions
+    # Panel 2 – Payment summary for current session only
     payment_summary = []
-    summary_total_payable = Decimal('0.00')
-    summary_total_paid = Decimal('0.00')
-    summary_total_school = Decimal('0.00')
-    if selected_account:
-        agreements = list(
-            FeesAccountAgreement.objects.filter(fees_account=selected_account)
-            .select_related('session')
-            .order_by('-session__session')
-        )
-        payments_by_session = Income.objects.filter(
-            fees_account=selected_account
-        ).values('session_id').annotate(total_paid=Sum('amount'))
-        payments_map = {row['session_id']: row['total_paid'] or Decimal('0.00') for row in payments_by_session}
-        seen_session_ids = set()
-        for agreement in agreements:
-            paid = payments_map.get(agreement.session_id, Decimal('0.00'))
-            payable = agreement.total_fees
-            school = _school_fees_for_session(selected_account, agreement.session, agreement)
+    if selected_account and current_session:
+        agreement = FeesAccountAgreement.objects.filter(fees_account=selected_account, session=current_session).first()
+        paid = Income.objects.filter(fees_account=selected_account, session=current_session).aggregate(total_paid=Sum('amount'))['total_paid'] or Decimal('0.00')
+        if agreement:
+            school = _school_fees_for_session(selected_account, current_session, agreement)
             payment_summary.append({
-                'session': agreement.session,
+                'session': current_session,
                 'school': school,
-                'payable': payable,
+                'payable': agreement.total_fees,
+                'opening': agreement.opening_balance or Decimal('0.00'),
                 'paid': paid,
-                'balance': payable - paid,
+                'balance': agreement.total_fees + (agreement.opening_balance or Decimal('0.00')) - paid,
             })
-            seen_session_ids.add(agreement.session_id)
-            summary_total_payable += payable
-            summary_total_paid += paid
-            summary_total_school += school
-        # Payments without an agreement
-        for session_id, paid in payments_map.items():
-            if session_id not in seen_session_ids:
-                session_obj = Session.objects.filter(pk=session_id).first()
-                payment_summary.append({
-                    'session': session_obj,
-                    'school': Decimal('0.00'),
-                    'payable': Decimal('0.00'),
-                    'paid': paid,
-                    'balance': -paid,
-                })
-                summary_total_paid += paid
-        payment_summary.sort(
-            key=lambda r: r['session'].session if r['session'] else '',
-            reverse=True,
-        )
-
-    summary_total_balance = summary_total_payable - summary_total_paid
+        elif paid:
+            payment_summary.append({
+                'session': current_session,
+                'school': Decimal('0.00'),
+                'payable': Decimal('0.00'),
+                'opening': Decimal('0.00'),
+                'paid': paid,
+                'balance': -paid,
+            })
 
     # Panel 3 – Agreed fees grid for current session (non-zero heads only)
     # Labels aligned with FEES_HEAD_MAP order
@@ -780,6 +915,7 @@ def fees_statement_parents(request):
         p3_students = account_students or list(
             Student.objects.filter(fees_account=selected_account, session=current_session)
             .select_related('student_class')
+            .order_by('first_name', 'last_name')
         )
         class_counts = {}
         for st in p3_students:
@@ -803,12 +939,32 @@ def fees_statement_parents(request):
                     total += getattr(fs, str_field, Decimal('0.00')) * count
             return total
 
+        def student_breakdown_for(str_field):
+            if str_field is None:
+                return []
+            breakdown = []
+            for st in p3_students:
+                amount = Decimal('0.00')
+                class_label = 'N/A'
+                if st.student_class:
+                    class_label = st.student_class.class_code or st.student_class.class_name or 'N/A'
+                    fs = structures.get(st.student_class_id)
+                    if fs:
+                        amount = getattr(fs, str_field, Decimal('0.00')) or Decimal('0.00')
+                breakdown.append(f"{st.first_name} ({class_label}): ₹{amount}")
+            return breakdown
+
         for label, (agr_field, str_field) in zip(PANEL3_LABELS, FEES_HEAD_MAP):
             agreed_amt = getattr(agreed_fees, agr_field, Decimal('0.00')) or Decimal('0.00')
             if agreed_amt == Decimal('0.00'):
                 continue
             school_amt = school_fee_for(str_field)
-            fee_heads.append((label, school_amt, agreed_amt))
+            fee_heads.append({
+                'label': label,
+                'school_amt': school_amt,
+                'agreed_amt': agreed_amt,
+                'student_breakdown': student_breakdown_for(str_field),
+            })
             p3_school_total += school_amt
 
     # Panel 4 – Payment transactions from income ledger (current session only)
@@ -830,14 +986,11 @@ def fees_statement_parents(request):
         'selected_student_id': selected_student_id,
         'selected_account': selected_account,
         'current_session': current_session,
+        'sessions': sessions,
         # Panel 1
         'account_students': account_students,
         # Panel 2
         'payment_summary': payment_summary,
-        'summary_total_school': summary_total_school,
-        'summary_total_payable': summary_total_payable,
-        'summary_total_paid': summary_total_paid,
-        'summary_total_balance': summary_total_balance,
         # Panel 3
         'agreed_fees': agreed_fees,
         'fee_heads': fee_heads,
@@ -1025,6 +1178,9 @@ def edit_fees_account(request, pk):
 def delete_fees_account(request, pk):
     """Delete a fees account"""
     account = get_object_or_404(FeesAccount, pk=pk)
+    if account.students.exists():
+        messages.error(request, f'Cannot delete account "{account.account_id}" — it has linked students.')
+        return redirect('view_fees_accounts')
     if request.method == 'POST':
         account.delete()
         return redirect('view_fees_accounts')
@@ -1034,6 +1190,9 @@ def delete_fees_account(request, pk):
 
 def link_fee_account(request):
     """Link fee account to student by Student Name or Account Register Page Number"""
+    from dailyLedger.models import Session
+    current_session = Session.objects.filter(status='current_session').first()
+
     if request.method == 'POST':
         action = request.POST.get('action')
         
@@ -1045,6 +1204,12 @@ def link_fee_account(request):
             if student_id and account_id:
                 student = get_object_or_404(Student, pk=student_id)
                 account = get_object_or_404(FeesAccount, pk=account_id)
+                if current_session and student.session_id != current_session.pk:
+                    messages.error(request, f'Linking is only allowed for students in the current session ({current_session.session}).')
+                    return redirect('link_fee_account')
+                if student.fees_account_id is not None and student.fees_account_id != account.pk:
+                    messages.error(request, f'{student.first_name} {student.last_name} is already linked to account "{student.fees_account.account_id}". Cannot reassign.')
+                    return redirect('link_fee_account')
                 student.fees_account = account
                 student.save()
                 messages.success(request, f'Fee account {account.account_id} linked to {student.first_name} {student.last_name} successfully!')
@@ -1058,6 +1223,12 @@ def link_fee_account(request):
             if register_page and student_id:
                 account = get_object_or_404(FeesAccount, register_page=register_page)
                 student = get_object_or_404(Student, pk=student_id)
+                if current_session and student.session_id != current_session.pk:
+                    messages.error(request, f'Linking is only allowed for students in the current session ({current_session.session}).')
+                    return redirect('link_fee_account')
+                if student.fees_account_id is not None and student.fees_account_id != account.pk:
+                    messages.error(request, f'{student.first_name} {student.last_name} is already linked to account "{student.fees_account.account_id}". Cannot reassign.')
+                    return redirect('link_fee_account')
                 student.fees_account = account
                 student.save()
                 messages.success(request, f'Fee account {account.account_id} linked to {student.first_name} {student.last_name} successfully!')
@@ -1070,7 +1241,6 @@ def link_fee_account(request):
                 return redirect(f'/students/link-fee-account/?student_id={student_id}')
     
     # Get sessions and classes for dropdowns
-    from dailyLedger.models import Session
     sessions = Session.objects.all()
     classes = Class.objects.all().order_by('age')
     
@@ -1078,8 +1248,7 @@ def link_fee_account(request):
     open_accounts = FeesAccount.objects.filter(account_status='open')
     
     # Get all students for register page panel
-    students = Student.objects.all()
-    
+    students = Student.objects.all().order_by('first_name', 'last_name')    
     # Get students with no fee account linked
     students_no_account = Student.objects.filter(fees_account__isnull=True)
     
@@ -1087,6 +1256,7 @@ def link_fee_account(request):
     session_filter = request.GET.get('session_filter', '')
     class_filter = request.GET.get('class_filter', '')
     student_name_filter = request.GET.get('student_name_filter', '')
+    father_name_filter = request.GET.get('father_name_filter', '')
 
     if session_filter:
         students_no_account = students_no_account.filter(session_id=session_filter)
@@ -1095,6 +1265,10 @@ def link_fee_account(request):
     if student_name_filter:
         students_no_account = students_no_account.filter(
             Q(first_name__icontains=student_name_filter) | Q(last_name__icontains=student_name_filter)
+        )
+    if father_name_filter:
+        students_no_account = students_no_account.filter(
+            fathers_name__icontains=father_name_filter
         )
     
     # Panel 4 - All students with their accounts
@@ -1138,6 +1312,9 @@ def link_fee_account(request):
     if register_page_filter_p4 and register_page_filter_p4 != 'None':
         filtered_students = filtered_students.filter(fees_account__register_page=register_page_filter_p4)
     
+    # Order by Account Name, then Student Name
+    filtered_students = filtered_students.order_by('fees_account__name', 'first_name', 'last_name')
+    
     # Get the student_id from query params to pre-select in Panel 1
     pre_selected_student_id = request.GET.get('student_id')
     
@@ -1152,15 +1329,226 @@ def link_fee_account(request):
         'session_filter': session_filter,
         'class_filter': class_filter,
         'student_name_filter': student_name_filter,
+        'father_name_filter': father_name_filter,
         'session_filter_p4': session_filter_p4,
         'class_filter_p4': class_filter_p4,
         'student_name_filter_p4': student_name_filter_p4,
         'account_name_filter_p4': account_name_filter_p4,
         'register_page_filter_p4': register_page_filter_p4,
         'pre_selected_student_id': pre_selected_student_id,
+        'current_session': current_session,
     }
     
     return render(request, 'students/link_fee_account.html', context)
+
+
+def export_linked_accounts_csv(request):
+    """Export linked student-account mappings for migration across environments."""
+    linked_students = (
+        Student.objects.filter(fees_account__isnull=False)
+        .select_related('session', 'student_class', 'fees_account')
+        .order_by('fees_account__name', 'first_name', 'last_name')
+    )
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="linked_accounts_export.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'session',
+        'class_code',
+        'student_srn',
+        'student_first_name',
+        'student_last_name',
+        'father_name',
+        'fees_account_id',
+        'fees_account_name',
+        'register_page',
+        'account_status',
+        'account_open',
+        'account_close',
+        'account_remark',
+    ])
+
+    for student in linked_students:
+        account = student.fees_account
+        writer.writerow([
+            student.session.session if student.session else '',
+            student.student_class.class_code if student.student_class else '',
+            student.srn or '',
+            student.first_name or '',
+            student.last_name or '',
+            student.fathers_name or '',
+            account.account_id if account else '',
+            account.name if account else '',
+            account.register_page if account and account.register_page else '',
+            account.account_status if account else 'open',
+            account.account_open.isoformat() if account and account.account_open else '',
+            account.account_close.isoformat() if account and account.account_close else '',
+            account.remark if account and account.remark else '',
+        ])
+
+    return response
+
+
+def import_linked_accounts_csv(request):
+    """Bulk import linked student-account mappings from exported CSV."""
+    if request.method != 'POST':
+        messages.error(request, 'Invalid request method for CSV import.')
+        return redirect('link_fee_account')
+
+    csv_file = request.FILES.get('csv_file')
+    if not csv_file:
+        messages.error(request, 'Please choose a CSV file to import.')
+        return redirect('link_fee_account')
+
+    try:
+        decoded = csv_file.read().decode('utf-8-sig')
+    except UnicodeDecodeError:
+        messages.error(request, 'Unable to read file. Please upload a UTF-8 CSV file.')
+        return redirect('link_fee_account')
+
+    reader = csv.DictReader(decoded.splitlines())
+    required_columns = {
+        'student_srn',
+        'student_first_name',
+        'student_last_name',
+        'father_name',
+        'fees_account_id',
+        'fees_account_name',
+        'register_page',
+        'account_status',
+        'account_open',
+        'account_close',
+        'account_remark',
+        'session',
+        'class_code',
+    }
+
+    if not reader.fieldnames or not required_columns.issubset(set(reader.fieldnames)):
+        messages.error(
+            request,
+            'Invalid CSV format. Use the file generated by "Export Linked Accounts CSV".',
+        )
+        return redirect('link_fee_account')
+
+    def parse_optional_date(raw_value):
+        raw_value = (raw_value or '').strip()
+        if not raw_value:
+            return None
+        for fmt in ('%Y-%m-%d', '%d-%m-%Y', '%d/%m/%Y', '%m/%d/%Y'):
+            try:
+                return datetime.strptime(raw_value, fmt).date()
+            except ValueError:
+                continue
+        raise ValueError(f'Invalid date value: {raw_value}')
+
+    stats = {
+        'rows': 0,
+        'accounts_created': 0,
+        'linked': 0,
+        'relinked': 0,
+        'unchanged': 0,
+        'failed': 0,
+    }
+    row_errors = []
+
+    for row_num, row in enumerate(reader, start=2):
+        stats['rows'] += 1
+
+        srn = (row.get('student_srn') or '').strip()
+        first_name = (row.get('student_first_name') or '').strip()
+        last_name = (row.get('student_last_name') or '').strip()
+        father_name = (row.get('father_name') or '').strip()
+        session_name = (row.get('session') or '').strip()
+        class_code = (row.get('class_code') or '').strip()
+
+        account_id = (row.get('fees_account_id') or '').strip()
+        account_name = (row.get('fees_account_name') or '').strip()
+        register_page = (row.get('register_page') or '').strip()
+        account_status = (row.get('account_status') or 'open').strip().lower()
+        account_open_raw = (row.get('account_open') or '').strip()
+        account_close_raw = (row.get('account_close') or '').strip()
+        account_remark = (row.get('account_remark') or '').strip()
+
+        try:
+            student = None
+            if srn:
+                student = Student.objects.filter(srn=srn).first()
+
+            if not student and first_name and last_name and father_name:
+                student_qs = Student.objects.filter(
+                    first_name__iexact=first_name,
+                    last_name__iexact=last_name,
+                    fathers_name__iexact=father_name,
+                )
+                if session_name:
+                    student_qs = student_qs.filter(session__session__iexact=session_name)
+                if class_code:
+                    student_qs = student_qs.filter(student_class__class_code__iexact=class_code)
+                student = student_qs.first()
+
+            if not student:
+                raise ValueError('Student not found (try matching by SRN or exact name + father name).')
+
+            with transaction.atomic():
+                account = None
+                if account_id:
+                    account = FeesAccount.objects.filter(account_id=account_id).first()
+                if not account and register_page:
+                    account = FeesAccount.objects.filter(register_page=register_page).first()
+                if not account and account_name:
+                    account_qs = FeesAccount.objects.filter(name__iexact=account_name)
+                    if register_page:
+                        account_qs = account_qs.filter(register_page=register_page)
+                    account = account_qs.first()
+
+                if not account:
+                    account_open = parse_optional_date(account_open_raw) or date.today()
+                    account_close = parse_optional_date(account_close_raw)
+                    create_kwargs = {
+                        'name': account_name or 'Imported Account',
+                        'account_open': account_open,
+                        'account_status': account_status if account_status in {'open', 'closed'} else 'open',
+                        'register_page': register_page or None,
+                        'account_close': account_close,
+                        'remark': account_remark or 'Imported from linked_accounts_export.csv',
+                    }
+                    if account_id:
+                        create_kwargs['account_id'] = account_id
+                    account = FeesAccount.objects.create(**create_kwargs)
+                    stats['accounts_created'] += 1
+
+                if student.fees_account_id == account.id:
+                    stats['unchanged'] += 1
+                else:
+                    had_existing_link = bool(student.fees_account_id)
+                    student.fees_account = account
+                    student.save()
+                    if had_existing_link:
+                        stats['relinked'] += 1
+                    else:
+                        stats['linked'] += 1
+
+        except Exception as exc:
+            stats['failed'] += 1
+            row_errors.append(f'Row {row_num}: {exc}')
+
+    messages.success(
+        request,
+        (
+            f'Import complete. Rows: {stats["rows"]}, New Accounts: {stats["accounts_created"]}, '
+            f'Linked: {stats["linked"]}, Relinked: {stats["relinked"]}, '
+            f'Unchanged: {stats["unchanged"]}, Failed: {stats["failed"]}.'
+        ),
+    )
+
+    for err in row_errors[:20]:
+        messages.error(request, err)
+    if len(row_errors) > 20:
+        messages.error(request, f'Additional errors not shown: {len(row_errors) - 20}')
+
+    return redirect('link_fee_account')
 
 
 def student_attendance_classes(request):
@@ -1404,6 +1792,10 @@ def delete_session_class_student_map(request, mapping_id):
 def promote_session_page(request):
     """Promote students from current session to new session"""
     from dailyLedger.models import Session
+
+    # This page should not show unrelated queued messages from other screens.
+    if request.method == 'GET':
+        list(get_messages(request))
     
     # Handle POST request for promotion
     if request.method == 'POST':
@@ -1505,9 +1897,24 @@ def promote_session_page(request):
                         account = FeesAccount.objects.get(id=fees_account_val)
                         sources = FeesAccountAgreement.objects.filter(session=current_session, fees_account=account)
 
+                    # Pre-fetch paid totals for all source accounts in current session
+                    source_account_ids = [s.fees_account_id for s in sources]
+                    paid_totals = (
+                        Income.objects
+                        .filter(session=current_session, fees_account_id__in=source_account_ids)
+                        .values('fees_account_id')
+                        .annotate(total_paid=Sum('amount'))
+                    )
+                    paid_map = {row['fees_account_id']: row['total_paid'] or Decimal('0.00') for row in paid_totals}
+
                     promoted_count = 0
                     for source in sources:
+                        paid = paid_map.get(source.fees_account_id, Decimal('0.00'))
+                        carried_balance = source.total_fees + source.opening_balance - paid
+
                         defaults = {f: getattr(source, f) for f in agreement_fields}
+                        defaults['opening_balance'] = carried_balance
+
                         obj, created = FeesAccountAgreement.objects.update_or_create(
                             fees_account=source.fees_account,
                             session=new_session,

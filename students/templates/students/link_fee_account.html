@@ -2,6 +2,27 @@
 
 {% block title %}Link Fee Account{% endblock %}
 
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+  .select2-container { width: 100% !important; }
+  .select2-selection--single { height: 38px !important; padding: 4px 8px !important; border: 1px solid #ccc !important; border-radius: 4px !important; }
+  .select2-selection__rendered { line-height: 28px !important; }
+  .select2-selection__arrow { height: 36px !important; }
+  table td[rowspan] { vertical-align: middle; font-weight: bold; background-color: #f0f0f0; }
+  @media print {
+    body { margin: 0; padding: 0; }
+    #panel4-container { display: block; }
+    .no-print { display: none !important; }
+    .card { page-break-inside: avoid; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #999; padding: 8px; text-align: left; }
+    th { background-color: #f5f5f5; font-weight: bold; }
+    table td[rowspan] { vertical-align: middle; font-weight: bold; background-color: #f0f0f0; }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 
 <h2 style="margin-top:0;">Link Fee Account to Student</h2>
@@ -26,10 +47,11 @@
       <div class="field">
         <label>Session</label>
         <select id="session_filter" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-          <option value="">-- Select Session --</option>
-          {% for session in sessions %}
-            <option value="{{ session.id }}">{{ session.session }}</option>
-          {% endfor %}
+          {% if current_session %}
+            <option value="{{ current_session.id }}" selected>{{ current_session.session }}</option>
+          {% else %}
+            <option value="">-- No Current Session --</option>
+          {% endif %}
         </select>
       </div>
 
@@ -109,10 +131,11 @@
       <div class="field">
         <label>Session</label>
         <select id="session_filter_panel2" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-          <option value="">-- All Sessions --</option>
-          {% for session in sessions %}
-            <option value="{{ session.id }}">{{ session.session }}</option>
-          {% endfor %}
+          {% if current_session %}
+            <option value="{{ current_session.id }}" selected>{{ current_session.session }}</option>
+          {% else %}
+            <option value="">-- No Current Session --</option>
+          {% endif %}
         </select>
       </div>
 
@@ -159,108 +182,153 @@
 </div>
 
 <script>
-  // Panel 1 - Link by Student Name
-  const sessionFilter = document.getElementById('session_filter');
-  const classFilter = document.getElementById('class_filter');
-  const studentIdSelect = document.getElementById('student_id');
-  const fatherNameDisplay = document.getElementById('father_name_display');
+  // Filtering is handled by jQuery/Select2 below
+</script>
 
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Select2 on account/register and student dropdowns (searchable)
+  $('#account_id').select2({ placeholder: '-- Select Account --', allowClear: true });
+  $('#register_page_select').select2({ placeholder: '-- Select Register Page --', allowClear: true });
+  function optionMatchesFilters($option, sessionId, classId) {
+    var optionSession = String($option.data('session') || '');
+    var optionClass = String($option.data('class') || '');
+    if (sessionId && optionSession !== String(sessionId)) return false;
+    if (classId && optionClass !== String(classId)) return false;
+    return true;
+  }
+
+  function makeStudentMatcher(sessionSelector, classSelector) {
+    return function(params, data) {
+      if (!data.id) return data;
+
+      var sessionId = $(sessionSelector).val();
+      var classId = $(classSelector).val();
+      var $option = $(data.element);
+
+      if (!optionMatchesFilters($option, sessionId, classId)) {
+        return null;
+      }
+
+      var term = $.trim(params.term || '').toLowerCase();
+      if (!term) return data;
+
+      var text = (data.text || '').toLowerCase();
+      return text.indexOf(term) > -1 ? data : null;
+    };
+  }
+
+  $('#student_id').select2({
+    placeholder: '-- Select Student --',
+    allowClear: true,
+    width: '100%',
+    matcher: makeStudentMatcher('#session_filter', '#class_filter')
+  });
+
+  $('#student_select_register').select2({
+    placeholder: '-- Select Student --',
+    allowClear: true,
+    width: '100%',
+    matcher: makeStudentMatcher('#session_filter_panel2', '#class_filter_panel2')
+  });
+
+  // -- Panel 1: validate selected student against current session/class filters --
   function filterStudents() {
-    const sessionId = sessionFilter.value;
-    const classId = classFilter.value;
+    var sessionId = $('#session_filter').val();
+    var classId = $('#class_filter').val();
 
-    Array.from(studentIdSelect.options).forEach(option => {
-      if (option.value === '') return;
-      const studentSession = option.dataset.session;
-      const studentClass = option.dataset.class;
-
-      let show = true;
-      if (sessionId && studentSession !== sessionId) show = false;
-      if (classId && studentClass !== classId) show = false;
-
-      option.disabled = !show;
-      option.hidden = !show;
-    });
-    // Reset selection if currently selected option becomes hidden
-    const selected = studentIdSelect.options[studentIdSelect.selectedIndex];
-    if (selected && selected.hidden) {
-      studentIdSelect.value = '';
-      fatherNameDisplay.value = '';
+    var sel = $('#student_id option:selected');
+    if (sel.val() && !optionMatchesFilters(sel, sessionId, classId)) {
+      $('#student_id').val('');
+      $('#father_name_display').val('');
+      $('#student_id').trigger('change.select2');
     }
   }
 
-  sessionFilter.addEventListener('change', filterStudents);
-  classFilter.addEventListener('change', filterStudents);
+  $('#session_filter').on('change', function() {
+    filterStudents();
+    $('#student_id').trigger('change.select2');
+  });
+  $('#class_filter').on('change', function() {
+    filterStudents();
+    $('#student_id').trigger('change.select2');
+  });
+  filterStudents();  // run on page load
 
-  studentIdSelect.addEventListener('change', function() {
-    const selectedOption = this.options[this.selectedIndex];
-    fatherNameDisplay.value = selectedOption.dataset.father || '';
+  $('#student_id').on('change', function() {
+    var opt = $(this).find('option:selected');
+    $('#father_name_display').val(opt.data('father') || '');
   });
 
-  // Panel 2 - Link by Account Register Page Number
-  const registerPageSelect = document.getElementById('register_page_select');
-  const accountIdDisplay = document.getElementById('account_id_display');
-  const accountNameDisplay = document.getElementById('account_name_display');
-  const studentSelectRegister = document.getElementById('student_select_register');
-  const fatherNameRegisterDisplay = document.getElementById('father_name_register_display');
-  const srnDisplay = document.getElementById('srn_display');
-  const sessionDisplay = document.getElementById('session_display');
-  const classDisplay = document.getElementById('class_display');
-  const studentIdRegisterInput = document.getElementById('student_id_register');
-  const registerPageHidden = document.getElementById('register_page_hidden');
-  
-  // Panel 2 - Filter students by Session and Class
-  const sessionFilterPanel2 = document.getElementById('session_filter_panel2');
-  const classFilterPanel2 = document.getElementById('class_filter_panel2');
-
+  // -- Panel 2: validate selected student against current session/class filters --
   function filterStudentsPanel2() {
-    const sessionId = sessionFilterPanel2.value;
-    const classId = classFilterPanel2.value;
+    var sessionId = $('#session_filter_panel2').val();
+    var classId = $('#class_filter_panel2').val();
 
-    Array.from(studentSelectRegister.options).forEach(option => {
-      if (option.value === '') return;
-      const studentSession = option.dataset.session;
-      const studentClass = option.dataset.class;
-
-      let show = true;
-      if (sessionId && studentSession !== sessionId) show = false;
-      if (classId && studentClass !== classId) show = false;
-
-      option.disabled = !show;
-      option.hidden = !show;
-    });
-    // Reset selection if currently selected option becomes hidden
-    const selected = studentSelectRegister.options[studentSelectRegister.selectedIndex];
-    if (selected && selected.hidden) {
-      studentSelectRegister.value = '';
-      fatherNameRegisterDisplay.value = '';
-      srnDisplay.value = '';
-      studentIdRegisterInput.value = '';
+    var sel = $('#student_select_register option:selected');
+    if (sel.val() && !optionMatchesFilters(sel, sessionId, classId)) {
+      $('#student_select_register').val('');
+      $('#father_name_register_display').val('');
+      $('#srn_display').val('');
+      $('#student_id_register').val('');
+      $('#student_select_register').trigger('change.select2');
     }
   }
 
-  sessionFilterPanel2.addEventListener('change', filterStudentsPanel2);
-  classFilterPanel2.addEventListener('change', filterStudentsPanel2);
+  $('#session_filter_panel2').on('change', function() {
+    filterStudentsPanel2();
+    $('#student_select_register').trigger('change.select2');
+  });
+  $('#class_filter_panel2').on('change', function() {
+    filterStudentsPanel2();
+    $('#student_select_register').trigger('change.select2');
+  });
+  filterStudentsPanel2();  // run on page load
 
-  registerPageSelect.addEventListener('change', function() {
-    const selectedOption = this.options[this.selectedIndex];
-    accountNameDisplay.value = selectedOption.dataset.accountName || '';
-    registerPageHidden.value = this.value;
+  $('#register_page_select').on('change', function() {
+    var opt = $(this).find('option:selected');
+    $('#account_name_display').val(opt.data('account-name') || '');
+    $('#register_page_hidden').val($(this).val());
   });
 
-  studentSelectRegister.addEventListener('change', function() {
-    const selectedOption = this.options[this.selectedIndex];
-    fatherNameRegisterDisplay.value = selectedOption.dataset.father || '';
-    srnDisplay.value = selectedOption.dataset.srn || '';
-    studentIdRegisterInput.value = this.value;
+  $('#student_select_register').on('change', function() {
+    var opt = $(this).find('option:selected');
+    $('#father_name_register_display').val(opt.data('father') || '');
+    $('#srn_display').val(opt.data('srn') || '');
+    $('#student_id_register').val($(this).val());
   });
 
-  // Panel 3 - Pre-select student if coming from Panel 3
   {% if pre_selected_student_id %}
-    document.getElementById('student_id').value = '{{ pre_selected_student_id }}';
-    const selectedOpt = document.getElementById('student_id').options[document.getElementById('student_id').selectedIndex];
-    document.getElementById('father_name_display').value = selectedOpt.dataset.father || '';
+    $('#student_id').val('{{ pre_selected_student_id }}').trigger('change');
+    var selOpt = $('#student_id option:selected');
+    $('#father_name_display').val(selOpt.data('father') || '');
   {% endif %}
+
+  // Print Panel 4
+  $('#print-panel4-btn').on('click', function() {
+    var printWindow = window.open('', '', 'height=700,width=1000');
+    var content = document.getElementById('panel4-print-content').innerHTML;
+    var title = 'All Students with Account Information';
+    printWindow.document.write('<html><head><title>' + title + '</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write('body { font-family: Arial, sans-serif; margin: 20px; }');
+    printWindow.document.write('h2 { text-align: center; color: #333; }');
+    printWindow.document.write('table { width: 100%; border-collapse: collapse; margin-top: 20px; }');
+    printWindow.document.write('th, td { border: 1px solid #999; padding: 10px; text-align: left; }');
+    printWindow.document.write('th { background-color: #e8e8e8; font-weight: bold; }');
+    printWindow.document.write('tr:nth-child(even) { background-color: #f9f9f9; }');
+    printWindow.document.write('.no-print { display: none !important; }');
+    printWindow.document.write('</style></head><body>');
+    printWindow.document.write('<h2>' + title + '</h2>');
+    printWindow.document.write(content);
+    printWindow.document.write('<p style="text-align:center; margin-top:30px; font-size:12px; color:#666;">Printed on: ' + new Date().toLocaleString() + '</p>');
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    setTimeout(function() { printWindow.print(); }, 250);
+  });
+});
 </script>
 
 <!-- Panel 3 - Student - Account Map -->
@@ -294,6 +362,12 @@
       <label style="font-size:12px; font-weight:700;">Student Name</label>
       <br>
       <input type="text" name="student_name_filter" placeholder="Search by name" value="{{ student_name_filter }}" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+    </div>
+
+    <div>
+      <label style="font-size:12px; font-weight:700;">Father Name</label>
+      <br>
+      <input type="text" name="father_name_filter" placeholder="Search by father name" value="{{ father_name_filter }}" style="height:40px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
     </div>
     
     <div>
@@ -407,47 +481,62 @@
     <div>
       <button type="submit">Filter</button>
       <a href="/students/link-fee-account/" style="margin-left:10px;">Clear</a>
+      <button type="button" id="print-panel4-btn" style="margin-left:10px; padding: 8px 16px; background-color: #17a2b8; color: white; border: none; border-radius: 4px; cursor: pointer;">Print</button>
+      <a href="{% url 'export_linked_accounts_csv' %}" style="margin-left:10px; padding: 8px 16px; background-color: #0f766e; color: white; border-radius: 4px; text-decoration: none; display: inline-block;">Export Linked CSV</a>
     </div>
   </form>
 
-  {% if filtered_students %}
-    <table>
-      <tr>
-        <th>No.</th>
-        <th>Session</th>
-        <th>Class</th>
-        <th>Student Name</th>
-        <th>Father Name</th>
-        <th>SRN</th>
-        <th>Account Name</th>
-        <th>Register Page</th>
-        <th>Action</th>
-      </tr>
+  <form method="post" action="{% url 'import_linked_accounts_csv' %}" enctype="multipart/form-data" style="display:flex; gap:10px; align-items:center; margin: 8px 0 16px 0; flex-wrap: wrap;">
+    {% csrf_token %}
+    <label style="font-size:12px; font-weight:700;">Import Linked CSV (PAW)</label>
+    <input type="file" name="csv_file" accept=".csv,text/csv" required style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+    <button type="submit" style="padding: 8px 16px; background-color: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Import Linked CSV</button>
+    <span style="font-size:12px; color:#666;">Use only files exported from "Export Linked CSV".</span>
+  </form>
 
-      {% for student in filtered_students %}
-      <tr>
-        <td>{{ forloop.counter }}</td>
-        <td>{{ student.session.session|default:"—" }}</td>
-        <td>{{ student.student_class.class_code|default:"—" }}</td>
-        <td>{{ student.first_name }} {{ student.last_name }}</td>
-        <td>{{ student.fathers_name }}</td>
-        <td>{{ student.srn|default:"—" }}</td>
-        <td>{{ student.fees_account.name|default:"Not Linked" }}</td>
-        <td>{{ student.fees_account.register_page|default:"—" }}</td>
-        <td class="actions">
-          <form method="post" style="display: inline;">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="update_from_panel3">
-            <input type="hidden" name="student_id" value="{{ student.id }}">
-            <button type="submit" class="btn-edit">Update Account</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-  {% else %}
-    <p style="padding: 20px; text-align: center; color: #666;">No students found matching the filters.</p>
-  {% endif %}
+  <div id="panel4-print-content">
+    {% if filtered_students %}
+      <table>
+        <tr>
+          <th>No.</th>
+          <th>Account Name</th>
+          <th>Student Name</th>
+          <th>Class</th>
+          <th>SRN</th>
+          <th>Father Name</th>
+          <th>Register Page</th>
+          <th class="no-print">Action</th>
+        </tr>
+
+        {% regroup filtered_students by fees_account.name as account_groups %}
+        {% for group in account_groups %}
+          {% for student in group.list %}
+          <tr>
+            <td>{{ forloop.parentloop.counter }}{% if forloop.first %}.1{% else %}.{{ forloop.counter }}{% endif %}</td>
+            {% if forloop.first %}
+            <td rowspan="{{ group.list|length }}">{{ group.grouper|default:"Not Linked" }}</td>
+            {% endif %}
+            <td>{{ student.first_name }} {{ student.last_name }}</td>
+            <td>{{ student.student_class.class_code|default:"—" }}</td>
+            <td>{{ student.srn|default:"—" }}</td>
+            <td>{{ student.fathers_name }}</td>
+            <td>{{ student.fees_account.register_page|default:"—" }}</td>
+            <td class="actions no-print">
+              <form method="post" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_from_panel3">
+                <input type="hidden" name="student_id" value="{{ student.id }}">
+                <button type="submit" class="btn-edit">Update Account</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        {% endfor %}
+      </table>
+    {% else %}
+      <p style="padding: 20px; text-align: center; color: #666;">No students found matching the filters.</p>
+    {% endif %}
+  </div>
 </div>
 
 {% endblock %}

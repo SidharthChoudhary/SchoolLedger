@@ -17,6 +17,8 @@ urlpatterns = [
     path('fee-agreement/', views.select_fee_account_for_agreement, name='select_fee_account_agreement'),
     path('fee-agreement/<int:account_id>/', views.fee_account_agreement, name='fee_account_agreement'),
     path('fee-status-account-wise/', views.fee_status_account_wise, name='fee_status_account_wise'),
+    path('fee-status-account-wise/legacy-template/', views.download_legacy_balance_template, name='download_legacy_balance_template'),
+    path('fee-status-account-wise/import-legacy/', views.import_legacy_balance_csv, name='import_legacy_balance_csv'),
     path('fees-statement-parents/', views.fees_statement_parents, name='fees_statement_parents'),
     path('year/', views.student_year_view, name='student_year_view'),
     path('attendance/', views.student_attendance_classes, name='student_attendance_classes'),
@@ -35,6 +37,8 @@ urlpatterns = [
     path('fees-account/edit/<int:pk>/', views.edit_fees_account, name='edit_fees_account'),
     path('fees-account/delete/<int:pk>/', views.delete_fees_account, name='delete_fees_account'),
     path('link-fee-account/', views.link_fee_account, name='link_fee_account'),
+    path('link-fee-account/export-linked-csv/', views.export_linked_accounts_csv, name='export_linked_accounts_csv'),
+    path('link-fee-account/import-linked-csv/', views.import_linked_accounts_csv, name='import_linked_accounts_csv'),
     
     # Session Class Student Map URLs
     path('manage-session-class-student-map/', views.manage_session_class_student_map, name='manage_session_class_student_map'),

@@ -56,6 +56,7 @@
       <button type="submit" class="btn-primary">Load</button>
     </div>
   </form>
+
 </div>
 
 <div class="card">
@@ -74,9 +75,10 @@
       <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
         <th style="padding:10px; text-align:left; border:1px solid #e5e7eb; font-weight:700;">Session</th>
         <th style="padding:10px; text-align:left; border:1px solid #e5e7eb; font-weight:700;">Account Name</th>
-        <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#dbeafe;">Payable Fees</th>
-        <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fbecf3;">Paid Fees</th>
-        <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#f0fdf4;">Balance Fees</th>
+        <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#dbeafe;">Current Session Fees</th>
+        <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fbecf3;">Fees Paid</th>
+        <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#fff7ed;">Opening Balance</th>
+        <th style="padding:10px; text-align:right; border:1px solid #e5e7eb; font-weight:700; background:#f0fdf4;">Net Balance</th>
       </tr>
     </thead>
     <tbody>
@@ -95,7 +97,8 @@
         </td>
         <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe; font-weight:600;">₹{{ row.payable_fee|indian_number }}</td>
         <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; background:#fbecf3; font-weight:600;">₹{{ row.paid_fee|indian_number }}</td>
-        <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; background:#f0fdf4; font-weight:600; {% if row.balance_fee > 0 %}color:#dc2626;{% elif row.balance_fee < 0 %}color:#15803d;{% endif %}">
+        <td style="padding:10px; text-align:right; border:1px solid #e5e7eb; background:#fff7ed; font-weight:600;">₹{{ row.opening_balance|indian_number }}</td>
+        <td class="balance-cell {% if row.balance_fee > 0 %}balance-positive{% elif row.balance_fee < 0 %}balance-negative{% endif %}" style="padding:10px; text-align:right; border:1px solid #e5e7eb; background:#f0fdf4; font-weight:600;">
           ₹{{ row.balance_fee|indian_number }}
         </td>
       </tr>
@@ -106,7 +109,8 @@
         <td colspan="2" style="padding:10px; border:1px solid #d1d5db;">Total</td>
         <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#dbeafe;">₹{{ total_payable|indian_number }}</td>
         <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fbecf3;">₹{{ total_paid|indian_number }}</td>
-        <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#f0fdf4; {% if total_balance > 0 %}color:#dc2626;{% elif total_balance < 0 %}color:#15803d;{% endif %}">
+        <td style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#fff7ed;">₹{{ total_opening_balance|indian_number }}</td>
+        <td class="balance-cell {% if total_balance > 0 %}balance-positive{% elif total_balance < 0 %}balance-negative{% endif %}" style="padding:10px; text-align:right; border:1px solid #d1d5db; background:#f0fdf4;">
           ₹{{ total_balance|indian_number }}
         </td>
       </tr>
@@ -121,6 +125,14 @@
   .status-grid th,
   .status-grid td {
     border: 1px solid #e5e7eb;
+  }
+
+  .balance-positive {
+    color: #dc2626;
+  }
+
+  .balance-negative {
+    color: #15803d;
   }
 
   @media (max-width: 1024px) {
@@ -177,6 +189,7 @@
 
     td[style*="dbeafe"], th[style*="dbeafe"] { background: #dbeafe !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     td[style*="fbecf3"], th[style*="fbecf3"] { background: #fbecf3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    td[style*="fff7ed"], th[style*="fff7ed"] { background: #fff7ed !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     td[style*="f0fdf4"], th[style*="f0fdf4"] { background: #f0fdf4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     tr[style*="f9fafb"] { background: #f9fafb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 

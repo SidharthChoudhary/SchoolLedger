@@ -5,6 +5,19 @@
 <h2 style="margin-top:0;">Agreed Fees</h2>
 
 <div class="card" style="margin-bottom:14px;">
+  <h4 style="margin-top:0; padding-bottom:10px; border-bottom: 1px solid #ddd;">Historical Opening Balance Import</h4>
+  <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+    <a href="{% url 'download_legacy_balance_template' %}" style="padding:10px 14px; background:#0f766e; color:#fff; border-radius:6px; text-decoration:none; font-weight:600;">Download Opening Balance CSV Template</a>
+    <form method="post" action="{% url 'import_legacy_balance_csv' %}" enctype="multipart/form-data" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:0; flex:1; min-width:320px;">
+      {% csrf_token %}
+      <input type="file" name="csv_file" accept=".csv,text/csv" required style="flex:1; min-width:220px; padding:7px; border:1px solid #d1d5db; border-radius:6px; background:#fff; height:40px; box-sizing:border-box;">
+      <button type="submit" style="padding:10px 14px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:600; white-space:nowrap; height:40px; box-sizing:border-box;">Import Opening Balance CSV</button>
+    </form>
+  </div>
+  <p style="margin:10px 0 0; color:#6b7280; font-size:12px;">Use this only for old sessions where carried-forward balance is available but full payable/paid history is not.</p>
+</div>
+
+<div class="card" style="margin-bottom:14px;">
   <h4 style="margin-top:0; padding-bottom:10px; border-bottom: 1px solid #ddd;">Select a Fees Account</h4>
 
   <form method="get" style="display:flex; gap:12px; align-items:end; flex-wrap:wrap; margin-bottom:16px;">

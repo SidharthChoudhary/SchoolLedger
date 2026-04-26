@@ -6,11 +6,21 @@
 
 {% include "website/_print_letterhead.html" %}
 
-<h2 style="margin-top:0;" class="no-print">Fees Statement{% if current_session %} Session {{ current_session.session }}{% endif %}</h2>
+<h2 style="margin-top:0;" class="no-print">Fees Statement{% if current_session %} {% if current_session %}Session {{ current_session.session }}{% endif %}{% endif %}</h2>
 
 <!-- ═══════════════════════ FILTER CARD ═══════════════════════ -->
 <div class="card no-print" style="margin-bottom:14px;">
   <form method="get" id="filter-form" style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap;">
+
+    <div class="field" style="min-width:180px; margin:0;">
+      <label style="font-size:12px; font-weight:700;">Session</label>
+      <select name="session" id="session_select" style="height:40px;">
+        <option value="">-- Current Session --</option>
+        {% for s in sessions %}
+          <option value="{{ s.id }}" {% if current_session and current_session.id == s.id %}selected{% endif %}>{{ s.session }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
     <div class="field" style="min-width:260px; margin:0;">
       <label style="font-size:12px; font-weight:700;">Account Name</label>
@@ -145,20 +155,25 @@
   {% endif %}
 </div>
 
-<!-- ═══════════════════════ PANEL 2 – PAYMENT SUMMARY (ALL SESSIONS) ═══════════════════════ -->
+
+<!-- ═══════════════════════ PANEL 2 – PAYMENT SUMMARY (CURRENT SESSION ONLY) ═══════════════════════ -->
 <div class="card" style="margin-bottom:14px;">
   <h3 class="report-heading" style="font-size:16px; font-weight:700; margin:0 0 12px;">
-    Account Balance – All Sessions
+    Account Balance{% if current_session %} — {{ current_session.session }}{% endif %}
   </h3>
+  <p style="margin:0 0 10px; color:#6b7280; font-size:12px;">
+    Net Balance = Current Session Fees + Opening Balance - Fees Paid
+  </p>
   {% if payment_summary %}
   <table style="width:100%; border-collapse:collapse; font-size:13px;">
     <thead>
       <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
         <th style="padding:8px 10px; text-align:left; border:1px solid #e5e7eb;">Session</th>
-        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fef9c3;">School Fees (₹)</th>
-        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe;">Payable Fees (₹)</th>
-        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fbecf3;">Paid Fees (₹)</th>
-        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#f0fdf4;">Balance (₹)</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fef9c3;">Standard Fees (₹)</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe;">Current Session Fees (₹)</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fff7ed;">Opening Balance (₹)</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fbecf3;">Fees Paid (₹)</th>
+        <th style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#f0fdf4;">Net Balance (₹)</th>
       </tr>
     </thead>
     <tbody>
@@ -173,6 +188,9 @@
         <td style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe;">
           {{ row.payable|indian_number }}
         </td>
+        <td style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fff7ed;">
+          {{ row.opening|indian_number }}
+        </td>
         <td style="padding:8px 10px; text-align:right; border:1px solid #e5e7eb; background:#fbecf3;">
           {{ row.paid|indian_number }}
         </td>
@@ -183,27 +201,9 @@
       </tr>
       {% endfor %}
     </tbody>
-    <tfoot>
-      <tr style="background:#f9fafb; border-top:2px solid #d1d5db; font-weight:700;">
-        <td style="padding:8px 10px; border:1px solid #d1d5db;">Total</td>
-        <td style="padding:8px 10px; text-align:right; border:1px solid #d1d5db; background:#fef9c3; color:#92400e;">
-          {{ summary_total_school|indian_number }}
-        </td>
-        <td style="padding:8px 10px; text-align:right; border:1px solid #d1d5db; background:#dbeafe;">
-          {{ summary_total_payable|indian_number }}
-        </td>
-        <td style="padding:8px 10px; text-align:right; border:1px solid #d1d5db; background:#fbecf3;">
-          {{ summary_total_paid|indian_number }}
-        </td>
-        <td style="padding:8px 10px; text-align:right; border:1px solid #d1d5db; background:#f0fdf4;
-          {% if summary_total_balance > 0 %}color:#dc2626;{% elif summary_total_balance < 0 %}color:#16a34a;{% endif %}">
-          {{ summary_total_balance|indian_number }}
-        </td>
-      </tr>
-    </tfoot>
   </table>
   {% else %}
-  <p style="margin:0; color:#6b7280; font-size:13px;">No payment records found for this account.</p>
+  <p style="margin:0; color:#6b7280; font-size:13px;">No payment records found for this account in the current session.</p>
   {% endif %}
 </div>
 
@@ -219,20 +219,29 @@
       <tr style="background:#f3f4f6; border-bottom:2px solid #d1d5db;">
         <th style="padding:8px 14px; text-align:left; border:1px solid #e5e7eb;">#</th>
         <th style="padding:8px 14px; text-align:left; border:1px solid #e5e7eb;">Fee Head</th>
-        <th style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#fef9c3;">School Fees (₹)</th>
-        <th style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe;">Payable Amount (₹)</th>
+        <th style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#fef9c3;">Standard Fees (₹)</th>
+        <th style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe;">Agreed Fees (₹)</th>
       </tr>
     </thead>
     <tbody>
-      {% for label, school_amt, agreed_amt in fee_heads %}
+      {% for row in fee_heads %}
       <tr style="border-bottom:1px solid #e5e7eb;">
         <td style="padding:8px 14px; border:1px solid #e5e7eb; color:#9ca3af;">{{ forloop.counter }}</td>
-        <td style="padding:8px 14px; border:1px solid #e5e7eb;">{{ label }}</td>
+        <td style="padding:8px 14px; border:1px solid #e5e7eb;">
+          {{ row.label }}
+          {% if row.student_breakdown %}
+            <div class="fee-head-breakdown">
+              {% for item in row.student_breakdown %}
+                <span>{{ item }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </td>
         <td style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#fef9c3; color:#92400e;">
-          {{ school_amt|indian_number }}
+          {{ row.school_amt|indian_number }}
         </td>
         <td style="padding:8px 14px; text-align:right; border:1px solid #e5e7eb; background:#dbeafe; font-weight:600;">
-          {{ agreed_amt|indian_number }}
+          {{ row.agreed_amt|indian_number }}
         </td>
       </tr>
       {% endfor %}
@@ -310,6 +319,24 @@
 {% endif %}{# end if selected_account #}
 
 <style>
+  .fee-head-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .fee-head-breakdown span {
+    color: #9ca3af;
+    font-size: 12px;
+  }
+
+  .fee-head-breakdown span:not(:last-child)::after {
+    content: ' |';
+    margin-left: 6px;
+    color: #d1d5db;
+  }
+
   @media print {
     @page { size: A4 portrait; margin: 8mm 10mm; }
 
