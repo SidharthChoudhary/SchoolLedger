@@ -644,19 +644,43 @@ def employee_payroll_unified(request):
         current_session = Session.objects.filter(pk=selected_session_id).first() or current_session
 
     def _calc_old_dues(emp, session, before_month):
-        """Old Dues = (sum payable_salary + other_amount for this session, months < before_month)
-                     minus (sum of Expense payments for this employee in this session)"""
-        past = EmployeePayrollEntry.objects.filter(
-            session=session, employee=emp, month__lt=before_month
-        ).aggregate(
-            total_payable=DjSum('payable_salary'),
-            total_other=DjSum('other_amount')
-        )
-        total_owed = float(past['total_payable'] or 0) + float(past['total_other'] or 0)
-        paid = Expense.objects.filter(
-            employee=emp, session=session
-        ).aggregate(total=DjSum('amount'))['total'] or 0
-        return round(max(float(total_owed) - float(paid), 0), 2)
+        """For April (first month of session): old dues = unpaid balance from the previous session.
+           For other months: old dues = owed in current session before this month minus paid."""
+        try:
+            mo = before_month.split('-')[1]
+        except (IndexError, AttributeError):
+            mo = ''
+
+        if mo == '04':
+            # Find the previous session (session names like "2025-2026", ordered descending)
+            prev_session = Session.objects.filter(
+                session__lt=session.session
+            ).order_by('-session').first()
+            if not prev_session:
+                return 0
+            owed = EmployeePayrollEntry.objects.filter(
+                session=prev_session, employee=emp
+            ).aggregate(
+                total_payable=DjSum('payable_salary'),
+                total_other=DjSum('other_amount')
+            )
+            total_owed = float(owed['total_payable'] or 0) + float(owed['total_other'] or 0)
+            paid = Expense.objects.filter(
+                employee=emp, session=prev_session
+            ).aggregate(total=DjSum('amount'))['total'] or 0
+            return round(max(float(total_owed) - float(paid), 0), 2)
+        else:
+            past = EmployeePayrollEntry.objects.filter(
+                session=session, employee=emp, month__lt=before_month
+            ).aggregate(
+                total_payable=DjSum('payable_salary'),
+                total_other=DjSum('other_amount')
+            )
+            total_owed = float(past['total_payable'] or 0) + float(past['total_other'] or 0)
+            paid = Expense.objects.filter(
+                employee=emp, session=session
+            ).aggregate(total=DjSum('amount'))['total'] or 0
+            return round(max(float(total_owed) - float(paid), 0), 2)
 
     # ── POST: Generate Payroll ──────────────────────────────────────────────
     if request.method == 'POST' and request.POST.get('action') == 'generate':
