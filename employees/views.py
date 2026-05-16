@@ -662,9 +662,16 @@ def employee_payroll_unified(request):
                 session=prev_session, employee=emp
             ).aggregate(
                 total_payable=DjSum('payable_salary'),
-                total_other=DjSum('other_amount')
+                total_other=DjSum('other_amount'),
+                total_old_dues=DjSum('old_dues'),
             )
-            total_owed = float(owed['total_payable'] or 0) + float(owed['total_other'] or 0)
+            # Include old_dues carried into the previous session (e.g. from the session before that)
+            # so the chain of unpaid dues accumulates correctly across sessions.
+            total_owed = (
+                float(owed['total_payable'] or 0)
+                + float(owed['total_other'] or 0)
+                + float(owed['total_old_dues'] or 0)
+            )
             paid = Expense.objects.filter(
                 employee=emp, session=prev_session
             ).aggregate(total=DjSum('amount'))['total'] or 0
