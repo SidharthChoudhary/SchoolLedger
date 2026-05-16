@@ -632,7 +632,7 @@ def employee_payroll_unified(request):
     from django.db.models import Sum as DjSum
 
     sessions = Session.objects.all().order_by('-session')
-    employees_list = Employee.objects.filter(status='active').order_by('name')
+    employees_list = Employee.objects.exclude(status='inactive').order_by('name')
 
     # Resolve selected session
     selected_session_id = request.GET.get('session', '')
