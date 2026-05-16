@@ -690,7 +690,8 @@ def employee_payroll_unified(request):
             monthly_salary = float(emp.base_salary_per_month or 0)
             total_tracked = work_days + leave
             register_salary = monthly_salary if (leave <= 2 and total_tracked >= days_in_month - 2) else min(round((monthly_salary / 30) * work_days, 2), monthly_salary)
-            old_dues = _calc_old_dues(emp, session, month)
+            # Old dues only apply in April (start of session)
+            old_dues = _calc_old_dues(emp, session, month) if mo == '04' else 0
 
             obj, is_new = EmployeePayrollEntry.objects.get_or_create(
                 session=session, employee=emp, month=month
@@ -711,10 +712,16 @@ def employee_payroll_unified(request):
         session_id = request.POST.get('session')
         month = request.POST.get('month')
         session = get_object_or_404(Session, pk=session_id)
+        # Determine if selected month is April
+        try:
+            _, _mo_save = month.split('-')
+        except (ValueError, TypeError, AttributeError):
+            _mo_save = ''
         saved = 0
         for emp in employees_list:
             payable_str      = request.POST.get(f'payable_{emp.id}', '').strip()
-            old_dues_str     = request.POST.get(f'old_dues_{emp.id}', '').strip() or '0'
+            # Old dues are only allowed in April; force 0 for all other months
+            old_dues_str     = (request.POST.get(f'old_dues_{emp.id}', '').strip() or '0') if _mo_save == '04' else '0'
             other_str        = request.POST.get(f'other_{emp.id}', '').strip() or '0'
             note             = request.POST.get(f'note_{emp.id}', '').strip()
             manual_work_str  = request.POST.get(f'manual_work_{emp.id}', '').strip()
@@ -783,11 +790,14 @@ def employee_payroll_unified(request):
                 monthly_salary = float(emp.base_salary_per_month or 0)
                 total_tracked = work_days + leave
                 register_salary = monthly_salary if (leave <= 2 and total_tracked >= days_in_month - 2) else min(round((monthly_salary / 30) * work_days, 2), monthly_salary)
-                # If entry exists use its saved old_dues, otherwise calculate live
-                if entry:
-                    old_dues_val = entry.old_dues
+                # Old dues only apply in April (first month of session)
+                if mo == '04':
+                    if entry:
+                        old_dues_val = entry.old_dues
+                    else:
+                        old_dues_val = _calc_old_dues(emp, current_session, selected_month)
                 else:
-                    old_dues_val = _calc_old_dues(emp, current_session, selected_month)
+                    old_dues_val = 0
                 rows.append({
                     'employee': emp,
                     'work_days': work_days,
@@ -805,6 +815,12 @@ def employee_payroll_unified(request):
         except (ValueError, TypeError):
             pass
 
+    # Determine if the selected month is April (old dues only apply in April)
+    try:
+        is_april = selected_month.split('-')[1] == '04' if selected_month else False
+    except (IndexError, AttributeError):
+        is_april = False
+
     # totals
     total_register   = sum(r['register_salary'] for r in rows)
     total_payable    = sum(float(r['payable_salary']) for r in rows if r['payable_salary'] not in ('', None))
@@ -815,6 +831,7 @@ def employee_payroll_unified(request):
         'sessions': sessions,
         'current_session': current_session,
         'selected_month': selected_month,
+        'is_april': is_april,
         'rows': rows,
         'days_in_month': days_in_month,
         'total_register': total_register,
