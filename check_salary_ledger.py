@@ -9,7 +9,7 @@ import os
 import sys
 import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schoolapp.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'production_settings')
 django.setup()
 
 from dailyLedger.models import Expense, Session
