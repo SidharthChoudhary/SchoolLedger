@@ -38,13 +38,17 @@ class Command(BaseCommand):
         year  = options['year']
         month = options['month']
 
-        if not (1 <= month <= 12):
-            raise CommandError('Month must be between 1 and 12.')
+        if not (0 <= month <= 12):
+            raise CommandError('Month must be between 0 and 12 (0 = all months).')
         if year < 2000 or year > 2100:
             raise CommandError('Year looks invalid.')
 
-        zip_bytes = build_monthly_zip(year, month)
-        filename  = f'schoolledger_monthly_{year}_{month:02d}.zip'
+        if month == 0:
+            zip_bytes = build_annual_zip(year)
+            filename  = f'schoolledger_annual_{year}.zip'
+        else:
+            zip_bytes = build_monthly_zip(year, month)
+            filename  = f'schoolledger_monthly_{year}_{month:02d}.zip'
 
         output_dir = options.get('output', '')
         if output_dir:
@@ -76,10 +80,24 @@ def build_monthly_zip(year: int, month: int) -> bytes:
     return zip_buf.getvalue()
 
 
+def build_annual_zip(year: int) -> bytes:
+    """Build a ZIP with full-year CSVs (all 12 months combined per report type)."""
+    label = f'{year}_all_months'
+    zip_buf = io.BytesIO()
+
+    with zipfile.ZipFile(zip_buf, 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr(f'income_{label}.csv',       _income_csv(year, month=None))
+        zf.writestr(f'expense_{label}.csv',      _expense_csv(year, month=None))
+        zf.writestr(f'payroll_{label}.csv',      _payroll_csv(year, month=None))
+        zf.writestr(f'fees_summary_{label}.csv', _fees_summary_csv(year, month=None))
+
+    return zip_buf.getvalue()
+
+
 # ---------------------------------------------------------------------------
 # Income CSV
 # ---------------------------------------------------------------------------
-def _income_csv(year: int, month: int) -> str:
+def _income_csv(year: int, month) -> str:
     from dailyLedger.models import Income
 
     buf = io.StringIO()
@@ -92,12 +110,10 @@ def _income_csv(year: int, month: int) -> str:
         'Details',
     ])
 
-    qs = (
-        Income.objects
-        .filter(date__year=year, date__month=month)
-        .select_related('session', 'fees_account')
-        .order_by('date', 'id')
-    )
+    qs = Income.objects.filter(date__year=year)
+    if month:
+        qs = qs.filter(date__month=month)
+    qs = qs.select_related('session', 'fees_account').order_by('date', 'id')
 
     for entry in qs:
         writer.writerow([
@@ -120,7 +136,7 @@ def _income_csv(year: int, month: int) -> str:
 # ---------------------------------------------------------------------------
 # Expense CSV
 # ---------------------------------------------------------------------------
-def _expense_csv(year: int, month: int) -> str:
+def _expense_csv(year: int, month) -> str:
     from dailyLedger.models import Expense
 
     buf = io.StringIO()
@@ -133,12 +149,10 @@ def _expense_csv(year: int, month: int) -> str:
         'Details',
     ])
 
-    qs = (
-        Expense.objects
-        .filter(date__year=year, date__month=month)
-        .select_related('session', 'employee')
-        .order_by('date', 'id')
-    )
+    qs = Expense.objects.filter(date__year=year)
+    if month:
+        qs = qs.filter(date__month=month)
+    qs = qs.select_related('session', 'employee').order_by('date', 'id')
 
     for entry in qs:
         writer.writerow([
@@ -161,10 +175,9 @@ def _expense_csv(year: int, month: int) -> str:
 # ---------------------------------------------------------------------------
 # Payroll CSV
 # ---------------------------------------------------------------------------
-def _payroll_csv(year: int, month: int) -> str:
+def _payroll_csv(year: int, month) -> str:
     from employees.models import EmployeePayrollEntry
 
-    month_str = f'{year}-{month:02d}'
     buf = io.StringIO()
     writer = csv.writer(buf)
     writer.writerow([
@@ -175,12 +188,13 @@ def _payroll_csv(year: int, month: int) -> str:
         'Note',
     ])
 
-    qs = (
-        EmployeePayrollEntry.objects
-        .filter(month=month_str)
-        .select_related('employee', 'session')
-        .order_by('employee__name')
-    )
+    qs = EmployeePayrollEntry.objects.select_related('employee', 'session')
+    if month:
+        month_str = f'{year}-{month:02d}'
+        qs = qs.filter(month=month_str)
+    else:
+        qs = qs.filter(month__startswith=str(year))
+    qs = qs.order_by('month', 'employee__name')
 
     for entry in qs:
         total = (entry.payable_salary or 0) + entry.old_dues + entry.other_amount
@@ -204,7 +218,7 @@ def _payroll_csv(year: int, month: int) -> str:
 # ---------------------------------------------------------------------------
 # Fees summary CSV  (income grouped by fees account for the month)
 # ---------------------------------------------------------------------------
-def _fees_summary_csv(year: int, month: int) -> str:
+def _fees_summary_csv(year: int, month) -> str:
     from dailyLedger.models import Income
 
     buf = io.StringIO()
@@ -214,18 +228,15 @@ def _fees_summary_csv(year: int, month: int) -> str:
         'No. of Payments', 'Total Collected (Rs)',
     ])
 
-    # Accounts that had at least one income entry this month
+    base_filter = dict(date__year=year, fees_account__isnull=False)
+    if month:
+        base_filter['date__month'] = month
+
     qs = (
         Income.objects
-        .filter(date__year=year, date__month=month, fees_account__isnull=False)
-        .values(
-            'fees_account__account_id',
-            'fees_account__name',
-        )
-        .annotate(
-            payment_count=Count('id'),
-            total=Sum('amount'),
-        )
+        .filter(**base_filter)
+        .values('fees_account__account_id', 'fees_account__name')
+        .annotate(payment_count=Count('id'), total=Sum('amount'))
         .order_by('fees_account__account_id')
     )
 
@@ -237,15 +248,10 @@ def _fees_summary_csv(year: int, month: int) -> str:
             row['total'],
         ])
 
-    # Summary row
-    totals = Income.objects.filter(
-        date__year=year, date__month=month, fees_account__isnull=False
-    ).aggregate(total=Sum('amount'), count=Count('id'))
+    totals = Income.objects.filter(**base_filter).aggregate(
+        total=Sum('amount'), count=Count('id')
+    )
     writer.writerow([])
-    writer.writerow([
-        'TOTAL', '',
-        totals['count'] or 0,
-        totals['total'] or 0,
-    ])
+    writer.writerow(['TOTAL', '', totals['count'] or 0, totals['total'] or 0])
 
     return buf.getvalue()

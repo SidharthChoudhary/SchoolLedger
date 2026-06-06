@@ -288,21 +288,27 @@ class DatabaseBackupAdmin(admin.ModelAdmin):
 
         try:
             year  = int(request.POST.get('export_year',  0))
-            month = int(request.POST.get('export_month', 0))
+            month = int(request.POST.get('export_month', -1))
         except (ValueError, TypeError):
             messages.error(request, 'Invalid year or month.')
             return HttpResponseRedirect('../')
 
-        if not (1 <= month <= 12) or year < 2000:
+        if not (0 <= month <= 12) or year < 2000:
             messages.error(request, 'Please select a valid year and month.')
             return HttpResponseRedirect('../')
 
         try:
-            from .management.commands.export_monthly_report import build_monthly_zip
+            from .management.commands.export_monthly_report import (
+                build_monthly_zip, build_annual_zip,
+            )
             import calendar
-            zip_bytes = build_monthly_zip(year, month)
-            month_name = calendar.month_abbr[month]
-            filename = f'schoolledger_monthly_{year}_{month:02d}_{month_name}.zip'
+            if month == 0:
+                zip_bytes = build_annual_zip(year)
+                filename = f'schoolledger_annual_{year}.zip'
+            else:
+                zip_bytes = build_monthly_zip(year, month)
+                month_name = calendar.month_abbr[month]
+                filename = f'schoolledger_monthly_{year}_{month:02d}_{month_name}.zip'
             response = HttpResponse(zip_bytes, content_type='application/zip')
             response['Content-Disposition'] = f'attachment; filename="{filename}"'
             return response
