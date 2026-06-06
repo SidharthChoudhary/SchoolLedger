@@ -28,8 +28,12 @@
     gap: 24px;
     margin-top: 20px;
   }
+  .export-card-row {
+    grid-column: 1 / -1;   /* full width */
+  }
   @media (max-width: 800px) {
     .backup-grid { grid-template-columns: 1fr; }
+    .export-card-row { grid-column: 1; }
   }
   .backup-card {
     background: #fff;
@@ -79,6 +83,31 @@
     font-weight: bold;
   }
   .btn-restore:hover { background: #8a0000; }
+  .btn-export {
+    background: #2e7d32;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .btn-export:hover { background: #1b5e20; }
+  .export-form select {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 8px;
+  }
+  .export-csv-list {
+    font-size: 12px;
+    color: #666;
+    padding-left: 18px;
+    margin-bottom: 16px;
+  }
+  .export-csv-list li { margin-bottom: 3px; }
   .restore-form label {
     display: block;
     font-size: 13px;
@@ -190,6 +219,51 @@
       <button type="button" class="btn-restore" onclick="openRestoreModal()">
         &#8593; Restore Database
       </button>
+    </form>
+  </div>
+
+  <!-- ─── MONTHLY EXPORT CARD (full width) ────────────────────── -->
+  <div class="backup-card export-card-row">
+    <h2>&#128196; Monthly Audit Reports (CSV)</h2>
+    <p>
+      Download a <strong>ZIP file</strong> containing four CSV audit reports
+      for any month. Use these for monthly audits, record-keeping, or sharing
+      with accountants.
+    </p>
+    <ul class="export-csv-list">
+      <li><strong>income_YYYY_MM.csv</strong> &mdash; All income entries (voucher, head, amount, fees account)</li>
+      <li><strong>expense_YYYY_MM.csv</strong> &mdash; All expense entries (voucher, head, amount, employee)</li>
+      <li><strong>payroll_YYYY_MM.csv</strong> &mdash; Employee payroll (base salary, payable, dues, total)</li>
+      <li><strong>fees_summary_YYYY_MM.csv</strong> &mdash; Fees collected per student account (count + total)</li>
+    </ul>
+    <form method="post" action="{% url 'admin:backup_export_monthly' %}" class="export-form">
+      {% csrf_token %}
+      <label style="font-size:13px; font-weight:bold; display:block; margin-bottom:8px;">
+        Select Month &amp; Year:
+      </label>
+      <select name="export_month" required>
+        <option value="">-- Month --</option>
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+      </select>
+      <select name="export_year" required>
+        <option value="">-- Year --</option>
+        {% for y in export_years %}
+          <option value="{{ y }}">{{ y }}</option>
+        {% endfor %}
+      </select>
+      <br><br>
+      <button type="submit" class="btn-export">&#128196; Download CSV Reports (ZIP)</button>
     </form>
   </div>
 

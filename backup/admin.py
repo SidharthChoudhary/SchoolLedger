@@ -1,7 +1,7 @@
 import json
 import os
 import tempfile
-from datetime import datetime
+from datetime import datetime, date
 from io import StringIO
 
 from django.apps import apps
@@ -101,6 +101,11 @@ class DatabaseBackupAdmin(admin.ModelAdmin):
                 self.admin_site.admin_view(self.restore_backup_view),
                 name='backup_restore',
             ),
+            path(
+                'export-monthly/',
+                self.admin_site.admin_view(self.export_monthly_view),
+                name='backup_export_monthly',
+            ),
         ]
         return custom_urls + super().get_urls()
 
@@ -108,10 +113,12 @@ class DatabaseBackupAdmin(admin.ModelAdmin):
     # Main page (changelist)
     # ------------------------------------------------------------------
     def changelist_view(self, request, extra_context=None):
+        current_year = date.today().year
         context = {
             **self.admin_site.each_context(request),
             'title': 'Database Backup & Restore',
             'opts': self.model._meta,
+            'export_years': list(range(current_year, current_year - 6, -1)),
         }
         return render(request, 'admin/backup/backup_restore.html', context)
 
@@ -268,3 +275,38 @@ class DatabaseBackupAdmin(admin.ModelAdmin):
                 os.unlink(tmp_path)
 
         return HttpResponseRedirect('../')
+
+    # ------------------------------------------------------------------
+    # Monthly CSV export → ZIP download
+    # ------------------------------------------------------------------
+    def export_monthly_view(self, request):
+        if request.method != 'POST':
+            return HttpResponseRedirect('../')
+        if not request.user.is_superuser:
+            messages.error(request, 'Only superusers can export reports.')
+            return HttpResponseRedirect('../')
+
+        try:
+            year  = int(request.POST.get('export_year',  0))
+            month = int(request.POST.get('export_month', 0))
+        except (ValueError, TypeError):
+            messages.error(request, 'Invalid year or month.')
+            return HttpResponseRedirect('../')
+
+        if not (1 <= month <= 12) or year < 2000:
+            messages.error(request, 'Please select a valid year and month.')
+            return HttpResponseRedirect('../')
+
+        try:
+            from .management.commands.export_monthly_report import build_monthly_zip
+            import calendar
+            zip_bytes = build_monthly_zip(year, month)
+            month_name = calendar.month_abbr[month]
+            filename = f'schoolledger_monthly_{year}_{month:02d}_{month_name}.zip'
+            response = HttpResponse(zip_bytes, content_type='application/zip')
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return response
+
+        except Exception as exc:
+            messages.error(request, f'Export failed: {exc}')
+            return HttpResponseRedirect('../')
