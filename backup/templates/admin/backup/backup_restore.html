@@ -173,8 +173,7 @@
     <form method="post"
           action="{% url 'admin:backup_restore' %}"
           enctype="multipart/form-data"
-          class="restore-form"
-          onsubmit="return confirmRestore()">
+          class="restore-form">
       {% csrf_token %}
 
       <label for="backup_file">Backup file (.json)</label>
@@ -188,25 +187,96 @@
              placeholder="RESTORE" autocomplete="off" required>
 
       <br><br>
-      <button type="submit" class="btn-restore">&#8593; Restore Database</button>
+      <button type="button" class="btn-restore" onclick="openRestoreModal()">
+        &#8593; Restore Database
+      </button>
     </form>
   </div>
 
 </div>
 
+<!-- ─── CONFIRM MODAL ──────────────────────────────────────────── -->
+<div id="restore-modal" style="display:none; position:fixed; inset:0;
+     background:rgba(0,0,0,0.55); z-index:9999; align-items:center;
+     justify-content:center;">
+  <div style="background:#fff; border-radius:6px; max-width:460px; width:90%;
+              padding:32px; box-shadow:0 8px 32px rgba(0,0,0,0.3); position:relative;">
+
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:48px; line-height:1;">&#9888;&#65039;</div>
+      <h2 style="color:#ba2121; margin:12px 0 6px; font-size:20px;">
+        This will overwrite ALL data
+      </h2>
+      <p style="color:#555; font-size:14px; margin:0;">
+        Every existing record in the database will be <strong>permanently deleted</strong>
+        and replaced with the contents of the uploaded backup file.
+        <br><br>
+        <strong>This action cannot be undone.</strong>
+      </p>
+    </div>
+
+    <div style="background:#fff3cd; border:1px solid #ffc107; border-radius:4px;
+                padding:12px; font-size:13px; color:#664d03; margin-bottom:24px;">
+      After restore you will be logged out and must sign in again
+      using the credentials from the backup.
+    </div>
+
+    <div style="display:flex; gap:12px; justify-content:flex-end;">
+      <button onclick="closeRestoreModal()"
+              style="padding:10px 24px; border:1px solid #ccc; border-radius:4px;
+                     background:#f8f8f8; cursor:pointer; font-size:14px;">
+        Cancel
+      </button>
+      <button onclick="submitRestore()"
+              style="padding:10px 24px; border:none; border-radius:4px;
+                     background:#ba2121; color:#fff; cursor:pointer;
+                     font-size:14px; font-weight:bold;">
+        Yes, Restore Now
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
-function confirmRestore() {
+function openRestoreModal() {
   var val = document.getElementById('confirm_restore').value.trim();
-  if (val !== 'RESTORE') {
-    alert('Please type RESTORE (all capitals) in the confirmation field.');
-    return false;
+  var file = document.getElementById('backup_file').value;
+
+  if (!file) {
+    showInlineError('Please choose a backup file first.');
+    return;
   }
-  return confirm(
-    'Are you absolutely sure?\n\n' +
-    'ALL current database records will be deleted and replaced with ' +
-    'the uploaded backup.\n\nThis cannot be undone.'
-  );
+  if (val !== 'RESTORE') {
+    showInlineError('Please type RESTORE (all capitals) in the confirmation field.');
+    return;
+  }
+  document.getElementById('restore-modal').style.display = 'flex';
 }
+
+function closeRestoreModal() {
+  document.getElementById('restore-modal').style.display = 'none';
+}
+
+function submitRestore() {
+  closeRestoreModal();
+  document.querySelector('.restore-form').submit();
+}
+
+function showInlineError(msg) {
+  var el = document.getElementById('inline-error');
+  if (!el) {
+    el = document.createElement('p');
+    el.id = 'inline-error';
+    el.style.cssText = 'color:#ba2121; font-size:13px; font-weight:bold; margin-top:8px;';
+    document.querySelector('.btn-restore').insertAdjacentElement('afterend', el);
+  }
+  el.textContent = '⚠ ' + msg;
+}
+
+// Close modal on backdrop click
+document.getElementById('restore-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeRestoreModal();
+});
 </script>
 
 {% endblock %}

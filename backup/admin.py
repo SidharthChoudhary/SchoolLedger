@@ -18,7 +18,6 @@ from .models import DatabaseBackup
 # ---------------------------------------------------------------------------
 # Tables exported/imported in strict dependency order.
 # Restore uses the same list; clear uses the reverse.
-# M2M through-tables are automatically handled by Django's ORM and dumpdata.
 # ---------------------------------------------------------------------------
 BACKUP_MODELS = [
     # Django internals
@@ -51,25 +50,19 @@ BACKUP_MODELS = [
     'students.studentattendance',
 ]
 
-
-def _disable_fk_checks():
-    """Disable FK constraint checks (MySQL and SQLite compatible)."""
-    vendor = connection.vendor
-    with connection.cursor() as cursor:
-        if vendor == 'mysql':
-            cursor.execute('SET FOREIGN_KEY_CHECKS = 0')
-        elif vendor == 'sqlite':
-            cursor.execute('PRAGMA foreign_keys = OFF')
-
-
-def _enable_fk_checks():
-    """Re-enable FK constraint checks."""
-    vendor = connection.vendor
-    with connection.cursor() as cursor:
-        if vendor == 'mysql':
-            cursor.execute('SET FOREIGN_KEY_CHECKS = 1')
-        elif vendor == 'sqlite':
-            cursor.execute('PRAGMA foreign_keys = ON')
+# ---------------------------------------------------------------------------
+# M2M through-tables and Django internal tables that are NOT in BACKUP_MODELS
+# but hold FK references to tables we delete. These must be cleared FIRST so
+# that the main deletions don't hit FK constraint violations (especially on
+# SQLite where disabling FK checks inside a transaction is not possible).
+# ---------------------------------------------------------------------------
+PRE_CLEAR_TABLES = [
+    'django_admin_log',            # FK → auth_user, contenttypes
+    'auth_user_groups',            # M2M: auth.user ↔ auth.group
+    'auth_user_user_permissions',  # M2M: auth.user ↔ auth.permission
+    'auth_group_permissions',      # M2M: auth.group ↔ auth.permission
+    'accounts_role_permissions',   # M2M: accounts.role ↔ auth.permission
+]
 
 
 @admin.register(DatabaseBackup)
@@ -195,23 +188,64 @@ class DatabaseBackupAdmin(admin.ModelAdmin):
                 tmp.write(content)
                 tmp_path = tmp.name
 
-            _disable_fk_checks()
+            # For MySQL: disable FK checks at session level (outside the
+            # transaction so it applies to the whole operation).
+            # For SQLite: PRAGMA can't be set inside a transaction, so instead
+            # we pre-clear M2M/internal tables in the correct order to avoid
+            # FK violations without needing to disable checks at all.
+            if connection.vendor == 'mysql':
+                with connection.cursor() as cur:
+                    cur.execute('SET FOREIGN_KEY_CHECKS = 0')
 
             try:
                 with transaction.atomic():
-                    # Clear every table in reverse dependency order
-                    for model_label in reversed(BACKUP_MODELS):
-                        app_label, model_name = model_label.split('.')
-                        try:
-                            model = apps.get_model(app_label, model_name)
-                            table = model._meta.db_table
-                            with connection.cursor() as cur:
-                                cur.execute(f'DELETE FROM `{table}`')
-                        except LookupError:
-                            pass
+                    q = connection.ops.quote_name  # DB-appropriate identifier quoting
 
-                    # Load the fixture in dependency order
-                    call_command('loaddata', tmp_path, verbosity=0)
+                    # Step 1: clear M2M through-tables and Django internal
+                    # tables that have FKs pointing at tables we're about to
+                    # delete.  Must happen BEFORE the main deletion loop.
+                    with connection.cursor() as cur:
+                        for table in PRE_CLEAR_TABLES:
+                            try:
+                                cur.execute(f'DELETE FROM {q(table)}')
+                            except Exception:
+                                pass  # table may not exist in all environments
+
+                    # Step 2: clear every app table in reverse dependency order
+                    with connection.cursor() as cur:
+                        for model_label in reversed(BACKUP_MODELS):
+                            app_label, model_name = model_label.split('.')
+                            try:
+                                model = apps.get_model(app_label, model_name)
+                                cur.execute(
+                                    f'DELETE FROM {q(model._meta.db_table)}'
+                                )
+                            except LookupError:
+                                pass
+
+                    # Step 3: restore from fixture.
+                    # Disconnect the User post_save signal handlers that
+                    # auto-create UserProfile, otherwise loaddata triggers
+                    # the signal when inserting auth.user → creates a
+                    # UserProfile row → then the fixture's own UserProfile
+                    # insert fails with a UNIQUE constraint violation.
+                    from django.db.models.signals import post_save
+                    from django.contrib.auth.models import User as AuthUser
+                    from accounts.signals import (
+                        create_user_profile,
+                        save_user_profile,
+                    )
+                    post_save.disconnect(create_user_profile, sender=AuthUser)
+                    post_save.disconnect(save_user_profile, sender=AuthUser)
+                    try:
+                        call_command(
+                            'loaddata', tmp_path,
+                            verbosity=0,
+                            ignorenonexistent=True,
+                        )
+                    finally:
+                        post_save.connect(create_user_profile, sender=AuthUser)
+                        post_save.connect(save_user_profile, sender=AuthUser)
 
                 # Clear Django's ContentType cache so it picks up fresh data
                 ContentType.objects.clear_cache()
@@ -222,7 +256,9 @@ class DatabaseBackupAdmin(admin.ModelAdmin):
                 )
 
             finally:
-                _enable_fk_checks()
+                if connection.vendor == 'mysql':
+                    with connection.cursor() as cur:
+                        cur.execute('SET FOREIGN_KEY_CHECKS = 1')
 
         except Exception as exc:
             messages.error(request, f'Restore failed: {exc}')
