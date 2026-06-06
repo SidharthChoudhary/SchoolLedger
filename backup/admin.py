@@ -113,12 +113,13 @@ class DatabaseBackupAdmin(admin.ModelAdmin):
     # Main page (changelist)
     # ------------------------------------------------------------------
     def changelist_view(self, request, extra_context=None):
-        current_year = date.today().year
+        from dailyLedger.models import Session as AcademicSession
+        sessions = AcademicSession.objects.order_by('-session').values_list('session', flat=True)
         context = {
             **self.admin_site.each_context(request),
             'title': 'Database Backup & Restore',
             'opts': self.model._meta,
-            'export_years': list(range(current_year, current_year - 6, -1)),
+            'export_sessions': list(sessions),
         }
         return render(request, 'admin/backup/backup_restore.html', context)
 
@@ -287,28 +288,33 @@ class DatabaseBackupAdmin(admin.ModelAdmin):
             return HttpResponseRedirect('../')
 
         try:
-            year  = int(request.POST.get('export_year',  0))
-            month = int(request.POST.get('export_month', -1))
+            session_str = request.POST.get('export_session', '').strip()
+            month       = int(request.POST.get('export_month', -1))
         except (ValueError, TypeError):
-            messages.error(request, 'Invalid year or month.')
+            messages.error(request, 'Invalid month.')
             return HttpResponseRedirect('../')
 
-        if not (0 <= month <= 12) or year < 2000:
-            messages.error(request, 'Please select a valid year and month.')
+        from .management.commands.export_monthly_report import (
+            build_session_zip, build_month_zip, _valid_session, MONTH_NAMES,
+        )
+
+        if not session_str:
+            messages.error(request, 'Please select a session.')
+            return HttpResponseRedirect('../')
+        if not _valid_session(session_str):
+            messages.error(request, f'Invalid session: "{session_str}".')
+            return HttpResponseRedirect('../')
+        if not (0 <= month <= 12):
+            messages.error(request, 'Please select a month.')
             return HttpResponseRedirect('../')
 
         try:
-            from .management.commands.export_monthly_report import (
-                build_monthly_zip, build_annual_zip,
-            )
-            import calendar
             if month == 0:
-                zip_bytes = build_annual_zip(year)
-                filename = f'schoolledger_annual_{year}.zip'
+                zip_bytes = build_session_zip(session_str)
+                filename  = f'schoolledger_{session_str}_all_months.zip'
             else:
-                zip_bytes = build_monthly_zip(year, month)
-                month_name = calendar.month_abbr[month]
-                filename = f'schoolledger_monthly_{year}_{month:02d}_{month_name}.zip'
+                zip_bytes = build_month_zip(session_str, month)
+                filename  = f'schoolledger_{session_str}_{month:02d}_{MONTH_NAMES[month]}.zip'
             response = HttpResponse(zip_bytes, content_type='application/zip')
             response['Content-Disposition'] = f'attachment; filename="{filename}"'
             return response
