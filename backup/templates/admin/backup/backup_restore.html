@@ -1,0 +1,212 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Database Backup &amp; Restore{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+  &rsaquo; Database Backup &amp; Restore
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>Database Backup &amp; Restore</h1>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="messagelist">
+      <p class="{{ message.tags }}">{{ message }}</p>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<style>
+  .backup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 20px;
+  }
+  @media (max-width: 800px) {
+    .backup-grid { grid-template-columns: 1fr; }
+  }
+  .backup-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 24px;
+  }
+  .backup-card h2 {
+    margin-top: 0;
+    font-size: 16px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+  }
+  .backup-card p {
+    color: #555;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .backup-card .info-list {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 16px;
+    padding-left: 18px;
+  }
+  .backup-card .info-list li { margin-bottom: 4px; }
+  .btn-backup {
+    background: #417690;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .btn-backup:hover { background: #205067; }
+  .btn-restore {
+    background: #ba2121;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .btn-restore:hover { background: #8a0000; }
+  .restore-form label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    margin-top: 12px;
+  }
+  .restore-form input[type="file"],
+  .restore-form input[type="text"] {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+  }
+  .restore-warning {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    color: #664d03;
+  }
+  .restore-warning strong { display: block; margin-bottom: 4px; }
+  .table-list {
+    font-size: 11px;
+    color: #888;
+    column-count: 2;
+    padding-left: 16px;
+    margin-bottom: 12px;
+  }
+  .table-list li { margin-bottom: 2px; }
+</style>
+
+<div class="backup-grid">
+
+  <!-- ─── BACKUP CARD ──────────────────────────────────────────── -->
+  <div class="backup-card">
+    <h2>&#8595; Create Backup</h2>
+    <p>
+      Exports all application data as a single JSON file which will be
+      downloaded to your computer. Keep this file in a safe place &mdash;
+      you can use it to restore the database at any time.
+    </p>
+    <p>Tables included:</p>
+    <ul class="table-list">
+      <li>auth_user / auth_group</li>
+      <li>auth_permission</li>
+      <li>accounts_role / userrole</li>
+      <li>accounts_userprofile</li>
+      <li>dailyledger_session</li>
+      <li>dailyledger_head</li>
+      <li>dailyledger_expense</li>
+      <li>dailyledger_income</li>
+      <li>dailyledger_feesstructure</li>
+      <li>students_class</li>
+      <li>students_student</li>
+      <li>students_feesaccount</li>
+      <li>students_feesaccountagreement</li>
+      <li>students_studentaccount</li>
+      <li>students_sessionclassstudentmap</li>
+      <li>students_studentattendance</li>
+      <li>employees_employee</li>
+      <li>employees_employeeattendance</li>
+      <li>employees_employeepayrollentry</li>
+    </ul>
+    <form method="post" action="{% url 'admin:backup_create' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn-backup">&#8595; Download Backup</button>
+    </form>
+  </div>
+
+  <!-- ─── RESTORE CARD ─────────────────────────────────────────── -->
+  <div class="backup-card">
+    <h2>&#8593; Restore from Backup</h2>
+
+    <div class="restore-warning">
+      <strong>&#9888; WARNING &mdash; This will overwrite all current data!</strong>
+      All existing records will be permanently deleted and replaced with the
+      data from the uploaded backup file. This action cannot be undone.
+      Make sure to download a fresh backup first.
+    </div>
+
+    <p>
+      Upload a <code>.json</code> backup file previously created by the
+      <em>Create Backup</em> tool. Tables are restored in the correct
+      dependency order automatically.
+    </p>
+
+    <form method="post"
+          action="{% url 'admin:backup_restore' %}"
+          enctype="multipart/form-data"
+          class="restore-form"
+          onsubmit="return confirmRestore()">
+      {% csrf_token %}
+
+      <label for="backup_file">Backup file (.json)</label>
+      <input type="file" id="backup_file" name="backup_file"
+             accept=".json,application/json" required>
+
+      <label for="confirm_restore">
+        Type <strong>RESTORE</strong> to confirm:
+      </label>
+      <input type="text" id="confirm_restore" name="confirm_restore"
+             placeholder="RESTORE" autocomplete="off" required>
+
+      <br><br>
+      <button type="submit" class="btn-restore">&#8593; Restore Database</button>
+    </form>
+  </div>
+
+</div>
+
+<script>
+function confirmRestore() {
+  var val = document.getElementById('confirm_restore').value.trim();
+  if (val !== 'RESTORE') {
+    alert('Please type RESTORE (all capitals) in the confirmation field.');
+    return false;
+  }
+  return confirm(
+    'Are you absolutely sure?\n\n' +
+    'ALL current database records will be deleted and replaced with ' +
+    'the uploaded backup.\n\nThis cannot be undone.'
+  );
+}
+</script>
+
+{% endblock %}

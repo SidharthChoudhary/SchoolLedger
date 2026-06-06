@@ -1,0 +1,234 @@
+import json
+import os
+import tempfile
+from datetime import datetime
+from io import StringIO
+
+from django.apps import apps
+from django.contrib import admin, messages
+from django.contrib.contenttypes.models import ContentType
+from django.core.management import call_command
+from django.db import connection, transaction
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import path
+
+from .models import DatabaseBackup
+
+# ---------------------------------------------------------------------------
+# Tables exported/imported in strict dependency order.
+# Restore uses the same list; clear uses the reverse.
+# M2M through-tables are automatically handled by Django's ORM and dumpdata.
+# ---------------------------------------------------------------------------
+BACKUP_MODELS = [
+    # Django internals
+    'contenttypes.contenttype',
+    'auth.permission',
+    'auth.group',
+    'auth.user',
+    # Core reference data (no FKs)
+    'dailyLedger.session',
+    'students.class',
+    'employees.employee',
+    'dailyLedger.head',
+    'students.feesaccount',
+    'accounts.role',
+    # User-linked tables
+    'accounts.userrole',
+    'accounts.userprofile',
+    # Tables that depend on session + reference data
+    'students.feesaccountagreement',
+    'dailyLedger.feesstructure',
+    'dailyLedger.expense',
+    'employees.employeeattendance',
+    'employees.employeepayrollentry',
+    # Student depends on class, feesaccount, session
+    'students.student',
+    # Tables that depend on student
+    'dailyLedger.income',
+    'students.studentaccount',
+    'students.sessionclassstudentmap',
+    'students.studentattendance',
+]
+
+
+def _disable_fk_checks():
+    """Disable FK constraint checks (MySQL and SQLite compatible)."""
+    vendor = connection.vendor
+    with connection.cursor() as cursor:
+        if vendor == 'mysql':
+            cursor.execute('SET FOREIGN_KEY_CHECKS = 0')
+        elif vendor == 'sqlite':
+            cursor.execute('PRAGMA foreign_keys = OFF')
+
+
+def _enable_fk_checks():
+    """Re-enable FK constraint checks."""
+    vendor = connection.vendor
+    with connection.cursor() as cursor:
+        if vendor == 'mysql':
+            cursor.execute('SET FOREIGN_KEY_CHECKS = 1')
+        elif vendor == 'sqlite':
+            cursor.execute('PRAGMA foreign_keys = ON')
+
+
+@admin.register(DatabaseBackup)
+class DatabaseBackupAdmin(admin.ModelAdmin):
+
+    # ------------------------------------------------------------------
+    # Permission guards – superuser only
+    # ------------------------------------------------------------------
+    def has_module_perms(self, request, app_label=None):
+        return request.user.is_superuser
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_view_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    # ------------------------------------------------------------------
+    # URL routing
+    # ------------------------------------------------------------------
+    def get_urls(self):
+        custom_urls = [
+            path(
+                'create/',
+                self.admin_site.admin_view(self.create_backup_view),
+                name='backup_create',
+            ),
+            path(
+                'restore/',
+                self.admin_site.admin_view(self.restore_backup_view),
+                name='backup_restore',
+            ),
+        ]
+        return custom_urls + super().get_urls()
+
+    # ------------------------------------------------------------------
+    # Main page (changelist)
+    # ------------------------------------------------------------------
+    def changelist_view(self, request, extra_context=None):
+        context = {
+            **self.admin_site.each_context(request),
+            'title': 'Database Backup & Restore',
+            'opts': self.model._meta,
+        }
+        return render(request, 'admin/backup/backup_restore.html', context)
+
+    # ------------------------------------------------------------------
+    # Create backup → stream JSON download
+    # ------------------------------------------------------------------
+    def create_backup_view(self, request):
+        if request.method != 'POST':
+            return HttpResponseRedirect('../')
+        if not request.user.is_superuser:
+            messages.error(request, 'Only superusers can create backups.')
+            return HttpResponseRedirect('../')
+
+        try:
+            buf = StringIO()
+            call_command(
+                'dumpdata',
+                *BACKUP_MODELS,
+                indent=2,
+                stdout=buf,
+                natural_foreign=True,
+                natural_primary=False,
+            )
+            json_data = buf.getvalue()
+
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f'schoolledger_backup_{timestamp}.json'
+            response = HttpResponse(json_data, content_type='application/json')
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return response
+
+        except Exception as exc:
+            messages.error(request, f'Backup failed: {exc}')
+            return HttpResponseRedirect('../')
+
+    # ------------------------------------------------------------------
+    # Restore backup ← uploaded JSON file
+    # ------------------------------------------------------------------
+    def restore_backup_view(self, request):
+        if request.method != 'POST':
+            return HttpResponseRedirect('../')
+        if not request.user.is_superuser:
+            messages.error(request, 'Only superusers can restore backups.')
+            return HttpResponseRedirect('../')
+
+        # Require typed confirmation
+        if request.POST.get('confirm_restore', '').strip() != 'RESTORE':
+            messages.error(
+                request,
+                'Restore cancelled: you must type RESTORE in the confirmation field.',
+            )
+            return HttpResponseRedirect('../')
+
+        if 'backup_file' not in request.FILES:
+            messages.error(request, 'No backup file was uploaded.')
+            return HttpResponseRedirect('../')
+
+        backup_file = request.FILES['backup_file']
+
+        # Validate JSON before touching the database
+        try:
+            content = backup_file.read().decode('utf-8')
+            json.loads(content)
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            messages.error(request, f'Invalid backup file: {exc}')
+            return HttpResponseRedirect('../')
+
+        tmp_path = None
+        try:
+            # Write to a temp file so loaddata can read it
+            with tempfile.NamedTemporaryFile(
+                mode='w', suffix='.json', delete=False, encoding='utf-8'
+            ) as tmp:
+                tmp.write(content)
+                tmp_path = tmp.name
+
+            _disable_fk_checks()
+
+            try:
+                with transaction.atomic():
+                    # Clear every table in reverse dependency order
+                    for model_label in reversed(BACKUP_MODELS):
+                        app_label, model_name = model_label.split('.')
+                        try:
+                            model = apps.get_model(app_label, model_name)
+                            table = model._meta.db_table
+                            with connection.cursor() as cur:
+                                cur.execute(f'DELETE FROM `{table}`')
+                        except LookupError:
+                            pass
+
+                    # Load the fixture in dependency order
+                    call_command('loaddata', tmp_path, verbosity=0)
+
+                # Clear Django's ContentType cache so it picks up fresh data
+                ContentType.objects.clear_cache()
+                messages.success(
+                    request,
+                    'Database restored successfully from backup. '
+                    'Please log in again.',
+                )
+
+            finally:
+                _enable_fk_checks()
+
+        except Exception as exc:
+            messages.error(request, f'Restore failed: {exc}')
+
+        finally:
+            if tmp_path and os.path.exists(tmp_path):
+                os.unlink(tmp_path)
+
+        return HttpResponseRedirect('../')

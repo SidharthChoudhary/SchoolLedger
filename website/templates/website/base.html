@@ -79,6 +79,12 @@
              href="/students/promote-session/">
             <i class="fa-solid fa-arrow-up"></i> Promote Session
           </a>
+          {% if user.is_superuser %}
+          <a class="nav-link nav-subitem {% if '/admin/backup/' in request.path %}active{% endif %}"
+             href="/admin/backup/databasebackup/">
+            <i class="fa-solid fa-database"></i> Backup &amp; Restore
+          </a>
+          {% endif %}
         </div>
       </div>
 

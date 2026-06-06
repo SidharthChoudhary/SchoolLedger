@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'website',
     'employees',
     'students',
+    'backup',
 ]
 
 MIDDLEWARE = [
