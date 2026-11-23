@@ -273,7 +273,8 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
                 initial["voucher_number"] = _next_expense_voucher()
             form = form_class(initial=initial, ledger_type=ledger_type)
 
-        form.fields["voucher_number"].widget.attrs["autofocus"] = True
+        form.fields["voucher_number"].widget.attrs.pop("autofocus", None)
+        form.fields["major_head"].widget.attrs["autofocus"] = True
 
     # Filters
     month_str = request.GET.get("month", "").strip()
@@ -282,11 +283,14 @@ def _ledger_view(request, model, form_class, template_name, page_title, ledger_t
     selected_major_head = request.GET.get("major_head", "").strip()
     selected_head = request.GET.get("head", "").strip()
     selected_sub_head = request.GET.get("sub_head", "").strip()
+    active_session = Session.objects.filter(status="current_session").order_by("-id").first()
+    if not selected_session:
+        selected_session = str(active_session.id) if active_session else ""
 
     qs = model.objects.all()
     month_start = None
     month_end = None
-    
+
     if month_str:
         try:
             y, m = month_str.split("-")

@@ -44,7 +44,7 @@ class LedgerEntryFormBase(forms.ModelForm):
             'payment_type',
         ]
         widgets = {
-            'voucher_number': forms.TextInput(attrs={'autofocus': 'autofocus'}),
+            'voucher_number': forms.TextInput(),
             "date": forms.DateInput(attrs={"type": "date"}),
             "details": forms.TextInput(),
         }
@@ -141,7 +141,7 @@ class IncomeFeesForm(forms.ModelForm):
             'fees_account',
         ]
         widgets = {
-            'voucher_number': forms.TextInput(attrs={'autofocus': 'autofocus'}),
+            'voucher_number': forms.TextInput(),
             "date": forms.DateInput(attrs={"type": "date"}),
             "details": forms.TextInput(),
             'session': forms.Select(attrs={'id': 'session-select', 'style': 'height: 40px;'}),

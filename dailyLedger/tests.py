@@ -257,3 +257,21 @@ class LedgerViewTests(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, '1000')
         self.assertNotContains(resp, '999')
+
+    def test_expenses_home_defaults_to_current_session(self):
+        old_session = Session.objects.create(session='2024-2025', status='old_session')
+        Expense.objects.create(date=date(2026, 1, 1), amount=1000, session=self.session, major_head='Salary')
+        Expense.objects.create(date=date(2025, 1, 1), amount=999, session=old_session, major_head='Other')
+
+        resp = self.client.get(reverse('expenses_home'))
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.context['selected_session'], str(self.session.id))
+        self.assertContains(resp, '1000')
+        self.assertNotContains(resp, '999')
+
+    def test_expenses_home_major_head_has_autofocus(self):
+        resp = self.client.get(reverse('expenses_home'))
+
+        self.assertContains(resp, 'name="major_head"')
+        self.assertContains(resp, 'autofocus')

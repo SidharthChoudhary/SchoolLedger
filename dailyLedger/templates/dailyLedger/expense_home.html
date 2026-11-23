@@ -104,7 +104,7 @@
 		<label style="font-size:12px; font-weight:700;">Session</label>
 		<br>
 		<select name="session" style="height:40px;">
-			<option value="">All</option>
+			<option value="all" {% if selected_session == 'all' %}selected{% endif %}>All</option>
 			{% for s in session_choices %}
 				<option value="{{ s.id }}" {% if selected_session == s.id|stringformat:"s" %}selected{% endif %}>{{ s.session }}</option>
 			{% endfor %}
