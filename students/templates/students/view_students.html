@@ -188,8 +188,6 @@
 
 {% if page_mode == 'list' %}
 <div id="saved-students" class="card" style="scroll-margin-top: 24px;">
-  <h3 class="form-section">Saved Students</h3>
-
   <form method="get" style="margin-bottom: 15px; display:flex; gap:12px; align-items:end; flex-wrap:wrap; background: #fbfbfc; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px;">
     <input type="hidden" name="mode" value="list">
 
@@ -242,11 +240,14 @@
     </div>
   </form>
 
+  <p style="margin: 4px 0 12px 0; font-size: 14px; color: #374151;"><strong>Total Students: {{ students|length }}</strong></p>
+
   {% if students %}
   <div class="table-responsive">
     <table class="table">
       <thead>
         <tr>
+          <th>SNo</th>
           <th>Photo</th>
           <th>Name</th>
           <th>Date of Birth</th>
@@ -262,6 +263,7 @@
       <tbody>
         {% for student in students %}
         <tr class="row-gender-{{ student.gender }}">
+          <td>{{ forloop.counter }}</td>
           <td>
             {% if student.image %}
               <img src="{{ student.image.url }}" alt="{{ student.name }}" class="student-photo">
